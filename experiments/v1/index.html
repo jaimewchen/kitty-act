@@ -151,10 +151,10 @@
       instructions_alien1_stimulus += '<div class="overlap-speech" style="margin-top:190px"><p><b><font size="6" color="#000000">He needs help finding some</font></b><style="text-align:center;" /p></div></div>';
       instructions_alien1_stimulus += '<div class="row">';
       instructions_alien1_stimulus += '<div class="overlap-speech" style="margin-top:260px"><p><b><font size="6" color="#000000">of his lost Earth things.</font></b><style="text-align:center;" /p></div></div>';
-      instructions_alien1_stimulus += '<div class="row"><figure><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:80px; opacity:0"></figure></div>';
+      instructions_alien1_stimulus += '<div class="row"><figure><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:360px; opacity:0"></figure></div>';
       instructions_alien1_stimulus += '<div class="row">';
-      instructions_alien1_stimulus += '<div class="column"><figure class="floating2_slide_left"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:260px"></figure></div>';
-      instructions_alien1_stimulus += '<div class="column"><figure class="floating_slide_up"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/alien.png" style="width:260px"></figure></div></div>';
+      instructions_alien1_stimulus += '<div class="overlap-bubble"><figure class="floating2_slide_left"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:260px"></figure></div>';
+      instructions_alien1_stimulus += '<div class="overlap-bubble"><figure class="floating_slide_up"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/alien.png" style="width:260px"></figure></div></div>';
       instructions_alien1_stimulus += '<p><i>Click Next when you are ready to continue.</font></i><style="text-align:center;" /p></div>';
 
     // display alien introduction part 1
@@ -167,30 +167,6 @@
 
     // explain overall goal of game (helping alien)
 
-    var instructions_alien2_stimulus = '<div id="container">';
-      instructions_alien2_stimulus += '<div class="row">';
-      instructions_alien2_stimulus += '<div class="overlap-bubble"><figure><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Speech_Bubble_Long_inv.png" style="width:700px"></figure></div>';
-      instructions_alien2_stimulus += '<div class="overlap-speech" style="margin-top:100px"><p><b><font size="6" color="#000000">But, he doesn'+"'"+'t know</font></b><style="text-align:center;" /p></div></div>';
-      instructions_alien2_stimulus += '<div class="row">';
-      instructions_alien2_stimulus += '<div class="overlap-speech" style="margin-top:170px"><p><b><font size="6" color="#000000"> our Earth language.</font></b><style="text-align:center;" /p></div></div>';
-      instructions_alien2_stimulus += '<div class="row">';
-      instructions_alien2_stimulus += '<div class="overlap-speech" style="margin-top:260px"><p><b><font size="6" color="#000000">Will you help him?</font></b><style="text-align:center;" /p></div></div>';
-      instructions_alien2_stimulus += '<div class="row"><figure><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:80px; opacity:0"></figure></div>';
-      instructions_alien2_stimulus += '<div class="row">';
-      instructions_alien2_stimulus += '<div class="column"><figure class="floating2_zoom"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:260px"></figure></div>';
-      instructions_alien2_stimulus += '<div class="column"><figure class="floating_unzoom"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/alien.png" style="width:260px"></figure></div></div>';
-      instructions_alien2_stimulus += '<p><i>Click Next when you are ready to continue.</font></i><style="text-align:center;" /p></div>';
-
-     // display alien introduction part 2
-
-		var alien_intro2 = {
-			type: 'html-keyboard-response',
-			stimulus: instructions_alien2_stimulus,
-      choices: ["NO_KEYS"],
-      trial_duration: 1000
-		}
-    timeline.push(alien_intro2);
-
 
     var instructions_alien3_stimulus = '<div id="container">';
       instructions_alien3_stimulus += '<div class="row">';
@@ -200,10 +176,10 @@
       instructions_alien3_stimulus += '<div class="overlap-speech" style="margin-top:170px"><p><b><font size="6" color="#000000"> our Earth language.</font></b><style="text-align:center;" /p></div></div>';
       instructions_alien3_stimulus += '<div class="row">';
       instructions_alien3_stimulus += '<div class="overlap-speech" style="margin-top:260px"><p><b><font size="6" color="#000000">Will you help him?</font></b><style="text-align:center;" /p></div></div>';
-      instructions_alien3_stimulus += '<div class="row"><figure><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:80px; opacity:0"></figure></div>';
+      instructions_alien3_stimulus += '<div class="row"><figure><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:360px; opacity:0"></figure></div>';
       instructions_alien3_stimulus += '<div class="row">';
-      instructions_alien3_stimulus += '<div class="column"><figure class="floating2_zoom"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:300px"></figure></div>';
-      instructions_alien3_stimulus += '<div class="column"><figure class="floating_unzoom"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/alien.png" style="width:220px"></figure></div></div>';
+      instructions_alien3_stimulus += '<div class="overlap_bubble" style="margin-top:-310px"><figure class="floating2_zoom"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/Bear_Smile.png" style="width:260px"></figure></div>';
+      instructions_alien3_stimulus += '<div class="overlap_bubble" style="margin-top:-310px"><figure class="floating"><img src="/Users/jaimechen/Desktop/catact_CA_sandbox/experiments/v1/stims/alien.png" style="width:260px"></figure></div></div>';
       instructions_alien3_stimulus += '<p><i>Click Next when you are ready to continue.</font></i><style="text-align:center;" /p></div>';
 
     var alien_intro3 = {
