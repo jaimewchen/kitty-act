@@ -18,8 +18,13 @@ body {
 }
 
 .p-closer {
-  margin-top: -0.5em ;
+  margin-top: -1em ;
   margin-bottom: -0.5em ;
+}
+
+.p-closer2 {
+  margin-top: -0.7em ;
+  margin-bottom: -0.7em ;
 }
 
 .overlap-speech {
@@ -67,53 +72,30 @@ body {
   100%   { transform: translate(0, 15px); }   
 }
 
-.floating2_zoom { 
-  animation-name: zoom-stay;
+.floating3 { 
+  animation-name: floating3;
   animation-duration: 3s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
 }
 
-@keyframes zoom-stay {
-  0% { transform: scale(1.15, 1.15) translate(0, 20px); }
-  50% { transform: scale(1.15, 1.15) translate(0, 5px); }
-  100%   { transform: scale(1.15, 1.15) translate(0, 20px); }   
+@keyframes floating3 {
+  0% { transform: translate(0,  0px); }
+  50%  { transform: translate(0, 5px); }
+  100%   { transform: translate(0, -0px); }   
 }
 
-.floating2_slide_left {
-  animation-name: slide-left, floating2-stay;
-  animation-duration: 1.5s, 3s;
-  animation-iteration-count: 1, infinite;
-  animation-timing-function: ease-in-out, ease-in-out;
+.floating4 { 
+  animation-name: floating2;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
 }
 
-@keyframes slide-left {
-  0% { transform: translate(10px, -250px); }
-  100%   { transform: translate(-140px, -250px); }     
-}
-
-@keyframes floating2-stay {
-  0% { transform: translate(-140px, -250px); }
-  50%  { transform: translate(-140px, -235px); }
-  100%   { transform: translate(-140px, -250px); }     
-}
-
-.floating_slide_up {
-  animation-name: slide-up, floating-stay;
-  animation-duration: 2s, 3s;
-  animation-iteration-count: 1, infinite;
-  animation-timing-function: ease-in-out, ease-in-out;
-}
-
-@keyframes slide-up {
-  0% { transform: translate(300px, 300px); }
-  100%   { transform: translate(140px, -250px); }     
-}
-
-@keyframes floating-stay {
-  0% { transform: translate(140px, -250px); }
-  50% { transform: translate(140px, -235px); }
-  100%   { transform: translate(140px, -250px); }     
+@keyframes floating4 {
+  0% { transform: translate(0,  5px); }
+  50%  { transform: translate(0, 0px); }
+  100%   { transform: translate(0, 5px); }   
 }
 
 .jspsych-btn-image-array {
