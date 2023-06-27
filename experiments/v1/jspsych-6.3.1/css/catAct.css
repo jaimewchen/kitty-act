@@ -1,6 +1,7 @@
 body {
   color: #fff;
-  background-image: url("background/space2.jpg");
+  background-image: url("background/space2.jpg"), url("background/earth.png");
+  background-size: cover;
   margin: 0;
 } 
 
@@ -165,7 +166,7 @@ figure {
     grid-template-columns: auto auto auto auto;
     grid-template-rows: auto auto auto auto;
     width: auto;
-    max-width: 500px;
+    max-width: 800px;
     align-items:  center;
     justify-items: center;
     padding: 2px;
@@ -192,8 +193,8 @@ figure {
    max-width: 800px;
 }
 
-#container2 {
-  width: 500px;
+.container2 {
+    margin: 0;
 }
 
 figure {

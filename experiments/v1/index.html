@@ -127,15 +127,10 @@
 		// create game introduction and push to timeline
 
 		var introduction_welcome_stimulus = '<div id="container">';
-      introduction_welcome_stimulus += '<div class="p-closer"><p><b><i><font size="4" color="000000#">Hi Friend! Let'+"'"+'s play...</font></i></b></p></div>';
-      introduction_welcome_stimulus += '<div class="p-closer2"><p><b><font size="6" color="#000000">Mr. Alien'+"'"+'s</font></b></p></div>';
-      introduction_welcome_stimulus += '<p><b><font size="10" color="#000000">EARTH SEARCH</font></b></p>';
-      introduction_welcome_stimulus += '<div style="opacity:0"<p style="margin-top:-10px"><b><font size="0">.</font></b></p></div>';
-      introduction_welcome_stimulus += '<div class="row">';
-      introduction_welcome_stimulus += '<div class="overlap-bubble" style="margin-top:-220px"><figure><img src="stims/Speech_Bubble_Long.png" style="width:600px"></figure></div>';
-      introduction_welcome_stimulus += '<div class="overlap-speech" style="margin-top:-15px; z-index:-2"><p><b><font size="4.5" color="#000000">Hi Friend!</font></b><style="text-align:center;" /p></div></div>';
-      introduction_welcome_stimulus += '<div class="row"><figure><img src="stims/Bear_Talk.png" style="width:10px; opacity:0"></figure></div>';
-      introduction_welcome_stimulus += '<div class="floating" style="margin-top:-120px"><figure><img src="stims/Bear_Talk.png" style="width:260px"></figure></div>';
+      introduction_welcome_stimulus += '<div class="p-closer"><p><b><i><font size="4"">Hi Friend! Let'+"'"+'s play...</font></i></b></p></div>';
+      introduction_welcome_stimulus += '<div class="p-closer2"><p><b><font size="6"">Mr. Alien'+"'"+'s</font></b></p></div>';
+      introduction_welcome_stimulus += '<p><b><font size="10"">EARTH SEARCH</font></b></p>';
+      introduction_welcome_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure class="floating"><img src="stims/Rocket.png" style="width:100px"></figure></div>';
 		// display welcome
 		var welcome = {
 			type: 'html-button-response',
@@ -146,49 +141,16 @@
 
     // create introduction of alien
 
-    var introduction_alien1_stimulus = '<div id="container">';
-      introduction_alien1_stimulus += '<div class="row">';
-      introduction_alien1_stimulus += '<div class="overlap-bubble"><figure><img src="stims/Speech_Bubble_Long_inv.png" style="width:770px"></figure></div>';
-      introduction_alien1_stimulus += '<div class="overlap-speech" style="margin-top:100px"><p><b><font size="6" color="#000000">This is Mr. Alien.</font></b><style="text-align:center;" /p></div></div>';
-      introduction_alien1_stimulus += '<div class="row">';
-      introduction_alien1_stimulus += '<div class="overlap-speech" style="margin-top:190px"><p><b><font size="6" color="#000000">He needs help finding some</font></b><style="text-align:center;" /p></div></div>';
-      introduction_alien1_stimulus += '<div class="row">';
-      introduction_alien1_stimulus += '<div class="overlap-speech" style="margin-top:260px"><p><b><font size="6" color="#000000">of his lost Earth things.</font></b><style="text-align:center;" /p></div></div>';
-      introduction_alien1_stimulus += '<div class="row"><figure><img src="stims/Bear_Talk.png" style="width:100px; opacity:0"></figure></div>';
-      introduction_alien1_stimulus += '<div class="row">';
-      introduction_alien1_stimulus += '<div class="column"><figure class="floating2"><img src="stims/Bear_Talk.png" style="width:260px"></figure></div>';
-      introduction_alien1_stimulus += '<div class="column"><figure class="floating"><img src="stims/alien.png" style="width:260px"></figure></div></div>';
-      introduction_alien1_stimulus += '<p><i>Click the button below to continue.</font></i><style="text-align:center;" /p></div>';
+    var introduction_alien_stimulus = '<div id="container">';
+      introduction_alien_stimulus += '<div class="d-flex align-items-center"><figure class="floating"><img src="stims/alien.png" style="width:300px"></figure></div></div>';
 
-    // display alien introduction part 1
-		var alien_intro1 = {
+    // display alien introduction
+		var alien_intro = {
 			type: 'html-button-response',
-			stimulus: introduction_alien1_stimulus,
-      choices: ["Hi Mr. Alien!"],
+			stimulus: introduction_alien_stimulus,
+      choices: ["CONTINUE"],
 		}
-		timeline.push(alien_intro1);
-
-    // explain overall goal of game (helping alien)
-
-    var introduction_alien3_stimulus = '<div id="container">';
-      introduction_alien3_stimulus += '<div class="row">';
-      introduction_alien3_stimulus += '<div class="overlap-bubble"><figure><img src="stims/Speech_Bubble_Long_inv.png" style="width:700px"></figure></div>';
-      introduction_alien3_stimulus += '<div class="overlap-speech" style="margin-top:100px"><p><b><font size="6" color="#000000">But, he doesn'+"'"+'t know</font></b><style="text-align:center;" /p></div></div>';
-      introduction_alien3_stimulus += '<div class="row">';
-      introduction_alien3_stimulus += '<div class="overlap-speech" style="margin-top:170px"><p><b><font size="6" color="#000000"> our Earth language.</font></b><style="text-align:center;" /p></div></div>';
-      introduction_alien3_stimulus += '<div class="row">';
-      introduction_alien3_stimulus += '<div class="overlap-speech" style="margin-top:260px"><p><b><font size="6" color="#000000">Will you help him?</font></b><style="text-align:center;" /p></div></div>';
-      introduction_alien3_stimulus += '<div class="row"><figure><img src="stims/Bear_Talk.png" style="width:400px; opacity:0"></figure></div>';
-      introduction_alien3_stimulus += '<div class="row">';
-      introduction_alien3_stimulus += '<div class="column" style="margin-top:-415px"><figure class="floating2"><img src="stims/Bear_Talk.png" style="width:260px"></figure></div>';
-      introduction_alien3_stimulus += '<div class="column" style="margin-top:-415px"><figure class="floating"><img src="stims/alien.png" style="width:260px"></figure></div></div></div>';
-
-    var alien_intro3 = {
-			type: 'html-button-response',
-			stimulus: introduction_alien3_stimulus,
-      choices: ["Yes! I'll help Mr. Alien!"],
-		}
-    timeline.push(alien_intro3);
+		timeline.push(alien_intro);
 
     // BUILD TRIALS
     // key parameters

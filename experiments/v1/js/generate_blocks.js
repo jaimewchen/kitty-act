@@ -1,82 +1,53 @@
 //generate instructions
 function generate_learning_instructions(current_training_label, current_training_images) {
     var current_learning_stimulus ='<div id="container">'
-    current_learning_stimulus+='<div class="row">';
-    current_learning_stimulus+='<div class="column"><figure><img src="stims/Bear_Talk_head.png" style="width:70%"></figure></div>';
-    current_learning_stimulus+='<div class="column"><p><b><font size="6" color="#000000">Here are 3 of Mr. Alien'+"'"+'s <font color="#d62d2d">'+current_training_label+'s</font>.</font></b><style="text-align:center;" /p></div>';
-    current_learning_stimulus+='<div class="column"><figure><img src="stims/alien_head.png" style="width:70%"></figure></div></div>';
-    current_learning_stimulus+='<div class="overlap-bubble" style="margin-top:-250px; margin-left:160px"><figure><img src="stims/Speech_Bubble_SideSquare.png" style="width:420px"></figure></div>';
-    current_learning_stimulus+='<div class="row">';
-    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[0]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
-    current_learning_stimulus+='<div class="column"><figure class="floating4"><img src="'+current_training_images[1]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
-    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[2]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div></div>';
-    current_learning_stimulus+='<p style="margin-top:50px; margin-bottom:35px;"><b><font size="6" color="#000000">You need to visit Earth to<br>find Mr. Alien'+"'"+'s lost <font color="#d62d2d">'+current_training_label+'s</font>.</font></b><style="text-align:center;" /p>';
-    current_learning_stimulus+='<p><i>Click Next when you are ready to continue.</font></i><style="text-align:center;" /p>';  
-    current_learning_stimulus+='<div class="overlap-bubble" style="margin-top:-502px; margin-left:55px"><figure><img src="stims/Speech_Bubble_DownLong.png" style="width:680px"></figure></div></div>';
+    current_learning_stimulus+='<p style="margin-bottom:-50px"><b><font size="6" color="#d62d2d">'+current_training_label+'s</font></b><style="text-align:center;" /p>';
+    current_learning_stimulus+='<div class="d-flex align-items-center"><figure style="height:320px"><img src="stims/alien_head.png" style="width:300px"></figure></div>';
+    current_learning_stimulus+='<div class="overlap-bubble" style="margin-top:-385px; margin-left:245px"><figure><img src="stims/Speech_Bubble_Long_inv.png" style="width:220px"></figure></div>';
+    current_learning_stimulus+='<div class="row" style="margin-bottom:50px">';
+    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
+    current_learning_stimulus+='<div class="column"><figure class="floating4"><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
+    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div></div>';
     return(current_learning_stimulus)
-
 }
 
 
 function generate_sampling_instructions(current_training_label, current_training_images) {
 
-  var current_sampling_stimulus ='<div id="container"><p style="margin-bottom:30px"><b><font size="5.5">GOAL: Find all of Mr. Alien'+"'"+'s lost <span style="background-color: #131124"><font color="#ff7575">'+current_training_label+'s</font></span> on Earth.</font></b><style="text-align:center;" /p>';
-  current_sampling_stimulus +='<p><b><font size="5" color="#000000">Here are 3 of Mr. Alien'+"'"+'s <font color="#d62d2d">'+current_training_label+'s</font>.</font></b><style="text-align:center;" /p>';
-  current_sampling_stimulus +='<div class="overlap-bubble" style="margin-top:-182px; margin-left:45px"><figure><img src="stims/Speech_Bubble_Thin.png" style="width:620px"></figure></div>';
-  current_sampling_stimulus +='<div class="row">';
-  current_sampling_stimulus +='<div class="column"><figure><img src="stims/Bear_Talk_head.png" style="width:90%"></figure></div>';
-  current_sampling_stimulus +='<div class="column"><figure class="floating3"><img src="'+current_training_images[0]+'" style="width:110%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
-  current_sampling_stimulus +='<div class="column"><figure class="floating4"><img src="'+current_training_images[1]+'" style="width:110%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
-  current_sampling_stimulus +='<div class="column"><figure class="floating3"><img src="'+current_training_images[2]+'" style="width:110%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
-  current_sampling_stimulus +='<div class="column"><figure><img src="stims/alien_head.png" style="width:90%"></figure></div></div>';
-  current_sampling_stimulus +='<p><b><font size="5.5" color="#000000">Before you go back to Earth...</font></b></p>'
-  current_sampling_stimulus +='<p style="margin-top:-20px"><b><font size="5.5" color="#000000">Let'+"'"+'s ask Mr. Alien if one of these</font>.</font></b></p>'
-  current_sampling_stimulus +='<p style="margin-top:-20px"><b><font size="5.5" color="#000000">items below is a <font color="#d62d2d">'+current_training_label+'</font>.</font></b></p>'
-  current_sampling_stimulus +='<div class="overlap-bubble" style="margin-top:-227px; margin-left:105px"><figure><img src="stims/Speech_Bubble_SamplingInstruction.png" style="width:560px"></figure></div>';
-  current_sampling_stimulus +='<p style="margin-top:30px"><b><font size="4.5"><i>You can only make one choice, so choose carefully!</font>.</i></font></b></p>'
-  current_sampling_stimulus +='<p style="margin-top:-10px"><i><font size="4.5">Click on the object that you would like to ask Mr. Alien about.</font></i><style="text-align:center;" /p>';
-  //current_sampling_stimulus +='<div class="row"><div class="column"></div></div></div>';
+  var current_sampling_stimulus ='<div id="container">';
+  current_sampling_stimulus +='<div class="d-flex align-items-center"><figure style="height:150px"><img src="stims/alien_head.png" style="width:130px"></figure></div>';
+  current_sampling_stimulus +='<div class="row" style="margin-bottom:50px; width:660px; margin-left:auto; margin-right:auto">';
+  current_sampling_stimulus +='<div class="column"><figure class="floating3"><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
+  current_sampling_stimulus +='<div class="column"><figure class="floating4"><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
+  current_sampling_stimulus +='<div class="column"><figure class="floating3"><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div></div>';
   return(current_sampling_stimulus)
 }
 
 function generate_selection_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image) {
 
   //var current_selection_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
-  var current_selection_stimulus ='<div id="container"><p style="margin-bottom:30px"><b><font size="5.5">GOAL: Find all of Mr. Alien'+"'"+'s lost <span style="background-color: #131124"><font color="#ff7575">'+current_training_label+'s</font></span> on Earth.</font></b><style="text-align:center;" /p>';
-  current_selection_stimulus += (current_sampling_label === current_training_label) ? '<p><b><font size="6">You picked a <span style="color:#d62d2d">'+current_training_label+'</span>!</font></b><style="text-align:center;" /p>' : '<p><b><font size="6">You did not pick a <span style="color:#d62d2d">'+current_training_label+'</span>!</font></b><style="text-align:center;" /p>';
+  current_selection_stimulus ='<div id="container">';
+  current_selection_stimulus +='<div class="d-flex align-items-center"><figure style="height:220px"><img src="stims/alien_head.png" style="width:200px"></figure></div>';
   current_selection_stimulus += '<div class="row">';
-  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_selection_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px;color:#ffa500; background-color:#131124">NOT a '+current_training_label+'</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">';
-  current_selection_stimulus += '<div id="container"><p><b><font size="6">Now let'+"'"+'s go to Earth to look for<br>the rest of Mr. Alien'+"'"+'s <font color="#d62d2d">'+current_training_label+'s</font>.</font></b>';
-  current_selection_stimulus +='<div class="overlap-bubble" style="margin-top:-227px; margin-left:105px"><figure><img src="stims/Bear_Talk_head.png" style="width:100px"></figure></div>';
-  current_selection_stimulus +='<div class="overlap-bubble" style="margin-top:-227px; margin-left:205px"><figure><img src="stims/alien_head.png" style="width:100px"></figure></div></div>';
-  current_selection_stimulus += '<p><i><font size="4.5">Click Next to continue.</font></i><style="text-align:center;" /p><style="text-align:center;" /p></div>';
+  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
+  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
+  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
+  current_selection_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px;color:#ffa500; background-color:#131124">NOT a '+current_training_label+'</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column"></div>';
   
   return(current_selection_stimulus)
 }
 
 function generate_test_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image) {
   //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
-  var current_test_stimulus = '<div id="container"><p style="margin-bottom:30px"><b><font size="5.5">GOAL: Find all of Mr. Alien'+"'"+'s lost <span style="background-color: #131124"><font color="#ff7575">'+current_training_label+'s</font></span> on Earth.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2"><p style="margin-bottom:30px"><b><font size="5.5">GOAL: Find all of Mr. Alien'+"'"+'s lost <span style="background-color: #131124"><font color="#ff7575">'+current_training_label+'s</font></span> on Earth.</font></b><style="text-align:center;" /p>';
   current_test_stimulus += '<p style="margin-block-start:0.1em;margin-block-end:0.1em"><font size="4.5"><b>Now, pick <u>all of the other '+current_training_label+'s</u>. </b></font><style="text-align:center;" /p>';
   current_test_stimulus += '<div class="row">';
   current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
   current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
   current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%;"><figcaption style="font-size:24px;color:#ffa500; background-color:#131124">NOT a '+current_training_label+'</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">';
-  //current_test_stimulus += '<p><b><font size="4.5">Now, pick <u>all of the '+current_training_label+'s</u> from among these 24 objects.</font></b><style="text-align:center;" /p>';
-  //current_test_stimulus += '<p><b><font size="4.5">You can pick an object by clicking on it. Objects you select will turn red. You can also unselect items by clicking on them again. ';
-  //current_test_stimulus += 'When you are finished selecting <u>all</u> of the objects you think are '+current_training_label+'s, press the submit button at the bottom of the page.</font></b><style="text-align:center;" /p></div>';
-  //current_test_stimulus += '<div class="row"><div class="column"></div></div></div>';
-  current_test_stimulus += '<p style="margin-block-start:0em;margin-block-end:0em"><font size="3"><i>Select '+current_training_label+ 's by clicking on them below. You can also unselect objects by clicking on them again.<br>';
-  current_test_stimulus += 'When you are finished selecting <u>all</u> of the objects you think are '+current_training_label+'s, click SUBMIT at the bottom of the page.</i></font><style="text-align:center /p>';
-  
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div class="column"></div></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%;"><figcaption style="font-size:24px;color:#ffa500; background-color:#131124">NOT a '+current_training_label+'</figcaption></figure></div class="column"></div></div>';
   return(current_test_stimulus)
 }
-
-
 
 // generate a block for CatAct
 function generate_block(trial, training_types) {
@@ -149,7 +120,7 @@ function generate_block(trial, training_types) {
 	// put sampling images together into an array
 	var current_sample_array=[];
   for (var i = 0; i < shuffled_sampling_images.length; i++) {
-    current_sample_array.push('<img src="'+shuffled_sampling_images[i]+'" width='+grid_image_width+' height='+grid_image_height+'>')
+    current_sample_array.push('<img src="'+shuffled_sampling_images[i]+'" width="150px" height="150px">')
   };
 
   //create training images
