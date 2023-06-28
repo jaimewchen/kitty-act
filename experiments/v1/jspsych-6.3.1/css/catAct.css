@@ -105,30 +105,17 @@ body {
   100%   { transform: translate(0, 15px); }   
 }
 
-.floating3 { 
-  animation-name: floating3;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+.slide-up {
+  animation-name: slide-up;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  animation-timing-function: linear;
 }
 
-@keyframes floating3 {
-  0% { transform: translate(0,  0px); }
-  50%  { transform: translate(0, 5px); }
-  100%   { transform: translate(0, -0px); }   
-}
-
-.floating4 { 
-  animation-name: floating2;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-}
-
-@keyframes floating4 {
-  0% { transform: translate(0,  5px); }
-  50%  { transform: translate(0, 0px); }
-  100%   { transform: translate(0, 5px); }   
+@keyframes slide-up {
+  0% { transform: translate(0,  500px); }
+  50%  { transform: translate(0, 250px); }
+  100%   { transform: translate(0, 0); }   
 }
 
 .jspsych-btn-image-array {

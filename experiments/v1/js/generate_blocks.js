@@ -1,23 +1,46 @@
 //generate instructions
 var rocket_animation = '<div id="container">';
-rocket_animation += '<div class="overlap-bubble"><figure class="background-animation"><img src="stims/earth.png" style="width:201.2%; margin-left:-100%; margin-top:-35%"></figure></div>';
+rocket_animation += '<div class="overlap-bubble"><figure class="background-animation"><img src="stims/earth.png" style="width:170%; margin-left:-62%; margin-top:-35%"></figure></div>';
 rocket_animation += '<div class="rocket-animation"><figure><img src="stims/Rocket.png"></figure></div></div>'
 
 var introduction_alien_stimulus = '<div id="container">';
 introduction_alien_stimulus += '<div class="d-flex align-items-center"><figure class="floating"><img src="stims/alien.png" style="width:300px"></figure></div></div>';
 
-function generate_learning_instructions(current_training_label, current_training_images) {
+function generate_learning_instructions0(current_training_label, current_training_images) {
     var current_learning_stimulus ='<div id="container">'
     current_learning_stimulus+='<p style="margin-bottom:-50px"><b><font size="6" color="#d62d2d">'+current_training_label+'s</font></b><style="text-align:center;" /p>';
     current_learning_stimulus+='<div class="d-flex align-items-center"><figure style="height:320px"><img src="stims/alien_head.png" style="width:300px"></figure></div>';
     current_learning_stimulus+='<div class="overlap-bubble" style="margin-top:-385px; margin-left:245px"><figure><img src="stims/Speech_Bubble_Long_inv.png" style="width:220px"></figure></div>';
     current_learning_stimulus+='<div class="row" style="margin-bottom:50px">';
-    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
-    current_learning_stimulus+='<div class="column"><figure class="floating4"><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
-    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div></div>';
+    current_learning_stimulus+='<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%; opacity:0"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124; opacity:0"><b>'+current_training_label+'</b></figcaption></figure></div>';
+    current_learning_stimulus+='<div class="column"><figure class="slide-up"><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+    current_learning_stimulus+='<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%; opacity:0"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124; opacity:0"><b>'+current_training_label+'</b></figcaption></figure></div></div>';
     return(current_learning_stimulus)
 }
 
+function generate_learning_instructions1(current_training_label, current_training_images) {
+  var current_learning_stimulus ='<div id="container">'
+  current_learning_stimulus+='<p style="margin-bottom:-50px"><b><font size="6" color="#d62d2d">'+current_training_label+'s</font></b><style="text-align:center;" /p>';
+  current_learning_stimulus+='<div class="d-flex align-items-center"><figure style="height:320px"><img src="stims/alien_head.png" style="width:300px"></figure></div>';
+  current_learning_stimulus+='<div class="overlap-bubble" style="margin-top:-385px; margin-left:245px"><figure><img src="stims/Speech_Bubble_Long_inv.png" style="width:220px"></figure></div>';
+  current_learning_stimulus+='<div class="row" style="margin-bottom:50px">';
+  current_learning_stimulus+='<div class="column"><figure class="slide-up"><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_learning_stimulus+='<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_learning_stimulus+='<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%; opacity:0"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124; opacity:0"><b>'+current_training_label+'</b></figcaption></figure></div></div>';
+  return(current_learning_stimulus)
+}
+
+function generate_learning_instructions2(current_training_label, current_training_images) {
+  var current_learning_stimulus ='<div id="container">'
+  current_learning_stimulus+='<p style="margin-bottom:-50px"><b><font size="6" color="#d62d2d">'+current_training_label+'s</font></b><style="text-align:center;" /p>';
+  current_learning_stimulus+='<div class="d-flex align-items-center"><figure style="height:320px"><img src="stims/alien_head.png" style="width:300px"></figure></div>';
+  current_learning_stimulus+='<div class="overlap-bubble" style="margin-top:-385px; margin-left:245px"><figure><img src="stims/Speech_Bubble_Long_inv.png" style="width:220px"></figure></div>';
+  current_learning_stimulus+='<div class="row" style="margin-bottom:50px">';
+  current_learning_stimulus+='<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_learning_stimulus+='<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_learning_stimulus+='<div class="column"><figure class="slide-up"><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div></div>';
+  return(current_learning_stimulus)
+}
 
 function generate_sampling_instructions(current_training_label, current_training_images) {
 
@@ -44,18 +67,143 @@ function generate_selection_instructions(current_training_label, current_samplin
   return(current_selection_stimulus)
 }
 
-function generate_test_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+// generate all individual test stimuli
+
+function generate_test_instructions0(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
   //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
   var current_test_stimulus = '<div class="container2">';
-  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:201.2%; margin-left:-100%; margin-top:-35%"></figure></div>';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
   current_test_stimulus += '<div class="row" style="width:800px">';
-  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div>';
-  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div>';
-  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div>';
-  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500; background-color:#cde6d5"><b>NOT a '+current_training_label+'</b></figcaption></figure></div class="column"></div>';
-  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[0]+'" style="width:500px"></figure></div>'
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[0]+'" style="width:400px"></figure></div>'
   return(current_test_stimulus)
 }
+
+function generate_test_instructions1(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[1]+'" style="width:400px"></figure></div>'
+  return(current_test_stimulus)
+}
+
+function generate_test_instructions2(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[2]+'" style="width:400px"></figure></div>'
+  return(current_test_stimulus)
+}
+
+function generate_test_instructions3(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[3]+'" style="width:400px"></figure></div>'
+  return(current_test_stimulus)
+}
+
+function generate_test_instructions4(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[4]+'" style="width:400px"></figure></div>'
+  return(current_test_stimulus)
+}
+
+function generate_test_instructions5(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[5]+'" style="width:400px"></figure></div>'
+  return(current_test_stimulus)
+}
+
+function generate_test_instructions6(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[6]+'" style="width:400px"></figure></div>'
+  return(current_test_stimulus)
+}
+
+function generate_test_instructions7(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[7]+'" style="width:400px"></figure></div>'
+  return(current_test_stimulus)
+}
+
+function generate_test_instructions8(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[8]+'" style="width:400px"></figure></div>'
+  return(current_test_stimulus)
+}
+
+function generate_test_instructions9(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:160%; margin-left:-55%; margin-top:-36%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d;"><span style="background-color:#cde6d5;"><b>'+current_training_label+'</b></span></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500;"><span style="background-color:#cde6d5;"><b>NOT a '+current_training_label+'</b></span></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[9]+'" style="width:400px"></figure></div>'
+  return(current_test_stimulus)
+}
+
+
+var post_test_stimulus = '<div id="container">';
+post_test_stimulus = '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:204%; margin-left:-97.7%; margin-top:-56%"></figure></div>';
+post_test_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure><img src="stims/Rocket.png" style="width:300px"></figure></div></div>';
+
 
 // generate a block for CatAct
 function generate_block(trial, training_types) {
@@ -177,7 +325,9 @@ function generate_block(trial, training_types) {
 
   console.log(sampling_image_words)
 
-  var current_learning_stimulus = generate_learning_instructions(current_training_label, current_training_images); 
+  var current_learning_stimulus0 = generate_learning_instructions0(current_training_label, current_training_images)
+  var current_learning_stimulus1 = generate_learning_instructions1(current_training_label, current_training_images); 
+  var current_learning_stimulus2 = generate_learning_instructions2(current_training_label, current_training_images); 
 	var current_sampling_stimulus = generate_sampling_instructions(current_training_label, current_training_images);
 
   // display rocket transition animation
@@ -200,9 +350,9 @@ function generate_block(trial, training_types) {
   cur_block.push(alien_pause);
 
   // display learning trial
-  var learning_trial = {
+  var learning_trial0 = {
     type: 'html-button-response',
-    stimulus: current_learning_stimulus ,
+    stimulus: current_learning_stimulus0 ,
     choices: ["CONTINUE"],
     data: {
       current_training_images: current_training_images,
@@ -219,7 +369,49 @@ function generate_block(trial, training_types) {
     },
   }
 
-  cur_block.push(learning_trial);
+  cur_block.push(learning_trial0);
+
+  var learning_trial1 = {
+    type: 'html-button-response',
+    stimulus: current_learning_stimulus1 ,
+    choices: ["CONTINUE"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "learning"
+    },
+  }
+
+  cur_block.push(learning_trial1);
+
+  var learning_trial2 = {
+    type: 'html-button-response',
+    stimulus: current_learning_stimulus2 ,
+    choices: ["CONTINUE"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "learning"
+    },
+  }
+
+  cur_block.push(learning_trial2);
 
   // display sampling trial
   var sampling_trial = {
@@ -245,6 +437,7 @@ function generate_block(trial, training_types) {
   cur_block.push(sampling_trial);
 
    //display selection trial
+
    var selection_trial = {
     type: 'html-button-response',
     on_start: function(trial) {
@@ -260,7 +453,7 @@ function generate_block(trial, training_types) {
         last_trial_data.current_training_images,
         last_trial_data.shuffled_sampling_images[last_trial_data.response])
     },
-    choices: ["Next"],
+    choices: ["CONTINUE"],
     data: {
       current_training_images: current_training_images,
       current_training_label: current_training_label,
@@ -278,17 +471,18 @@ function generate_block(trial, training_types) {
 
   cur_block.push(selection_trial);
 
-  // display test trial
-  var test_trial = {
+  // display test trial 0
+
+  var test_trial0 = {
     type: 'html-button-response',
     on_start: function(trial) {
       last_trial_data = jsPsych.data.get().last(1).values()[0];
       trial.data.sampled_image = last_trial_data.sampled_image;
-      trial.data.sampled_label = last_trial_data.sampled_label
+      trial.data.sampled_label = last_trial_data.sampled_label;
     },
     stimulus: function() {
       last_trial_data = jsPsych.data.get().last(1).values()[0];
-      return generate_test_instructions(
+      return generate_test_instructions0(
         last_trial_data.current_training_label, 
         last_trial_data.sampled_label,
         last_trial_data.current_training_images,
@@ -297,9 +491,6 @@ function generate_block(trial, training_types) {
         )
     },
     choices: ["YES", "NO"],
-    margin_horizontal: '2px',
-    margin_vertical: '2px',
-    button_html: '<button class="jspsych-btn-image-array">%choice%</button>',
     data: {
       current_training_images: current_training_images,
       current_training_label: current_training_label,
@@ -315,8 +506,330 @@ function generate_block(trial, training_types) {
     }
   }
 
-  cur_block.push(test_trial);
+  cur_block.push(test_trial0);
 
+  var test_trial1 = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      trial.data.sampled_image = last_trial_data.sampled_image;
+      trial.data.sampled_label = last_trial_data.sampled_label;
+    },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      return generate_test_instructions1(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        shuffled_images
+        )
+    },
+    choices: ["YES", "NO"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "test"
+    }
+  }
+
+  cur_block.push(test_trial1);
+
+  var test_trial2 = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      trial.data.sampled_image = last_trial_data.sampled_image;
+      trial.data.sampled_label = last_trial_data.sampled_label;
+    },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      return generate_test_instructions2(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        shuffled_images
+        )
+    },
+    choices: ["YES", "NO"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "test"
+    }
+  }
+
+  cur_block.push(test_trial2);
+
+  var test_trial3 = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      trial.data.sampled_image = last_trial_data.sampled_image;
+      trial.data.sampled_label = last_trial_data.sampled_label;
+    },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      return generate_test_instructions3(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        shuffled_images
+        )
+    },
+    choices: ["YES", "NO"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "test"
+    }
+  }
+
+  cur_block.push(test_trial3);
+
+  var test_trial4 = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      trial.data.sampled_image = last_trial_data.sampled_image;
+      trial.data.sampled_label = last_trial_data.sampled_label;
+    },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      return generate_test_instructions4(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        shuffled_images
+        )
+    },
+    choices: ["YES", "NO"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "test"
+    }
+  }
+
+  cur_block.push(test_trial4);
+
+  var test_trial5 = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      trial.data.sampled_image = last_trial_data.sampled_image;
+      trial.data.sampled_label = last_trial_data.sampled_label;
+    },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      return generate_test_instructions5(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        shuffled_images
+        )
+    },
+    choices: ["YES", "NO"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "test"
+    }
+  }
+
+  cur_block.push(test_trial5);
+
+  var test_trial6 = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      trial.data.sampled_image = last_trial_data.sampled_image;
+      trial.data.sampled_label = last_trial_data.sampled_label;
+    },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      return generate_test_instructions6(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        shuffled_images
+        )
+    },
+    choices: ["YES", "NO"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "test"
+    }
+  }
+
+  cur_block.push(test_trial6);
+
+  var test_trial7 = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      trial.data.sampled_image = last_trial_data.sampled_image;
+      trial.data.sampled_label = last_trial_data.sampled_label;
+    },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      return generate_test_instructions7(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        shuffled_images
+        )
+    },
+    choices: ["YES", "NO"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "test"
+    }
+  }
+
+  cur_block.push(test_trial7);
+
+  var test_trial8 = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      trial.data.sampled_image = last_trial_data.sampled_image;
+      trial.data.sampled_label = last_trial_data.sampled_label;
+    },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      return generate_test_instructions8(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        shuffled_images
+        )
+    },
+    choices: ["YES", "NO"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "test"
+    }
+  }
+
+  cur_block.push(test_trial8);
+
+  var test_trial9 = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      trial.data.sampled_image = last_trial_data.sampled_image;
+      trial.data.sampled_label = last_trial_data.sampled_label;
+    },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      return generate_test_instructions9(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        shuffled_images
+        )
+    },
+    choices: ["YES", "NO"],
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "test"
+    }
+  }
+
+  cur_block.push(test_trial9);
+
+  var post_test = {
+    type: 'html-button-response',
+    stimulus: post_test_stimulus,
+    choices: ["CONTINUE"]
+  }
+
+  cur_block.push(post_test);
 
   // var current_test_meaning_stimulus = '<div id="container"><p> What do you think that <b>' + current_training_label + '</b> means?</p><p><textarea name="word_meaning" type="text" id="test-resp-box" size="20" rows="2" cols="40" required></textarea></p>';
   // current_test_meaning_stimulus+='<p><i>Click Next to continue.</font></i><style="text-align:center;" /p></div>';  
