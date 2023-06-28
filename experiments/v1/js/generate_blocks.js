@@ -201,8 +201,8 @@ function generate_test_instructions9(current_training_label, current_sampling_la
 
 
 var post_test_stimulus = '<div id="container">';
-post_test_stimulus = '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:204%; margin-left:-99%; margin-top:-56%"></figure></div>';
-post_test_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure><img src="stims/Rocket.png" style="width:300px"></figure></div></div>';
+post_test_stimulus = '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:205%; margin-left:-99%; margin-top:-56%"></figure></div>';
+post_test_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure><img src="stims/Rocket.png" style="width:500px"></figure></div></div>';
 
 
 // generate a block for CatAct
