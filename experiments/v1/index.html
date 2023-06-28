@@ -131,7 +131,7 @@
       introduction_welcome_stimulus += '<div class="p-closer2"><p><b><font size="6"">Mr. Alien'+"'"+'s</font></b></p></div>';
       introduction_welcome_stimulus += '<p><b><font size="10"">EARTH SEARCH</font></b></p>';
       introduction_welcome_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure class="floating"><img src="stims/Rocket.png" style="width:100px"></figure></div>';
-		// display welcome
+
 		var welcome = {
 			type: 'html-button-response',
 			stimulus: introduction_welcome_stimulus,
@@ -139,18 +139,15 @@
 		}
 		timeline.push(welcome);
 
-    // create introduction of alien
+    var starting_earth_background = '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:270%; margin-left:-165%; margin-top:-80%"></figure></div>';
 
-    var introduction_alien_stimulus = '<div id="container">';
-      introduction_alien_stimulus += '<div class="d-flex align-items-center"><figure class="floating"><img src="stims/alien.png" style="width:300px"></figure></div></div>';
-
-    // display alien introduction
-		var alien_intro = {
+    var starting_background = {
 			type: 'html-button-response',
-			stimulus: introduction_alien_stimulus,
-      choices: ["CONTINUE"],
+			stimulus: starting_earth_background,
+      button_html: '<button class="jspsych-btn" style="border:5px solid; border-color:red; color:red; font-size:50px">%choice%</button>',
+      choices: ["<b>BLASTOFF!</b>"],
 		}
-		timeline.push(alien_intro);
+		timeline.push(starting_background);
 
     // BUILD TRIALS
     // key parameters
@@ -180,19 +177,6 @@
       show_clickable_nav: true
 		}
 		timeline.push(end_page); 
-
-    // add demographics and debrief questions
-    var demographics = create_demographics();
-    timeline = timeline.concat(demographics);
-    var debrief = create_debrief_questions();
-    timeline = timeline.concat(debrief);
-
-    // /* finish connection with pavlovia.org */
-    // var pavlovia_finish = {
-    //   type: "pavlovia",
-    //   command: "finish"
-    // };
-    // timeline.push(pavlovia_finish);
 
     console.log(timeline)
 

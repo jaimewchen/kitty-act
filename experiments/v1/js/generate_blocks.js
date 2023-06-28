@@ -1,13 +1,20 @@
 //generate instructions
+var rocket_animation = '<div id="container">';
+rocket_animation += '<div class="overlap-bubble"><figure class="background-animation"><img src="stims/earth.png" style="width:201.2%; margin-left:-100%; margin-top:-35%"></figure></div>';
+rocket_animation += '<div class="rocket-animation"><figure><img src="stims/Rocket.png"></figure></div></div>'
+
+var introduction_alien_stimulus = '<div id="container">';
+introduction_alien_stimulus += '<div class="d-flex align-items-center"><figure class="floating"><img src="stims/alien.png" style="width:300px"></figure></div></div>';
+
 function generate_learning_instructions(current_training_label, current_training_images) {
     var current_learning_stimulus ='<div id="container">'
     current_learning_stimulus+='<p style="margin-bottom:-50px"><b><font size="6" color="#d62d2d">'+current_training_label+'s</font></b><style="text-align:center;" /p>';
     current_learning_stimulus+='<div class="d-flex align-items-center"><figure style="height:320px"><img src="stims/alien_head.png" style="width:300px"></figure></div>';
     current_learning_stimulus+='<div class="overlap-bubble" style="margin-top:-385px; margin-left:245px"><figure><img src="stims/Speech_Bubble_Long_inv.png" style="width:220px"></figure></div>';
     current_learning_stimulus+='<div class="row" style="margin-bottom:50px">';
-    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
-    current_learning_stimulus+='<div class="column"><figure class="floating4"><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
-    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div></div>';
+    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+    current_learning_stimulus+='<div class="column"><figure class="floating4"><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+    current_learning_stimulus+='<div class="column"><figure class="floating3"><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div></div>';
     return(current_learning_stimulus)
 }
 
@@ -17,9 +24,9 @@ function generate_sampling_instructions(current_training_label, current_training
   var current_sampling_stimulus ='<div id="container">';
   current_sampling_stimulus +='<div class="d-flex align-items-center"><figure style="height:150px"><img src="stims/alien_head.png" style="width:130px"></figure></div>';
   current_sampling_stimulus +='<div class="row" style="margin-bottom:50px; width:660px; margin-left:auto; margin-right:auto">';
-  current_sampling_stimulus +='<div class="column"><figure class="floating3"><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
-  current_sampling_stimulus +='<div class="column"><figure class="floating4"><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div>';
-  current_sampling_stimulus +='<div class="column"><figure class="floating3"><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div></div>';
+  current_sampling_stimulus +='<div class="column"><figure class="floating3"><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_sampling_stimulus +='<div class="column"><figure class="floating4"><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_sampling_stimulus +='<div class="column"><figure class="floating3"><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div></div>';
   return(current_sampling_stimulus)
 }
 
@@ -29,23 +36,23 @@ function generate_selection_instructions(current_training_label, current_samplin
   current_selection_stimulus ='<div id="container">';
   current_selection_stimulus +='<div class="d-flex align-items-center"><figure style="height:220px"><img src="stims/alien_head.png" style="width:200px"></figure></div>';
   current_selection_stimulus += '<div class="row">';
-  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_selection_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px;color:#ffa500; background-color:#131124">NOT a '+current_training_label+'</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column"></div>';
+  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_selection_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_selection_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"><b>'+current_training_label+'</b></figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px;color:#ffa500; background-color:#131124"><b>NOT a '+current_training_label+'</b></figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column"></div>';
   
   return(current_selection_stimulus)
 }
 
 function generate_test_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image) {
   //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
-  var current_test_stimulus = '<div class="container2"><p style="margin-bottom:30px"><b><font size="5.5">GOAL: Find all of Mr. Alien'+"'"+'s lost <span style="background-color: #131124"><font color="#ff7575">'+current_training_label+'s</font></span> on Earth.</font></b><style="text-align:center;" /p>';
-  current_test_stimulus += '<p style="margin-block-start:0.1em;margin-block-end:0.1em"><font size="4.5"><b>Now, pick <u>all of the other '+current_training_label+'s</u>. </b></font><style="text-align:center;" /p>';
-  current_test_stimulus += '<div class="row">';
-  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124"">'+current_training_label+'</figcaption></figure></div>';
-  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%"><figcaption style="font-size:24px; color:#ff7575; background-color:#131124">'+current_training_label+'</figcaption></figure></div class="column"></div></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%;"><figcaption style="font-size:24px;color:#ffa500; background-color:#131124">NOT a '+current_training_label+'</figcaption></figure></div class="column"></div></div>';
+  var current_test_stimulus = '<div class="container2">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:201.2%; margin-left:-100%; margin-top:-35%"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div class="column"></div></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500; background-color:#cde6d5"><b>NOT a '+current_training_label+'</b></figcaption></figure></div class="column"></div></div>';
   return(current_test_stimulus)
 }
 
@@ -172,11 +179,30 @@ function generate_block(trial, training_types) {
   var current_learning_stimulus = generate_learning_instructions(current_training_label, current_training_images); 
 	var current_sampling_stimulus = generate_sampling_instructions(current_training_label, current_training_images);
 
+  // display rocket transition animation
+  var rocket_animation_transition = {
+    type: 'html-keyboard-response',
+    stimulus: rocket_animation,
+    choices: ['NO_KEYS'],
+    trial_duration: 2000
+  }
+
+  cur_block.push(rocket_animation_transition)
+
+  // display pause before trial
+  var alien_pause = {
+    type: 'html-button-response',
+    stimulus: introduction_alien_stimulus,
+    choices: ["CONTINUE"]
+  }
+
+  cur_block.push(alien_pause);
+
   // display learning trial
   var learning_trial = {
     type: 'html-button-response',
     stimulus: current_learning_stimulus ,
-    choices: ["Next"],
+    choices: ["CONTINUE"],
     data: {
       current_training_images: current_training_images,
       current_training_label: current_training_label,
@@ -292,31 +318,31 @@ function generate_block(trial, training_types) {
   cur_block.push(test_trial);
 
 
-  var current_test_meaning_stimulus = '<div id="container"><p> What do you think that <b>' + current_training_label + '</b> means?</p><p><textarea name="word_meaning" type="text" id="test-resp-box" size="20" rows="2" cols="40" required></textarea></p>';
-  current_test_meaning_stimulus+='<p><i>Click Next to continue.</font></i><style="text-align:center;" /p></div>';  
+  // var current_test_meaning_stimulus = '<div id="container"><p> What do you think that <b>' + current_training_label + '</b> means?</p><p><textarea name="word_meaning" type="text" id="test-resp-box" size="20" rows="2" cols="40" required></textarea></p>';
+  // current_test_meaning_stimulus+='<p><i>Click Next to continue.</font></i><style="text-align:center;" /p></div>';  
     
 
-  var test_meaning_trial = {
-    type: 'survey-html-form',
-    html: current_test_meaning_stimulus,
-    autofocus: 'test-resp-box',
-    button_label: "Next",
-    data: {
-      current_training_images: current_training_images,
-      current_training_label: current_training_label,
-      shuffled_sampling_images: shuffled_sampling_images,
-      sampling_image_words: sampling_image_words,
-      shuffled_test_images: shuffled_images,
-      current_category_label_level: current_category_label_level,
-      current_category_kind: current_category_kind,
-      current_category_training_level,
-      current_alternate_training_label: current_alternate_training_label,
-      current_hypernym_category_kind: current_hypernym_category_kind,
-      trial_type: "test_meaning"
-    },
-  }
+  // var test_meaning_trial = {
+    // type: 'survey-html-form',
+    // html: current_test_meaning_stimulus,
+    // autofocus: 'test-resp-box',
+    // button_label: "Next",
+    // data: {
+      // current_training_images: current_training_images,
+      // current_training_label: current_training_label,
+      // shuffled_sampling_images: shuffled_sampling_images,
+      // sampling_image_words: sampling_image_words,
+      // shuffled_test_images: shuffled_images,
+      // current_category_label_level: current_category_label_level,
+      // current_category_kind: current_category_kind,
+      // current_category_training_level,
+      // current_alternate_training_label: current_alternate_training_label,
+      // current_hypernym_category_kind: current_hypernym_category_kind,
+      //trial_type: "test_meaning"
+    // },
+  // }
 
-  cur_block.push(test_meaning_trial);
+  // cur_block.push(test_meaning_trial);
 
   
   return(cur_block)
@@ -331,14 +357,14 @@ function generate_all_blocks(trial_order, training_types) {
     cur_block=generate_block(trial, training_types)
     all_blocks=all_blocks.concat(cur_block)
 
-    if (j < trial_order.length - 1) {
-      var instructions_between_trials = {
-        type: 'html-button-response',
-        stimulus: '<div id="container"><p><b><font size="4.5">Great job!</font></b></p><p><i><font size="4.5">Click Next to learn another word.</font></i></p> </div>',
-        choices: ["Next"],
-      }
-      all_blocks.push(instructions_between_trials);
-    }
+    // if (j < trial_order.length - 1) {
+      // var instructions_between_trials = {
+        // type: 'html-button-response',
+        // stimulus: '<div id="container"><p><b><font size="4.5">Great job!</font></b></p><p><i><font size="4.5">Click Next to learn another word.</font></i></p> </div>',
+        // choices: ["Next"],
+      // }
+      // all_blocks.push(instructions_between_trials);
+    // }
   }
 
   return(all_blocks)
