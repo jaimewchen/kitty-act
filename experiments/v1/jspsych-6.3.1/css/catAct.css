@@ -68,15 +68,26 @@ body {
 
 .background-animation {
   animation-name: background-anim;
-  animation-duration: 3s;
+  animation-duration: 2s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
 
 @keyframes background-anim {
-  0% { transform: translate(0,  0); }
-  50%  { transform: translate(0, -2500px); }
-  100%   { transform: translate(0, -5000px); }   
+  0% { opacity: 1}
+  100%   { opacity: 0 }   
+}
+
+.background-animation-to-earth {
+  animation-name: background-anim-to-earth;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  animation-timing-function: linear;
+}
+
+@keyframes background-anim-to-earth {
+  0% { opacity: 0 }
+  100%   { opacity: 1 }   
 }
 
 .floating { 
@@ -118,6 +129,18 @@ body {
   100%   { transform: translate(0, 0); }   
 }
 
+.fade-in {
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  animation-timing-function: linear;
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100%   { opacity: 1; }   
+}
+
 .jspsych-btn-image-array {
   border: 1px solid black;
   align-items: center;
@@ -155,7 +178,7 @@ body {
 .jspsych-btn-image-array:disabled {
   background-color: #eee;
   color: #aaa;
-  border-color: #ccc;
+  border-color: #cccccc;
   cursor: not-allowed;
 }
 
