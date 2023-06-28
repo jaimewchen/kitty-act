@@ -44,7 +44,7 @@ function generate_selection_instructions(current_training_label, current_samplin
   return(current_selection_stimulus)
 }
 
-function generate_test_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image) {
+function generate_test_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image,shuffled_images) {
   //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
   var current_test_stimulus = '<div class="container2">';
   current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:201.2%; margin-left:-100%; margin-top:-35%"></figure></div>';
@@ -52,7 +52,8 @@ function generate_test_instructions(current_training_label, current_sampling_lab
   current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div>';
   current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div>';
   current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div>';
-  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div class="column"></div></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500; background-color:#cde6d5"><b>NOT a '+current_training_label+'</b></figcaption></figure></div class="column"></div></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%"><figcaption style="font-size:24px; color:#d62d2d; background-color:#cde6d5"><b>'+current_training_label+'</b></figcaption></figure></div class="column"></div>' : '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:90%;"><figcaption style="font-size:24px;color:#ffa500; background-color:#cde6d5"><b>NOT a '+current_training_label+'</b></figcaption></figure></div class="column"></div>';
+  current_test_stimulus += '<div class="d-flex align-items-center"><figure><img src="'+shuffled_images[0]+'" style="width:500px"></figure></div>'
   return(current_test_stimulus)
 }
 
@@ -279,7 +280,7 @@ function generate_block(trial, training_types) {
 
   // display test trial
   var test_trial = {
-    type: 'html-button-response-catact',
+    type: 'html-button-response',
     on_start: function(trial) {
       last_trial_data = jsPsych.data.get().last(1).values()[0];
       trial.data.sampled_image = last_trial_data.sampled_image;
@@ -291,12 +292,11 @@ function generate_block(trial, training_types) {
         last_trial_data.current_training_label, 
         last_trial_data.sampled_label,
         last_trial_data.current_training_images,
-        last_trial_data.sampled_image
+        last_trial_data.sampled_image,
+        shuffled_images
         )
     },
-    choices: current_grid_array,
-    images: shuffled_images,
-    response_ends_trial: false,
+    choices: ["YES", "NO"],
     margin_horizontal: '2px',
     margin_vertical: '2px',
     button_html: '<button class="jspsych-btn-image-array">%choice%</button>',
