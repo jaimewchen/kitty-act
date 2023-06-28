@@ -1,6 +1,6 @@
 //generate instructions
 var rocket_animation = '<div id="container">';
-rocket_animation += '<div class="overlap-bubble"><figure class="background-animation"><img src="stims/earth.png" style="width:170%; margin-left:-62%; margin-top:-35%"></figure></div>';
+rocket_animation += '<div class="overlap-bubble"><figure class="background-animation"><img src="stims/earth.png" style="width:1760px; margin-left:-607px; margin-top:-330px"></figure></div>';
 rocket_animation += '<div class="rocket-animation"><figure><img src="stims/Rocket.png"></figure></div></div>'
 
 var introduction_alien_stimulus = '<div id="container">';
@@ -215,8 +215,8 @@ function generate_test_instructions9(current_training_label, current_sampling_la
 
 
 var post_test_stimulus = '<div id="container">';
-post_test_stimulus = '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:205%; margin-left:-99%; margin-top:-56%"></figure></div>';
-post_test_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure><img src="stims/Rocket.png" style="width:500px"></figure></div></div>';
+post_test_stimulus = '<div class="overlap-bubble"><figure><img src="stims/earth.png" style="width:1760px; margin-left:-796px; margin-top:-411px"></figure></div>';
+post_test_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure><img src="stims/Rocket.png" style="width:400px"></figure></div></div>';
 
 
 // generate a block for CatAct
