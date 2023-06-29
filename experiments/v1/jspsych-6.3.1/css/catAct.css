@@ -45,19 +45,11 @@ body {
 .overlap-bubble {
   position: absolute;
   align-items: center;
-  left: 50%;
-  z-index: -1;
-}
-
-.overlap-background {
-  position: absolute;
-  align-items: center;
   width: 100%;
   left: 50%;
   margin-left: -50%;
   top: 50%;
-  margin-top: -25%;
-  z-index: -2;
+  z-index: -1;
 }
 
 .rocket-animation {
