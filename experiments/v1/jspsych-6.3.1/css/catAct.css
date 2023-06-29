@@ -45,8 +45,11 @@ body {
 .overlap-bubble {
   position: absolute;
   align-items: center;
-  min-width: 300px;
-  margin-top: 200px;
+  width: 100%;
+  left: 50%;
+  margin-left: -50%;
+  top: 50%;
+  margin-top: -25%;
   z-index: -1;
 }
 
@@ -233,11 +236,6 @@ figure {
  #container {
    width: auto;
    max-width: 800px;
-}
-
-.container2 {
-    margin: 0;
-    max-width:fit-content;
 }
 
 figure {
