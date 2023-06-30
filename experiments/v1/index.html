@@ -130,7 +130,7 @@
 
 		var introduction_welcome_stimulus = '<div id="container">';
       introduction_welcome_stimulus += '<div class="p-closer"><p><b><i><font size="4"">Hi Friend! Let'+"'"+'s play...</font></i></b></p></div>';
-      introduction_welcome_stimulus += '<div class="p-closer2"><p><b><font size="6"">Mr. Alien'+"'"+'s</font></b></p></div>';
+      introduction_welcome_stimulus += '<div class="p-closer2"><p><b><font size="6"">Miss Alien'+"'"+'s</font></b></p></div>';
       introduction_welcome_stimulus += '<p><b><font size="10"">EARTH SEARCH</font></b></p>';
       introduction_welcome_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure class="floating"><img src="stims/Rocket.png" style="width:100px"></figure></div>';
 
@@ -173,14 +173,14 @@
     console.log(timeline)
 
 	 // create end of experiment instruction and lead-in to demographics.
-	 var end_page_stimulus = '<div id="container"><p><font size="4.5">Thank you for completing the experiment! </font></p><p><font size="4.5">Now we have a few brief questions. Click next to begin.</p></font></div>';
+	 var alien_sticker_stimulus = '<div id="container"><div class="floating"><figure><img src="stims/alien_sticker.png" style="width:500px"></figure></div></div>';
 		// display conclusion page
-		var end_page = {
-			type: 'instructions',
-			pages: [end_page_stimulus],
-      show_clickable_nav: true
+		var alien_sticker = {
+			type: 'html-keyboard-response',
+      stimulus: alien_sticker_stimulus,
+			choices: ["NO_KEYS"],
 		}
-		timeline.push(end_page); 
+		timeline.push(alien_sticker); 
 
     console.log(timeline)
 
