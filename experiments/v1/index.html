@@ -173,7 +173,11 @@
     console.log(timeline)
 
 	 // create end of experiment instruction and lead-in to demographics.
-	 var alien_sticker_stimulus = '<div id="container"><div class="floating"><figure><img src="stims/alien_sticker.png" style="width:500px"></figure></div></div>';
+	 var alien_sticker_stimulus = '<div id="container"><div class="floating"><figure><img src="stims/alien_sticker.png" style="width:500px"></figure></div>';
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="flashing1"><img src="stims/flashing1.PNG" style="width:1200px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="flashing2"><img src="stims/flashing2.PNG" style="width:1200px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="flashing3"><img src="stims/flashing3.PNG" style="width:1200px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="flashing4"><img src="stims/flashing4.PNG" style="width:1200px"></figure></div>'
 		// display conclusion page
 		var alien_sticker = {
 			type: 'html-keyboard-response',

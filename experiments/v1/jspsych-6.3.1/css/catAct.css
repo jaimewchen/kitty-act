@@ -118,19 +118,6 @@ body {
   100%   { transform: translate(0, 15px); }   
 }
 
-.slide-up {
-  animation-name: slide-up;
-  animation-duration: 0.5s;
-  animation-iteration-count: 1;
-  animation-timing-function: linear;
-}
-
-@keyframes slide-up {
-  0% { transform: translate(0,  500px); }
-  50%  { transform: translate(0, 250px); }
-  100%   { transform: translate(0, 0); }   
-}
-
 .fade-in {
   animation-name: fade-in;
   animation-duration: 0.5s;
@@ -141,6 +128,66 @@ body {
 @keyframes fade-in {
   0% { opacity: 0; }
   100%   { opacity: 1; }   
+}
+
+.flashing1 {
+  animation-name: flashing1;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes flashing1 {
+  0% {opacity: 1}
+  25% {opacity: 0}
+  50% {opacity: 0}
+  75% {opacity: 0}
+  100% {opacity: 1}
+}
+
+.flashing2 {
+  animation-name: flashing2;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes flashing2 {
+  0% {opacity: 0}
+  25% {opacity: 1}
+  50% {opacity: 0}
+  75% {opacity: 0}
+  100% {opacity: 0}
+}
+
+.flashing3 {
+  animation-name: flashing3;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes flashing3 {
+  0% {opacity: 0}
+  25% {opacity: 0}
+  50% {opacity: 1}
+  75% {opacity: 0}
+  100% {opacity: 0}
+}
+
+.flashing4 {
+  animation-name: flashing4;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes flashing4 {
+  0% {opacity: 0}
+  25% {opacity: 0}
+  50% {opacity: 0}
+  75% {opacity: 1}
+  100% {opacity: 0}
 }
 
 .jspsych-btn-image-array {
