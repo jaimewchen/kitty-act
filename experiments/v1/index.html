@@ -173,18 +173,39 @@
     console.log(timeline)
 
 	 // create end of experiment instruction and lead-in to demographics.
-	 var alien_sticker_stimulus = '<div id="container"><div class="floating"><figure><img src="stims/alien_sticker.png" style="width:500px"></figure></div>';
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="flashing1"><img src="stims/flashing1.PNG" style="width:1200px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="flashing2"><img src="stims/flashing2.PNG" style="width:1200px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="flashing3"><img src="stims/flashing3.PNG" style="width:1200px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="flashing4"><img src="stims/flashing4.PNG" style="width:1200px"></figure></div>'
+	 var alien_sticker_stimulus = '<div id="container"><div><figure><img src="stims/alien_sticker.png" style="width:500px"></figure></div>';
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame1"><img src="stims/confetti_frames/Frame01.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame2"><img src="stims/confetti_frames/Frame02.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame3"><img src="stims/confetti_frames/Frame03.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame4"><img src="stims/confetti_frames/Frame04.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame5"><img src="stims/confetti_frames/Frame05.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame6"><img src="stims/confetti_frames/Frame06.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame7"><img src="stims/confetti_frames/Frame07.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame8"><img src="stims/confetti_frames/Frame08.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame9"><img src="stims/confetti_frames/Frame09.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame10"><img src="stims/confetti_frames/Frame10.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame11"><img src="stims/confetti_frames/Frame11.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame12"><img src="stims/confetti_frames/Frame12.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame13"><img src="stims/confetti_frames/Frame13.png" style="width:1500px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame14"><img src="stims/confetti_frames/Frame14.png" style="width:1500px"></figure></div>'
+
+   var alien_sticker_stimulus_still = '<div id="container"><div class="floating"><figure><img src="stims/alien_sticker.png" style="width:500px"></figure></div>';
+
 		// display conclusion page
-		var alien_sticker = {
+		var alien_sticker_animated = {
 			type: 'html-keyboard-response',
       stimulus: alien_sticker_stimulus,
 			choices: ["NO_KEYS"],
+      trial_duration: 2500
 		}
-		timeline.push(alien_sticker); 
+		timeline.push(alien_sticker_animated); 
+
+    var alien_sticker_still = {
+			type: 'html-keyboard-response',
+      stimulus: alien_sticker_stimulus_still,
+			choices: ["NO_KEYS"]
+		}
+    timeline.push(alien_sticker_still); 
 
     console.log(timeline)
 
