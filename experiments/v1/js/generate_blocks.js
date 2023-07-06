@@ -12,7 +12,7 @@ function generate_learning_instructions0(current_training_label, current_trainin
     current_learning_stimulus+= '<div class="row" style="margin-bottom:50px">';
     current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[0]+'" class="fade-in" style="width:100%; margin-bottom:-7px;"></figure><figcaption class="fade-in" style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
     current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
-    current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
+    current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div>';
     return(current_learning_stimulus)
 }
 
@@ -22,7 +22,7 @@ function generate_learning_instructions1(current_training_label, current_trainin
   current_learning_stimulus+= '<div class="row" style="margin-bottom:50px">';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[1]+'" class="fade-in" style="width:100%; margin-bottom:-7px;"></figure><figcaption class="fade-in" style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
-  current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
+  current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div>';
   return(current_learning_stimulus)
 }
 
@@ -32,7 +32,7 @@ function generate_learning_instructions2(current_training_label, current_trainin
   current_learning_stimulus+= '<div class="row" style="margin-bottom:50px">';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
-  current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[2]+'" class="fade-in" style="width:100%; margin-bottom:-7px;"></figure><figcaption class="fade-in" style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
+  current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid #ff7575; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[2]+'" class="fade-in" style="width:100%; margin-bottom:-7px;"></figure><figcaption class="fade-in" style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div>';
   return(current_learning_stimulus)
 }
 
@@ -261,9 +261,8 @@ function generate_block(trial, training_types) {
 
   // display learning trial
   var learning_trial0 = {
-    type: 'audio-button-response',
+    type: 'audio-button-response-adapted',
     stimulus: function(){
-      current_learning_stimulus0;
       if (current_training_label == 'beppo') {
         return 'stims/audio/beppo.wav'
       } else if (current_training_label == 'sibu') {
@@ -292,7 +291,7 @@ function generate_block(trial, training_types) {
   cur_block.push(learning_trial0);
 
   var learning_trial1 = {
-    type: 'audio-button-response',
+    type: 'audio-button-response-adapted',
     stimulus: function(){
       if (current_training_label == 'beppo') {
         return 'stims/audio/beppo.wav'
@@ -322,7 +321,7 @@ function generate_block(trial, training_types) {
   cur_block.push(learning_trial1);
 
   var learning_trial2 = {
-    type: 'audio-button-response',
+    type: 'audio-button-response-adapted',
     stimulus: function(){
       if (current_training_label == 'beppo') {
         return 'stims/audio/beppo.wav'
