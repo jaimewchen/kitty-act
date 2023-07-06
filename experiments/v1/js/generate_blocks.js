@@ -75,6 +75,23 @@ var rocket_animation_to_earth = '<div id="container">';
 rocket_animation_to_earth += '<div class="overlap-bubble"><figure class="background-animation-to-earth"><img src="stims/earth.png"></figure></div>';
 rocket_animation_to_earth += '<div class="rocket-animation"><figure><img src="stims/Rocket.png"></figure></div></div>'
 
+// generate pre-test training and sampling reminder images
+function generate_pre_test_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image,cur_test_image) {
+  //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
+  var current_test_stimulus = '<div class="container">';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png"></figure></div>';
+  current_test_stimulus += '<div class="row" style="width:800px">';
+  current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
+  current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
+  current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_sampling_image+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div></div>' : '<div class="column"><figure><figure style="border: 3px solid #ffa500;"><img src="'+current_sampling_image+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ffa500;"><b>-<span style="color:#ffa500">not '+current_training_label+'</span>-</b></span></figcaption></figure></div></div>' ;
+  current_test_stimulus += '<div class="row" style="width:800px">'
+  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div>'
+  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div>'
+  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div></div>'
+  return(current_test_stimulus)
+}
+
 // generate all individual test stimuli
 function generate_test_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image,cur_test_image) {
   //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
@@ -85,7 +102,10 @@ function generate_test_instructions(current_training_label, current_sampling_lab
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_sampling_image+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div></div>' : '<div class="column"><figure><figure style="border: 3px solid #ffa500;"><img src="'+current_sampling_image+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ffa500;"><b>-<span style="color:#ffa500">not '+current_training_label+'</span>-</b></span></figcaption></figure></div></div>' ;
-  current_test_stimulus += '<div class="d-flex align-items-center" style="margin-top:25px"><figure><img src="'+cur_test_image+'" style="width:300px; border: 4px solid #404040"></figure></div>'
+  current_test_stimulus += '<div class="row" style="width:800px">'
+  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div>'
+  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040;"><img src="'+cur_test_image+'" style="width:300px; margin-bottom:-7px"></figure></div>'
+  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div></div>'
   return(current_test_stimulus)
 }
 
@@ -265,7 +285,7 @@ function generate_block(trial, training_types) {
       current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
-      trial_type: "learning"
+      trial_type: "learning_1"
     },
   }
 
@@ -295,7 +315,7 @@ function generate_block(trial, training_types) {
       current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
-      trial_type: "learning"
+      trial_type: "learning_2"
     },
   }
 
@@ -325,7 +345,7 @@ function generate_block(trial, training_types) {
       current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
-      trial_type: "learning"
+      trial_type: "learning_3"
     },
   }
 
@@ -383,7 +403,7 @@ function generate_block(trial, training_types) {
       current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
-      trial_type: "sampling_feedback"
+      trial_type: "sampling_feedback_big"
     }
   }
 
@@ -455,10 +475,47 @@ function generate_block(trial, training_types) {
 
   cur_block.push(rocket_animation_transition_to_earth)
 
+  var selection_trial = {
+    type: 'html-button-response',
+    on_start: function(trial) {
+        last_trial_data = jsPsych.data.get().last(1).values()[0];
+        trial.data.sampled_image = last_trial_data.sampled_image;
+        trial.data.sampled_label = last_trial_data.sampled_label;
+      },
+    stimulus: function() {
+      last_trial_data = jsPsych.data.get().last(1).values()[0];
+      cur_test_image = shuffled_images[0];
+      return generate_pre_test_instructions(
+        last_trial_data.current_training_label, 
+        last_trial_data.sampled_label,
+        last_trial_data.current_training_images,
+        last_trial_data.sampled_image,
+        cur_test_image
+        )
+    },
+    choices: ["CONTINUE"],
+    button_html: '<button class="jspsych-btn-test">%choice%</button>',
+    data: {
+      current_training_images: current_training_images,
+      current_training_label: current_training_label,
+      shuffled_sampling_images: shuffled_sampling_images,
+      sampling_image_words: sampling_image_words,
+      shuffled_test_images: shuffled_images,
+      current_category_label_level: current_category_label_level,
+      current_category_kind: current_category_kind,
+      current_category_training_level,
+      current_alternate_training_label: current_alternate_training_label,
+      current_hypernym_category_kind: current_hypernym_category_kind,
+      trial_type: "pre_test",
+      test_trial_index: -1
+    }
+  }
+   
+  cur_block.push(selection_trial);
+
   for (var test_trial_index = 0; test_trial_index < shuffled_images.length; test_trial_index++) {
 
     console.log()
-
     
 
     var test_trial = {
@@ -567,76 +624,76 @@ function generate_all_blocks(trial_order, training_types) {
   return(all_blocks)
 }
 
-function create_demographics() {
-    var demographic_block=[];
+// function create_demographics() {
+//     var demographic_block=[];
 
 //demographics
-var demo_1 = {
-    type: 'survey-text',
-    preamble: "Next, we have just a few demographic questions.",
-    timeline: [
-    {questions: [{prompt: "Please enter your age (in number of years; e.g., 30).",name: "age", required: true}]},
-    {questions: [{prompt: "What is your gender?",name: "gender", required: true}]},
-    {questions: [{prompt: "What country do you currently live in? (e.g., United States)", name: "country", required: true}]},
-    {questions: [{prompt: "What is your first/ primary language(s)?", name: "language", required: true},{prompt: "Please list any other languages you are fluent in.", name: "other_languages"}]},
+// var demo_1 = {
+//     type: 'survey-text',
+//     preamble: "Next, we have just a few demographic questions.",
+//     timeline: [
+//     {questions: [{prompt: "Please enter your age (in number of years; e.g., 30).",name: "age", required: true}]},
+//     {questions: [{prompt: "What is your gender?",name: "gender", required: true}]},
+//     {questions: [{prompt: "What country do you currently live in? (e.g., United States)", name: "country", required: true}]},
+//     {questions: [{prompt: "What is your first/ primary language(s)?", name: "language", required: true},{prompt: "Please list any other languages you are fluent in.", name: "other_languages"}]},
 
-    ]
-  }
-  demographic_block.push(demo_1);
+//     ]
+//   }
+//   demographic_block.push(demo_1);
 
-  var demo_2 = {
-  type: 'survey-multi-select',
-  preamble: "Next, we have just a few demographic questions.",
-  questions: [
-    {
-      prompt: "What is your race or ethnicity? Please check one or more boxes.", 
-      options: ["White","Black or African American", "Hispanic or Latino", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Other Pacific Islander","Not listed","Prefer not to answer"], 
-      horizontal: false,
-      required: true,
-      name: 'race'
-    }
-    ]
-  }
-  demographic_block.push(demo_2);
+//   var demo_2 = {
+//   type: 'survey-multi-select',
+//   preamble: "Next, we have just a few demographic questions.",
+//   questions: [
+//     {
+//       prompt: "What is your race or ethnicity? Please check one or more boxes.", 
+//       options: ["White","Black or African American", "Hispanic or Latino", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Other Pacific Islander","Not listed","Prefer not to answer"], 
+//       horizontal: false,
+//       required: true,
+//       name: 'race'
+//     }
+//     ]
+//   }
+//   demographic_block.push(demo_2);
 
-  var demo_3 = {
-  type: 'survey-multi-choice',
+//   var demo_3 = {
+//   type: 'survey-multi-choice',
 
-  questions: [
-    {
-      prompt: "What is your current level of education?", 
-      options: ["Some high school", "High school", "Some college/ university", "Bachelor's degree", "Master's degree","Doctoral degree","Other professional degree","Not applicable/ unknown","Other","Prefer not to answer"], 
-      horizontal: false,
-      required: true,
-      name: 'education'
-    }
-    ]
-    } 
-  demographic_block.push(demo_3);
+//   questions: [
+//     {
+//       prompt: "What is your current level of education?", 
+//       options: ["Some high school", "High school", "Some college/ university", "Bachelor's degree", "Master's degree","Doctoral degree","Other professional degree","Not applicable/ unknown","Other","Prefer not to answer"], 
+//       horizontal: false,
+//       required: true,
+//       name: 'education'
+//     }
+//     ]
+//     } 
+//   demographic_block.push(demo_3);
 
-  return(demographic_block)
+//   return(demographic_block)
 
-}
+// }
 
-function create_debrief_questions() {
+// function create_debrief_questions() {
 
-  var debrief_block = [];
+//   var debrief_block = [];
 
 
-//game questions
-var debrief_questions = {
-    type: 'survey-text',
-    questions: [
-    {prompt: "Did you use a strategy to figure out what each word meant? If yes, please explain",name: "strategy", rows: 3,columns: 60, required: true},
-    {prompt: "After seeing a new word and the first three examples, how did you choose which (fourth) object to see a word for next?",name: "choice_strategy", rows: 3,columns: 60, required: true},
-    {prompt: "Any additional comments?", name: "comments", rows: 3,columns: 60}
-    ],
+// //game questions
+// var debrief_questions = {
+//     type: 'survey-text',
+//     questions: [
+//     {prompt: "Did you use a strategy to figure out what each word meant? If yes, please explain",name: "strategy", rows: 3,columns: 60, required: true},
+//     {prompt: "After seeing a new word and the first three examples, how did you choose which (fourth) object to see a word for next?",name: "choice_strategy", rows: 3,columns: 60, required: true},
+//     {prompt: "Any additional comments?", name: "comments", rows: 3,columns: 60}
+//     ],
 
-  }
+//   }
 
-  debrief_block.push(debrief_questions);
+//   debrief_block.push(debrief_questions);
 
-  return(debrief_block)
+//   return(debrief_block)
 
-}
+// }
 
