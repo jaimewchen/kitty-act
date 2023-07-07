@@ -95,10 +95,6 @@ function generate_pre_test_instructions(current_training_label, current_sampling
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_sampling_image+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div></div>' : '<div class="column"><figure><figure style="border: 3px solid #ffa500;"><img src="'+current_sampling_image+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ffa500;"><b>-<span style="color:#ffa500">not '+current_training_label+'</span>-</b></span></figcaption></figure></div></div>' ;
-  current_test_stimulus += '<div class="row" style="width:800px">'
-  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div>'
-  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div>'
-  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div></div>'
   return(current_test_stimulus)
 }
 
@@ -112,10 +108,6 @@ function generate_test_instructions(current_training_label, current_sampling_lab
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_test_stimulus += (current_sampling_label === current_training_label) ? '<div class="column"><figure><figure style="border: 3px solid #ff7575;"><img src="'+current_sampling_image+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ff7575;"><b>-<span style="color:#ff7575">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div></div>' : '<div class="column"><figure><figure style="border: 3px solid #ffa500;"><img src="'+current_sampling_image+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid #ffa500;"><b>-<span style="color:#ffa500">not '+current_training_label+'</span>-</b></span></figcaption></figure></div></div>' ;
-  current_test_stimulus += '<div class="row" style="width:800px">'
-  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div>'
-  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040;"><img src="'+cur_test_image+'" style="width:300px; margin-bottom:-7px"></figure></div>'
-  current_test_stimulus += '<div class="column" style="margin-top:25px"><figure style="border: 4px solid #404040; opacity: 0"><img src="'+cur_test_image+'" style="width:300px; opacity:0; margin-bottom:-7px"></figure></div></div>'
   return(current_test_stimulus)
 }
 
@@ -507,7 +499,7 @@ function generate_block(trial, training_types) {
 
   cur_block.push(rocket_animation_transition_to_earth)
 
-  var selection_trial = {
+  var pre_test_trial = {
     type: 'html-button-response',
     on_start: function(trial) {
         last_trial_data = jsPsych.data.get().last(1).values()[0];
@@ -543,38 +535,30 @@ function generate_block(trial, training_types) {
     }
   }
    
-  cur_block.push(selection_trial);
+  cur_block.push(pre_test_trial);
 
-  for (var test_trial_index = 0; test_trial_index < shuffled_images.length; test_trial_index++) {
-
-    console.log()
-    
-
-    var test_trial = {
-    type: 'html-button-response',
+  var test_trial = {
+    type: 'html-button-response-catact',
     on_start: function(trial) {
       last_trial_data = jsPsych.data.get().last(1).values()[0];
       trial.data.sampled_image = last_trial_data.sampled_image;
-      trial.data.sampled_label = last_trial_data.sampled_label;
-      console.log(last_trial_data)
+      trial.data.sampled_label = last_trial_data.sampled_label
     },
     stimulus: function() {
       last_trial_data = jsPsych.data.get().last(1).values()[0];
-      cur_test_trial_index = last_trial_data.test_trial_index + 1;
-      console.log(cur_test_trial_index);
-      console.log(shuffled_images);
-      cur_test_image = shuffled_images[cur_test_trial_index];
-      //trial.data.current_test_image = cur_test_image;
       return generate_test_instructions(
         last_trial_data.current_training_label, 
         last_trial_data.sampled_label,
         last_trial_data.current_training_images,
-        last_trial_data.sampled_image,
-        cur_test_image
+        last_trial_data.sampled_image
         )
     },
-    choices: ["YES", "NO"],
-    button_html: '<button class="jspsych-btn-test">%choice%</button>',
+    choices: current_grid_array,
+    images: shuffled_images,
+    response_ends_trial: false,
+    margin_horizontal: '2px',
+    margin_vertical: '2px',
+    button_html: '<button class="jspsych-btn-image-array">%choice%</button>',
     data: {
       current_training_images: current_training_images,
       current_training_label: current_training_label,
@@ -585,16 +569,13 @@ function generate_block(trial, training_types) {
       current_category_kind: current_category_kind,
       current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
-      current_hypernym_category_kind: current_hypernym_category_kind,
-      trial_type: "test",
-      test_trial_index: test_trial_index
+      trial_type: "test"
     }
   }
 
   cur_block.push(test_trial);
 
-
-  }
+  
 
   var post_test = {
     type: 'html-button-response',
@@ -632,7 +613,8 @@ function generate_block(trial, training_types) {
 
   
   return(cur_block)
- } 
+  
+}
 
 // generate all blocks
 function generate_all_blocks(trial_order, training_types) {

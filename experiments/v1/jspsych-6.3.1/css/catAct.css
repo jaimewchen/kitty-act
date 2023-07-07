@@ -334,7 +334,7 @@ body {
 }
 
 .jspsych-btn-image-array {
-  border: 1px solid black;
+  border: 3px solid;
   align-items: center;
   padding: 6px 6px;
   border-radius: 0px;
@@ -351,7 +351,7 @@ body {
   background-image: none;
   color: #333;
   background-color: #fff;
-  border-color: #ccc;
+  border-color: #606060;
 }
 
 /* only apply the hover style on devices with a mouse/pointer that can hover - issue #977 */
@@ -387,7 +387,7 @@ figure {
 }
 
 #html-button-response-catact-submit {
-  border: 5px solid black;
+  border: 3px solid #606060;
   font-size: 24px;
   font-weight: bold; 
   border-radius: 6px;
