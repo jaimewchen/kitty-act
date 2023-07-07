@@ -334,7 +334,7 @@ body {
 }
 
 .jspsych-btn-image-array {
-  border: 3px solid;
+  border: 1px solid;
   align-items: center;
   padding: 6px 6px;
   border-radius: 0px;
@@ -351,7 +351,7 @@ body {
   background-image: none;
   color: #333;
   background-color: #fff;
-  border-color: #606060;
+  border-color: #a3a3a3;
 }
 
 /* only apply the hover style on devices with a mouse/pointer that can hover - issue #977 */
