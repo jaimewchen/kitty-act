@@ -47,7 +47,7 @@ function get_training_types(
 			category_label_level: correct_category_labels["broad"],
 			training_label: training_labels_shuffled[2],
 			alternate_training_label: alternate_training_labels_shuffled[2],
-			training_image_path_info: ["sub1.jpg","sup1.jpg","sup2.jpg"],
+			training_image_path_info: ["sub1.jpg","sup2.jpg","sup5.jpg"],
 			hypernym_kind: hypernym_dict[category_kinds["broad"]]
 		}
 	};
