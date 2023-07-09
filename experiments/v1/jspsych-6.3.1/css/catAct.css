@@ -138,7 +138,7 @@ body {
 
 .frame1 {
   animation-name: frame1;
-  animation-duration: 1.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -151,7 +151,7 @@ body {
 
 .frame2 {
   animation-name: frame2;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -166,7 +166,7 @@ body {
 
 .frame3 {
   animation-name: frame3;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -181,7 +181,7 @@ body {
 
 .frame4 {
   animation-name: frame4;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -196,7 +196,7 @@ body {
 
 .frame5 {
   animation-name: frame5;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -211,7 +211,7 @@ body {
 
 .frame6 {
   animation-name: frame6;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -226,7 +226,7 @@ body {
 
 .frame7 {
   animation-name: frame7;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -241,7 +241,7 @@ body {
 
 .frame8 {
   animation-name: frame8;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -256,7 +256,7 @@ body {
 
 .frame9 {
   animation-name: frame9;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -271,7 +271,7 @@ body {
 
 .frame10 {
   animation-name: frame10;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -285,7 +285,7 @@ body {
 }
 .frame11 {
   animation-name: frame11;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -299,7 +299,7 @@ body {
 }
 .frame12 {
   animation-name: frame12;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -314,7 +314,7 @@ body {
 
 .frame13 {
   animation-name: frame13;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
@@ -328,7 +328,7 @@ body {
 
 .frame14 {
   animation-name: frame14;
-  animation-duration: 2.5s;
+  animation-duration: 2.0s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
 }
