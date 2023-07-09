@@ -1,15 +1,15 @@
 /**
- * jspsych-html-button-response-catact
+ * jspsych-html-button-response-cols
  * Josh de Leeuw, Martin Zettersten, Molly Cutler
  *
  * plugin for displaying a stimulus and getting a button response
- * adapted to allow selection and deselection
- *
+ * adapted to organize buttons in grid-like columns
+ * 
  * documentation: docs.jspsych.org
  *
  **/
 
- jsPsych.plugins["html-button-response-catact"] = (function() {
+jsPsych.plugins["html-button-response-cols-kittyact"] = (function() {
 
   var plugin = {};
 
@@ -29,13 +29,6 @@
         default: undefined,
         array: true,
         description: 'The labels for the buttons.'
-      },
-      images: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Images',
-        default: undefined,
-        array: true,
-        description: 'The images used in the buttons.'
       },
       button_html: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -71,14 +64,8 @@
       margin_horizontal: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Margin horizontal',
-        default: '8px',
+        default: '0px',
         description: 'The horizontal margin of the button.'
-      },
-      button_label: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Button label',
-        default:  'SUBMIT',
-        description: 'Label of the submit button.'
       },
       response_ends_trial: {
         type: jsPsych.plugins.parameterType.BOOL,
@@ -107,8 +94,9 @@
         buttons.push(trial.button_html);
       }
     }
-    //html += '<div id="container"><div id="jspsych-html-button-response-btngroup">';
-    html += '<div class = "grid-container-test">';
+    html += '<div class = "grid-container-alien-head">';
+    //html += '<div id="jspsych-html-button-response-btngroup">';
+    
     for (var i = 0; i < trial.choices.length; i++) {
       html += '<div class = "grid-item">';
       var str = buttons[i].replace(/%choice%/g, trial.choices[i]);
@@ -116,9 +104,6 @@
       html += '</div>';
     }
     html += '</div>';
-
-    // add submit button
-    html += '<input type="submit" id="html-button-response-catact-submit" class="html-button-response-catact jspsych-btn" value="'+trial.button_label+'"></input>';
 
     //show prompt if there is one
     if (trial.prompt !== null) {
@@ -137,97 +122,31 @@
       });
     }
 
-    //add event listener to final submission button
-    display_element.querySelector('#html-button-response-catact-submit').addEventListener('click', function(e){
-      //require at least one image click before advancing
-      if (response_counter>0) {
-        end_trial();
-      } else {
-        display_element.insertAdjacentHTML('beforeend', '<p style="color:red"><b>Please make at least one selection.</b></p>');
-      }
-
-    });
-
-
     // store response
     var response = {
       rt: null,
-      button: null,
-      selection_array: null,
-      selection_index: null,
-      rt_array: null,
-      selection_type_array: null,
-      final_choice_array:null
+      button: null
     };
-
-    //temporary arrays to hold selection information
-    var selections=[];
-    var selection_indices=[];
-    var selection_rts=[];
-    var selection_types=[];
-    var final_choices=[];
-    // response counter
-    var response_counter = 0;
-
-    function toggle_response(choice) {
-
-      //add RT
-      var cur_time = performance.now();
-      cur_rt=cur_time-start_time;
-      selection_rts.push(cur_rt);
-
-      //add selection
-      var image_choice=trial.images[choice];
-      selections.push(image_choice);
-      selection_indices.push(choice);
-
-      //update response counter
-      response_counter = response_counter+1;
-
-      //console.log(selections);
-      //console.log(selection_indices);
-      //console.log(selection_rts);
-
-      if (document.getElementById('jspsych-html-button-response-button-'+choice).style.color=="tomato") {
-        document.getElementById('jspsych-html-button-response-button-'+choice).style.color="#333";
-        document.getElementById('jspsych-html-button-response-button-'+choice).style.border="5px solid transparent";
-        //update data storage
-        //update selection array type
-        selection_types.push("unselect");
-        //remove from final choice array
-        var index = final_choices.indexOf(image_choice);
-        if (index > -1) {
-          final_choices.splice(index, 1);
-        }
-      } else {
-        document.getElementById('jspsych-html-button-response-button-'+choice).style.color="tomato";
-        document.getElementById('jspsych-html-button-response-button-'+choice).style.border="5px solid";
-        //update data storage
-        //update selection array type
-        selection_types.push("select");
-        //add to final choice array
-        final_choices.push(image_choice);
-      }
-
-      //console.log(selection_types);
-     //console.log(final_choices);
-    }
 
     // function to handle responses by the subject
     function after_response(choice) {
 
       // measure rt
-      //var end_time = performance.now();
-      //var rt = end_time - start_time;
-      //response.button = parseInt(choice);
-      //response.rt = rt;
-
-      toggle_response(choice);
+      var end_time = performance.now();
+      var rt = end_time - start_time;
+      response.button = parseInt(choice);
+      response.rt = rt;
 
       // after a valid response, the stimulus will have the CSS class 'responded'
       // which can be used to provide visual feedback that a response was recorded
       display_element.querySelector('#jspsych-html-button-response-stimulus').className += ' responded';
 
+      // disable all the buttons after a response
+      var btns = document.querySelectorAll('.jspsych-html-button-response-button button');
+      for(var i=0; i<btns.length; i++){
+        //btns[i].removeEventListener('click');
+        btns[i].setAttribute('disabled', 'disabled');
+      }
 
       if (trial.response_ends_trial) {
         end_trial();
@@ -236,30 +155,15 @@
 
     // function to end trial when it is time
     function end_trial() {
-      // measure rt
-      var end_time = performance.now();
-      var rt = end_time - start_time;
-      response.rt = rt;
-
-      response.rt_array=selection_rts;
-      response.selection_array=selections;
-      response.selection_index=selection_indices;
-      response.selection_type_array=selection_types;
-      response.final_choice_array=final_choices;
 
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
       // gather the data to store for the trial
       var trial_data = {
-        selection_array: response.selection_array,
-        selection_index: response.selection_index,
-        rt_array: response.rt_array,
-        selection_type_array: response.selection_type_array,
-        final_choice_array: response.final_choice_array,
-        final_rt: response.rt,
-        //stimulus: trial.stimulus,
-        //response: response.button
+        rt: response.rt,
+        stimulus: trial.stimulus,
+        response: response.button
       };
 
       // clear the display
@@ -287,4 +191,3 @@
 
   return plugin;
 })();
-
