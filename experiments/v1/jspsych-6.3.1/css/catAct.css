@@ -1,6 +1,6 @@
 body {
   color: #fff;
-  background-image: url("background/space2.jpg"), url("background/earth.png");
+  background-image: url("background/space2.jpg");
   background-size: cover;
   margin: 0;
   position: fixed;
