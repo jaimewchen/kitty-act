@@ -1,14 +1,14 @@
 //generate instructions
 var rocket_animation = '<div id="container">';
-rocket_animation += '<div class="overlap-bubble"><figure class="background-animation"><img src="stims/earth.png"></figure></div>';
-rocket_animation += '<div class="rocket-animation"><figure><img src="stims/Rocket.png"></figure></div></div>'
+rocket_animation += '<div class="overlap-bubble"><figure class="background-animation"><img src="stims_general/earth.png"></figure></div>';
+rocket_animation += '<div class="rocket-animation"><figure><img src="stims_general/Rocket.png"></figure></div></div>'
 
 var introduction_alien_stimulus = '<div id="container">';
-introduction_alien_stimulus += '<div class="d-flex align-items-center"><figure class="floating"><img src="stims/alien.png" style="width:300px"></figure></div></div>';
+introduction_alien_stimulus += '<div class="d-flex align-items-center"><figure class="floating"><img src="stims_general/alien.png" style="width:300px"></figure></div></div>';
 
 function generate_learning_instructions_pre(current_training_label, current_training_images) {
   var current_learning_stimulus ='<div id="container" style="margin-top:12px">'
-  current_learning_stimulus+= '<div class="d-flex align-items-center" style="margin-bottom:4px"><figure style="height:320px;"><img src="stims/alien_head.png" style="width:300px"></figure></div>';
+  current_learning_stimulus+= '<div class="d-flex align-items-center" style="margin-bottom:4px"><figure style="height:320px;"><img src="stims_general/alien_head.png" style="width:300px"></figure></div>';
   current_learning_stimulus+= '<div class="row" style="margin-bottom:-5px">';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[0]+'" class="fade-in" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
@@ -18,7 +18,7 @@ function generate_learning_instructions_pre(current_training_label, current_trai
 
 function generate_learning_instructions0(current_training_label, current_training_images) {
     var current_learning_stimulus ='<div id="container">'
-    current_learning_stimulus+= '<div class="d-flex align-items-center"><figure style="height:320px;"><img src="stims/alien_head.png" style="width:300px"></figure></div>';
+    current_learning_stimulus+= '<div class="d-flex align-items-center"><figure style="height:320px;"><img src="stims_general/alien_head.png" style="width:300px"></figure></div>';
     current_learning_stimulus+= '<div class="row">';
     current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption class="fade-in" style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
     current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
@@ -28,7 +28,7 @@ function generate_learning_instructions0(current_training_label, current_trainin
 
 function generate_learning_instructions1(current_training_label, current_training_images) {
   var current_learning_stimulus ='<div id="container">'
-  current_learning_stimulus+= '<div class="d-flex align-items-center"><figure style="height:320px"><img src="stims/alien_head.png" style="width:300px"></figure></div>';
+  current_learning_stimulus+= '<div class="d-flex align-items-center"><figure style="height:320px"><img src="stims_general/alien_head.png" style="width:300px"></figure></div>';
   current_learning_stimulus+= '<div class="row">';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[1]+'" class="fade-in" style="width:100%; margin-bottom:-7px;"></figure><figcaption class="fade-in" style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
@@ -38,7 +38,7 @@ function generate_learning_instructions1(current_training_label, current_trainin
 
 function generate_learning_instructions2(current_training_label, current_training_images) {
   var current_learning_stimulus = '<div id="container">'
-  current_learning_stimulus+= '<div class="d-flex align-items-center"><figure style="height:320px"><img src="stims/alien_head.png" style="width:300px"></figure></div>';
+  current_learning_stimulus+= '<div class="d-flex align-items-center"><figure style="height:320px"><img src="stims_general/alien_head.png" style="width:300px"></figure></div>';
   current_learning_stimulus+= '<div class="row">';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
@@ -66,7 +66,7 @@ function generate_sampling_instructions(current_training_label, current_training
 
   var current_sampling_stimulus ='<div id="container">';
   current_sampling_stimulus += '<p> </p>';
-  current_sampling_stimulus += '<div class="d-flex align-items-center"><figure style="height:150px"><img src="stims/alien_head.png" style="width:130px"></figure></div>';
+  current_sampling_stimulus += '<div class="d-flex align-items-center"><figure style="height:150px"><img src="stims_general/alien_head.png" style="width:130px"></figure></div>';
   current_sampling_stimulus += '<div class="row" style="margin-bottom:50px; width:660px; margin-left:auto; margin-right:auto">';
   current_sampling_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_sampling_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
@@ -77,7 +77,7 @@ function generate_sampling_instructions(current_training_label, current_training
 function generate_selection_instructions_big(current_training_label, current_sampling_label,current_training_images,current_sampling_image) {
   //var current_selection_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
   current_selection_stimulus = '<div id="container">';
-  current_selection_stimulus += '<div class="d-flex align-items-center"><figure style="height:140px"><img src="stims/alien_head.png" style="width:130px"></figure></div>';
+  current_selection_stimulus += '<div class="d-flex align-items-center"><figure style="height:140px"><img src="stims_general/alien_head.png" style="width:130px"></figure></div>';
   current_selection_stimulus += '<div class="row" style="width:620px; margin-left:auto; margin-right:auto">';
   current_selection_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_selection_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
@@ -89,7 +89,7 @@ function generate_selection_instructions_big(current_training_label, current_sam
 function generate_selection_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image) {
   //var current_selection_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
   current_selection_stimulus = '<div id="container">';
-  current_selection_stimulus += '<div class="d-flex align-items-center"><figure style="height:220px"><img src="stims/alien_head.png" style="width:200px"></figure></div>';
+  current_selection_stimulus += '<div class="d-flex align-items-center"><figure style="height:220px"><img src="stims_general/alien_head.png" style="width:200px"></figure></div>';
   current_selection_stimulus += '<div class="row">';
   current_selection_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_selection_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
@@ -99,14 +99,14 @@ function generate_selection_instructions(current_training_label, current_samplin
 }
 
 var rocket_animation_to_earth = '<div id="container">';
-rocket_animation_to_earth += '<div class="overlap-bubble"><figure class="background-animation-to-earth"><img src="stims/earth.png"></figure></div>';
-rocket_animation_to_earth += '<div class="rocket-animation"><figure><img src="stims/Rocket.png"></figure></div></div>'
+rocket_animation_to_earth += '<div class="overlap-bubble"><figure class="background-animation-to-earth"><img src="stims_general/earth.png"></figure></div>';
+rocket_animation_to_earth += '<div class="rocket-animation"><figure><img src="stims_general/Rocket.png"></figure></div></div>'
 
 // generate pre-test training and sampling reminder images
 function generate_pre_test_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image,cur_test_image) {
   //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
   var current_test_stimulus = '<div class="container">';
-  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png"></figure></div>';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims_general/earth.png"></figure></div>';
   current_test_stimulus += '<div class="row" style="width:800px">';
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
@@ -119,7 +119,7 @@ function generate_pre_test_instructions(current_training_label, current_sampling
 function generate_test_instructions(current_training_label, current_sampling_label,current_training_images,current_sampling_image,cur_test_image) {
   //var current_test_stimulus = '<div id="container"><p><b><font size="4.5">Your job is to figure out which objects are '+current_training_label+'s and which are not.</font></b><style="text-align:center;" /p>';
   var current_test_stimulus = '<div class="container">';
-  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims/earth.png"></figure></div>';
+  current_test_stimulus += '<div class="overlap-bubble"><figure><img src="stims_general/earth.png"></figure></div>';
   current_test_stimulus += '<div class="row" style="width:800px">';
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_test_stimulus += '<div class="column"><figure><figure style="border: 3px solid tomato;"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
@@ -129,8 +129,8 @@ function generate_test_instructions(current_training_label, current_sampling_lab
 }
 
 var post_test_stimulus = '<div id="container">';
-post_test_stimulus = '<div class="overlap-bubble"><figure><img src="stims/earth.png"></figure></div>';
-post_test_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure><img src="stims/Rocket.png" style="width:400px"></figure></div></div>';
+post_test_stimulus = '<div class="overlap-bubble"><figure><img src="stims_general/earth.png"></figure></div>';
+post_test_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure><img src="stims_general/Rocket.png" style="width:400px"></figure></div></div>';
 
 
 // generate a block for CatAct
@@ -260,10 +260,11 @@ function generate_block(trial, training_types) {
   var current_sampling_stimulus_hidden = generate_sampling_instructions_hidden(current_training_label, current_training_images, shuffled_sampling_images);
 	var current_sampling_stimulus = generate_sampling_instructions(current_training_label, current_training_images);
 
+// THREE TRAINING IMAGES
   // display rocket transition animation
   var rocket_animation_transition = {
     type: 'audio-keyboard-response',
-    stimulus: 'stims/audio/rocket_sound.wav',
+    stimulus: 'stims_general/audio/rocket_sound.wav',
     prompt: rocket_animation, 
     choices: ['NO_KEYS'],
     trial_duration: 2000
@@ -307,11 +308,11 @@ function generate_block(trial, training_types) {
     stimulus: function(){
       current_learning_stimulus0;
       if (current_training_label == 'beppo') {
-        return 'stims/audio/beppo.wav'
+        return 'stims_general/audio/beppo.wav'
       } else if (current_training_label == 'sibu') {
-        return 'stims/audio/sibu.wav'
+        return 'stims_general/audio/sibu.wav'
       } else {
-        return 'stims/audio/kita.wav'
+        return 'stims_general/audio/kita.wav'
       }
     },
     prompt: current_learning_stimulus0,
@@ -337,11 +338,11 @@ function generate_block(trial, training_types) {
     type: 'audio-button-response-adapted',
     stimulus: function(){
       if (current_training_label == 'beppo') {
-        return 'stims/audio/beppo.wav'
+        return 'stims_general/audio/beppo.wav'
       } else if (current_training_label == 'sibu') {
-        return 'stims/audio/sibu.wav'
+        return 'stims_general/audio/sibu.wav'
       } else {
-        return 'stims/audio/kita.wav'
+        return 'stims_general/audio/kita.wav'
       }
     },
     prompt: current_learning_stimulus1,
@@ -367,11 +368,11 @@ function generate_block(trial, training_types) {
     type: 'audio-button-response-adapted',
     stimulus: function(){
       if (current_training_label == 'beppo') {
-        return 'stims/audio/beppo.wav'
+        return 'stims_general/audio/beppo.wav'
       } else if (current_training_label == 'sibu') {
-        return 'stims/audio/sibu.wav'
+        return 'stims_general/audio/sibu.wav'
       } else {
-        return 'stims/audio/kita.wav'
+        return 'stims_general/audio/kita.wav'
       }
     },
     prompt: current_learning_stimulus2,
@@ -397,7 +398,7 @@ function generate_block(trial, training_types) {
   var sampling_trial_hidden_button = {
     type: 'html-button-response-cols-kittyact',
     stimulus: ' ',
-    choices: ["<img src='stims/alien_head.png' style='width:130px; margin-top:-1.5px;'>"],
+    choices: ["<img src='stims_general/alien_head.png' style='width:130px; margin-top:-1.5px;'>"],
     button_html: '<button class="jspsych-btn" style="height:145px; border:none; background-color: rgba(0,0,0,0)">%choice%</button>',
     prompt: current_sampling_stimulus_hidden,
     data: {
@@ -518,7 +519,7 @@ function generate_block(trial, training_types) {
       trial.data.sampled_label = last_trial_data.sampled_label;
       console.log(last_trial_data)
     },
-    stimulus: 'stims/audio/rocket_sound.wav',
+    stimulus: 'stims_general/audio/rocket_sound.wav',
     prompt: rocket_animation_to_earth, 
     choices: ['NO_KEYS'],
     trial_duration: 2000,
@@ -657,7 +658,7 @@ function generate_block(trial, training_types) {
 }
 
 // generate all blocks
-function generate_all_blocks(trial_order, training_types) {
+function generate_all_blocks_3(trial_order, training_types) {
 
   var all_blocks=[];
   for (var j = 0; j < trial_order.length; j++) {
