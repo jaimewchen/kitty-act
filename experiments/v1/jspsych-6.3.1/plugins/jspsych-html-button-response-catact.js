@@ -188,7 +188,7 @@
       //console.log(selection_indices);
       //console.log(selection_rts);
 
-      if (document.getElementById('jspsych-html-button-response-button-'+choice).style.color=="purple") {
+      if (document.getElementById('jspsych-html-button-response-button-'+choice).style.color=="tomato") {
         document.getElementById('jspsych-html-button-response-button-'+choice).style.color="#333";
         document.getElementById('jspsych-html-button-response-button-'+choice).style.border="5px solid transparent";
         //update data storage
@@ -200,7 +200,7 @@
           final_choices.splice(index, 1);
         }
       } else {
-        document.getElementById('jspsych-html-button-response-button-'+choice).style.color="purple";
+        document.getElementById('jspsych-html-button-response-button-'+choice).style.color="tomato";
         document.getElementById('jspsych-html-button-response-button-'+choice).style.border="5px solid";
         //update data storage
         //update selection array type
