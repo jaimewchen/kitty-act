@@ -72,15 +72,17 @@
         var correct_category_label_levels = create_correct_category_labels(n_cat_level,i_cat_level,b_cat_level);
         console.log(correct_category_label_levels);
 
-        var category_kinds =["animals","vegetables","vehicles"];
-        var randomized_category_kinds = create_category_kinds(category_kinds,catk_n,catk_i,catk_b);
+        var category_codes = ["c1","c2","c3"];
+
+        var randomized_category_codes = create_category_codes(category_codes,catk_n,catk_i,catk_b);
+
+        console.log(randomized_category_codes);
+
+        var randomized_category_kinds = create_category_kinds(randomized_category_codes);
+
         console.log(randomized_category_kinds);
-        
-        //create random code for final message
-        var code = createCode("CatAct");
 
         jsPsych.data.addProperties({
-          code: code,
           subject: subject_id,
           workerId: workerId,
           hitId: hitId,

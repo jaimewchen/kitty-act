@@ -58,3 +58,15 @@ var training_image_names = [
 "stims_a/veh_c2_sup1.jpg",
 "stims_a/veh_c2_sup2.jpg",];
 
+var category_kinds_assignment = {
+	"c1": "vegetables",
+	"c2": "vehicles",
+	"c3": "animals"
+}
+
+var category_kinds_shortened_assignment = {
+	"c1": "veg",
+	"c2": "veh",
+	"c3": "ani"
+}
+

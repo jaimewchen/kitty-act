@@ -60,18 +60,46 @@ function get_trial_order(category_levels) {
 	return(trial_order)
 }
 
-function create_category_kinds(category_kinds,narrow_category_kind,intermediate_category_kind,broad_category_kind) {
+// function create_category_kinds(category_kinds,narrow_category_kind,intermediate_category_kind,broad_category_kind) {
 
-	var category_kinds_shuffled = jsPsych.randomization.shuffle(category_kinds);
+// 	var category_kinds_shuffled = jsPsych.randomization.shuffle(category_kinds);
 
-  var category_kinds_narrow = decode_category_kinds(narrow_category_kind,category_kinds_shuffled,0)
-  var category_kinds_intermediate = decode_category_kinds(intermediate_category_kind,category_kinds_shuffled,1)
-  var category_kinds_broad = decode_category_kinds(broad_category_kind,category_kinds_shuffled,2)
+//   var category_kinds_narrow = decode_category_kinds(narrow_category_kind,category_kinds_shuffled,0)
+//   var category_kinds_intermediate = decode_category_kinds(intermediate_category_kind,category_kinds_shuffled,1)
+//   var category_kinds_broad = decode_category_kinds(broad_category_kind,category_kinds_shuffled,2)
 
-  var category_kind_assigned_dict = {
-    narrow: category_kinds_narrow,
-    intermediate: category_kinds_intermediate,
-    broad: category_kinds_broad
+//   var category_kind_assigned_dict = {
+//     narrow: category_kinds_narrow,
+//     intermediate: category_kinds_intermediate,
+//     broad: category_kinds_broad
+//   }
+
+//   return(category_kind_assigned_dict)
+// }
+
+function create_category_codes(category_codes,narrow_category_code,intermediate_category_code,broad_category_code) {
+
+	var category_codes_shuffled = jsPsych.randomization.shuffle(category_codes);
+
+  var category_codes_narrow = decode_category_codes(narrow_category_code,category_codes_shuffled,0)
+  var category_codes_intermediate = decode_category_codes(intermediate_category_code,category_codes_shuffled,1)
+  var category_codes_broad = decode_category_codes(broad_category_code,category_codes_shuffled,2)
+
+  var category_codes_assigned_dict = {
+    narrow: category_codes_narrow,
+    intermediate: category_codes_intermediate,
+    broad: category_codes_broad
+  }
+
+  return(category_codes_assigned_dict)
+}
+
+function create_category_kinds(category_codes_dict) {
+
+	var category_kind_assigned_dict = {
+    narrow: category_kinds_assignment[category_codes_dict["narrow"]],
+    intermediate: category_kinds_assignment[category_codes_dict["intermediate"]],
+    broad: category_kinds_assignment[category_codes_dict["broad"]]
   }
 
   return(category_kind_assigned_dict)
@@ -109,6 +137,20 @@ function decode_category_kinds(category_kind_short,shuffled_category_kinds,array
   }
 
   return(current_category_kind)
+}
+
+function decode_category_codes(category_code_short,shuffled_category_codes,array_index) {
+  if (category_code_short == "c1") {
+    var current_category_code = "c1";
+  } else if (category_code_short == "c2") {
+    var current_category_code = "c2";
+  } else if (category_code_short == "c3") {
+    var current_category_code = "c3";
+  } else {
+    var current_category_code = shuffled_category_codes[array_index]
+  }
+
+  return(current_category_code)
 }
 
 function decode_category_level(category_level_short,category_level_labels) {

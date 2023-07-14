@@ -623,32 +623,6 @@ function generate_block(trial, training_types) {
 
   cur_block.push(post_test);
 
-  // var current_test_meaning_stimulus = '<div id="container"><p> What do you think that <b>' + current_training_label + '</b> means?</p><p><textarea name="word_meaning" type="text" id="test-resp-box" size="20" rows="2" cols="40" required></textarea></p>';
-  // current_test_meaning_stimulus+='<p><i>Click Next to continue.</font></i><style="text-align:center;" /p></div>';  
-    
-
-  // var test_meaning_trial = {
-    // type: 'survey-html-form',
-    // html: current_test_meaning_stimulus,
-    // autofocus: 'test-resp-box',
-    // button_label: "Next",
-    // data: {
-      // current_training_images: current_training_images,
-      // current_training_label: current_training_label,
-      // shuffled_sampling_images: shuffled_sampling_images,
-      // sampling_image_words: sampling_image_words,
-      // shuffled_test_images: shuffled_images,
-      // current_category_label_level: current_category_label_level,
-      // current_category_kind: current_category_kind,
-      // current_category_training_level,
-      // current_alternate_training_label: current_alternate_training_label,
-      // current_hypernym_category_kind: current_hypernym_category_kind,
-      //trial_type: "test_meaning"
-    // },
-  // }
-
-  // cur_block.push(test_meaning_trial);
-
   
   return(cur_block)
   
@@ -662,90 +636,7 @@ function generate_all_blocks_3(trial_order, training_types) {
     trial=trial_order[j];
     cur_block=generate_block(trial, training_types)
     all_blocks=all_blocks.concat(cur_block)
-
-    // if (j < trial_order.length - 1) {
-      // var instructions_between_trials = {
-        // type: 'html-button-response',
-        // stimulus: '<div id="container"><p><b><font size="4.5">Great job!</font></b></p><p><i><font size="4.5">Click Next to learn another word.</font></i></p> </div>',
-        // choices: ["Next"],
-      // }
-      // all_blocks.push(instructions_between_trials);
-    // }
   }
 
   return(all_blocks)
 }
-
-// function create_demographics() {
-//     var demographic_block=[];
-
-//demographics
-// var demo_1 = {
-//     type: 'survey-text',
-//     preamble: "Next, we have just a few demographic questions.",
-//     timeline: [
-//     {questions: [{prompt: "Please enter your age (in number of years; e.g., 30).",name: "age", required: true}]},
-//     {questions: [{prompt: "What is your gender?",name: "gender", required: true}]},
-//     {questions: [{prompt: "What country do you currently live in? (e.g., United States)", name: "country", required: true}]},
-//     {questions: [{prompt: "What is your first/ primary language(s)?", name: "language", required: true},{prompt: "Please list any other languages you are fluent in.", name: "other_languages"}]},
-
-//     ]
-//   }
-//   demographic_block.push(demo_1);
-
-//   var demo_2 = {
-//   type: 'survey-multi-select',
-//   preamble: "Next, we have just a few demographic questions.",
-//   questions: [
-//     {
-//       prompt: "What is your race or ethnicity? Please check one or more boxes.", 
-//       options: ["White","Black or African American", "Hispanic or Latino", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Other Pacific Islander","Not listed","Prefer not to answer"], 
-//       horizontal: false,
-//       required: true,
-//       name: 'race'
-//     }
-//     ]
-//   }
-//   demographic_block.push(demo_2);
-
-//   var demo_3 = {
-//   type: 'survey-multi-choice',
-
-//   questions: [
-//     {
-//       prompt: "What is your current level of education?", 
-//       options: ["Some high school", "High school", "Some college/ university", "Bachelor's degree", "Master's degree","Doctoral degree","Other professional degree","Not applicable/ unknown","Other","Prefer not to answer"], 
-//       horizontal: false,
-//       required: true,
-//       name: 'education'
-//     }
-//     ]
-//     } 
-//   demographic_block.push(demo_3);
-
-//   return(demographic_block)
-
-// }
-
-// function create_debrief_questions() {
-
-//   var debrief_block = [];
-
-
-// //game questions
-// var debrief_questions = {
-//     type: 'survey-text',
-//     questions: [
-//     {prompt: "Did you use a strategy to figure out what each word meant? If yes, please explain",name: "strategy", rows: 3,columns: 60, required: true},
-//     {prompt: "After seeing a new word and the first three examples, how did you choose which (fourth) object to see a word for next?",name: "choice_strategy", rows: 3,columns: 60, required: true},
-//     {prompt: "Any additional comments?", name: "comments", rows: 3,columns: 60}
-//     ],
-
-//   }
-
-//   debrief_block.push(debrief_questions);
-
-//   return(debrief_block)
-
-// }
-
