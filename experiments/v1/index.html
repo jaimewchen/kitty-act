@@ -25,7 +25,8 @@
   <script type="text/javascript" src="lib/jspsych-pavlovia-3.2.5.js"></script> -->
 
        <script src="js/helper.js"></script>
-       <script src="js/settings_a.js"></script>
+       <script src="js/settings.js"></script>
+       <!-- <script src="js/settings_a.js"></script> -->
        <!-- <script src="js/settings_b.js"></script> -->
        <script src="js/generate_trials_a.js"></script>
        <!-- <script src="js/generate_trials_b.js"></script> -->
@@ -68,6 +69,148 @@
         catk_n.replace(/[^A-Za-z0-9_]/g, "");
         catk_i.replace(/[^A-Za-z0-9_]/g, "");
         catk_b.replace(/[^A-Za-z0-9_]/g, "");
+
+        var stim_type_options = ["a","b"];
+
+        var stim_type = jsPsych.randomization.sampleWithoutReplacement(stim_type_options,1)[0];
+
+        console.log(stim_type)
+
+        if (stim_type == "a") {
+
+var image_path="stims/"
+
+// store names of test phase image files
+var grid_image_names = [
+"stims/ani_c3_sup3.jpg",
+"stims/ani_c3_sup4.jpg",
+"stims/ani_c3_bas3.jpg",
+"stims/ani_c3_sub4.jpg",
+"stims/veg_c1_sup3.jpg",
+"stims/veg_c1_sup4.jpg",
+"stims/veg_c1_bas3.jpg",
+"stims/veg_c1_sub4.jpg",
+"stims/veh_c2_sup4.jpg",
+"stims/veh_c2_sup1.jpg",
+"stims/veh_c2_bas3.jpg",
+"stims/veh_c2_sub4.jpg"];
+
+console.log(grid_image_names)
+
+// store names of sampling phase image files - reduced sampling image set in v3 is created per block
+var sampling_image_names = [
+"stims/ani_c3_sub4.jpg",
+"stims/ani_c3_sup3.jpg",
+"stims/ani_c3_bas3.jpg",
+"stims/veg_c1_sub4.jpg",
+"stims/veg_c1_sup3.jpg",
+"stims/veg_c1_bas3.jpg",
+"stims/veh_c2_sub4.jpg",
+"stims/veh_c2_sup3.jpg",
+"stims/veh_c2_bas3.jpg"];
+
+var training_image_names = [
+"stims/ani_c3_sub1.jpg",
+"stims/ani_c3_sub2.jpg",
+"stims/ani_c3_sub3.jpg",
+"stims/ani_c3_bas1.jpg",
+"stims/ani_c3_bas2.jpg",
+"stims/ani_c3_sup1.jpg",
+"stims/ani_c3_sup2.jpg",
+"stims/veg_c1_sub1.jpg",
+"stims/veg_c1_sub2.jpg",
+"stims/veg_c1_sub3.jpg",
+"stims/veg_c1_bas1.jpg",
+"stims/veg_c1_bas2.jpg",
+"stims/veg_c1_sup1.jpg",
+"stims/veg_c1_sup2.jpg",
+"stims/veh_c2_sub1.jpg",
+"stims/veh_c2_sub2.jpg",
+"stims/veh_c2_sub3.jpg",
+"stims/veh_c2_bas1.jpg",
+"stims/veh_c2_bas2.jpg",
+"stims/veh_c2_sup1.jpg",
+"stims/veh_c2_sup2.jpg",];
+
+var category_kinds_assignment = {
+  "c1": "vegetables",
+  "c2": "vehicles",
+  "c3": "animals"
+}
+
+var category_kinds_shortened_assignment = {
+  "c1": "veg",
+  "c2": "veh",
+  "c3": "ani"
+}
+
+        } else if (stim_type == "b") {
+          var image_path="stims/"
+
+// store names of test phase image files
+var grid_image_names = [
+"stims/sea_c2_sup3.jpg",
+"stims/sea_c2_sup4.jpg",
+"stims/sea_c2_bas3.jpg",
+"stims/sea_c2_sub4.jpg",
+"stims/fru_c1_sup3.jpg",
+"stims/fru_c1_sup4.jpg",
+"stims/fru_c1_bas3.jpg",
+"stims/fru_c1_sub4.jpg",
+"stims/veh_c3_sup4.jpg",
+"stims/veh_c3_sup1.jpg",
+"stims/veh_c3_bas3.jpg",
+"stims/veh_c3_sub4.jpg"];
+
+console.log(grid_image_names)
+
+// store names of sampling phase image files - reduced sampling image set in v3 is created per block
+var sampling_image_names = [
+"stims/sea_c2_sub4.jpg",
+"stims/sea_c2_sup3.jpg",
+"stims/sea_c2_bas3.jpg",
+"stims/fru_c1_sub4.jpg",
+"stims/fru_c1_sup3.jpg",
+"stims/fru_c1_bas3.jpg",
+"stims/veh_c3_sub4.jpg",
+"stims/veh_c3_sup3.jpg",
+"stims/veh_c3_bas3.jpg"];
+
+var training_image_names = [
+"stims/sea_c2_sub1.jpg",
+"stims/sea_c2_sub2.jpg",
+"stims/sea_c2_sub3.jpg",
+"stims/sea_c2_bas1.jpg",
+"stims/sea_c2_bas2.jpg",
+"stims/sea_c2_sup1.jpg",
+"stims/sea_c2_sup2.jpg",
+"stims/fru_c1_sub1.jpg",
+"stims/fru_c1_sub2.jpg",
+"stims/fru_c1_sub3.jpg",
+"stims/fru_c1_bas1.jpg",
+"stims/fru_c1_bas2.jpg",
+"stims/fru_c1_sup1.jpg",
+"stims/fru_c1_sup2.jpg",
+"stims/veh_c3_sub1.jpg",
+"stims/veh_c3_sub2.jpg",
+"stims/veh_c3_sub3.jpg",
+"stims/veh_c3_bas1.jpg",
+"stims/veh_c3_bas2.jpg",
+"stims/veh_c3_sup1.jpg",
+"stims/veh_c3_sup2.jpg",];
+
+var category_kinds_assignment = {
+  "c1": "fruit",
+  "c2": "sea",
+  "c3": "vehicle"
+}
+
+var category_kinds_shortened_assignment = {
+  "c1": "fru",
+  "c2": "sea",
+  "c3": "veh"
+}
+        }
 
         var correct_category_label_levels = create_correct_category_labels(n_cat_level,i_cat_level,b_cat_level);
         console.log(correct_category_label_levels);
