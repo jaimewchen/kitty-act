@@ -2,6 +2,9 @@
 		
 function get_training_types(
 	category_kinds, 
+	category_codes,
+	category_kinds_assignment,
+	category_kinds_shortened_assignment,
 	training_labels,
 	alternate_training_labels,
 	correct_category_labels) {
@@ -12,43 +15,62 @@ function get_training_types(
 
 	//get possible hyperhym assignment
 	//var hypernym_dict_keys_in_order = ["animals", "vegetables","vehicles"] - just to show the order of the keys in the dictionary
-	var possible_category_permutations = [["vegetables","vehicles","animals"],["vehicles","animals","vegetables"]]
-	var hypernym_assignment =  jsPsych.randomization.sampleWithoutReplacement(possible_category_permutations,1)[0]
+	//var possible_category_permutations = [["vegetables","vehicles","animals"],["vehicles","animals","vegetables"]]
+	var possible_category_code_permutations=[["c2","c3","c1"],["c3","c1","c2"]]
+	//var hypernym_assignment =  jsPsych.randomization.sampleWithoutReplacement(possible_category_permutations,1)[0]
+	var hypernym_assignment =  jsPsych.randomization.sampleWithoutReplacement(possible_category_code_permutations,1)[0]
 	console.log(hypernym_assignment);
+	// var hypernym_dict = {
+	// 	"animals": hypernym_assignment[0],
+	// 	"vegetables": hypernym_assignment[1],
+	// 	"vehicles": hypernym_assignment[2],
+	// }
 	var hypernym_dict = {
-		"animals": hypernym_assignment[0],
-		"vegetables": hypernym_assignment[1],
-		"vehicles": hypernym_assignment[2],
+		"c1": hypernym_assignment[0],
+		"c2": hypernym_assignment[1],
+		"c3": hypernym_assignment[2],
 	}
 	console.log(hypernym_dict)
 
 	var training_types = {
 		narrow: {
 			category_kind: category_kinds["narrow"],
+			category_kind_shortened: category_kinds_shortened_assignment[category_codes["narrow"]],
+			category_label: category_codes["narrow"],
 			category_training_level: "narrow",
 			category_label_level: correct_category_labels["narrow"],
 			training_label: training_labels_shuffled[0],
 			alternate_training_label: alternate_training_labels_shuffled[0],
 			training_image_path_info: ["sub1.jpg","sub2.jpg","sub3.jpg"],
-			hypernym_kind: hypernym_dict[category_kinds["narrow"]]
+			hypernym_kind: category_kinds_assignment[hypernym_dict[category_codes["narrow"]]],
+			hypernym_kind_shortened: category_kinds_shortened_assignment[hypernym_dict[category_codes["narrow"]]],
+			hypernym_code: hypernym_dict[category_codes["narrow"]],
 		},
 		intermediate: {
 			category_kind: category_kinds["intermediate"],
+			category_kind_shortened: category_kinds_shortened_assignment[category_codes["intermediate"]],
+			category_label: category_codes["intermediate"],
 			category_training_level: "intermediate",
 			category_label_level: correct_category_labels["intermediate"],
 			training_label: training_labels_shuffled[1],
 			alternate_training_label: alternate_training_labels_shuffled[1],
 			training_image_path_info: ["sub1.jpg","bas1.jpg","bas2.jpg"],
-			hypernym_kind: hypernym_dict[category_kinds["intermediate"]]
+			hypernym_kind: category_kinds_assignment[hypernym_dict[category_codes["intermediate"]]],
+			hypernym_kind_shortened: category_kinds_shortened_assignment[hypernym_dict[category_codes["intermediate"]]],
+			hypernym_code: hypernym_dict[category_codes["intermediate"]],
 		},
 		broad: {
 			category_kind: category_kinds["broad"],
+			category_kind_shortened: category_kinds_shortened_assignment[category_codes["broad"]],
+			category_label: category_codes["broad"],
 			category_training_level: "broad",
 			category_label_level: correct_category_labels["broad"],
 			training_label: training_labels_shuffled[2],
 			alternate_training_label: alternate_training_labels_shuffled[2],
 			training_image_path_info: ["sub1.jpg","sup2.jpg","sup5.jpg"],
-			hypernym_kind: hypernym_dict[category_kinds["broad"]]
+			hypernym_kind: category_kinds_assignment[hypernym_dict[category_codes["broad"]]],
+			hypernym_kind_shortened: category_kinds_shortened_assignment[hypernym_dict[category_codes["broad"]]],
+			hypernym_code: hypernym_dict[category_codes["broad"]],
 		}
 	};
 

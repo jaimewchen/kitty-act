@@ -143,33 +143,15 @@ function generate_block(trial, training_types) {
   var current_training_label = current_trial_info["training_label"];
   var current_alternate_training_label = current_trial_info["alternate_training_label"];
   var current_category_kind = current_trial_info["category_kind"];
+  var current_category_label = current_trial_info["category_label"];
+  var current_category_kind_shortened = current_trial_info["category_kind_shortened"];
   var current_category_training_level = current_trial_info["category_training_level"];
   var current_category_label_level = current_trial_info["category_label_level"];
-  var current_training_image_path_info = current_trial_info["training_image_path_info"]
+  var current_training_image_path_info = current_trial_info["training_image_path_info"];
   //select hypernym category (if needed)
   var current_hypernym_category_kind = current_trial_info["hypernym_kind"];
-
-  if (current_category_kind=="vegetables") {
-    var current_category_label = "c1";
-    var current_category_kind_shortened = "veg";
-  } else if (current_category_kind=="vehicles") {
-    var current_category_label = "c2";
-    var current_category_kind_shortened = "veh";
-  } else {
-    var current_category_label = "c3";
-    var current_category_kind_shortened = "ani";
-  }
-
-  if (current_hypernym_category_kind=="vegetables") {
-    var current_hypernym_category_label = "c1";
-    var current_hypernym_category_kind_shortened = "veg";
-  } else if (current_hypernym_category_kind=="vehicles") {
-    var current_hypernym_category_label = "c2";
-    var current_hypernym_category_kind_shortened = "veh";
-  } else {
-    var current_hypernym_category_label = "c3";
-    var current_hypernym_category_kind_shortened = "ani";
-  }
+  var current_hypernym_category_label = current_trial_info["hypernym_code"];
+  var current_hypernym_category_kind_shortened = current_trial_info["hypernym_kind_shortened"];
 
   console.log(current_training_label);
   console.log(current_alternate_training_label);
@@ -177,6 +159,8 @@ function generate_block(trial, training_types) {
   console.log(current_category_label_level);
   console.log(current_category_label);
   console.log(current_hypernym_category_kind);
+  console.log(current_hypernym_category_label);
+  console.log(current_hypernym_category_kind_shortened);
 
   // PREPPTING THE SELECTION ARRAYS
 		  

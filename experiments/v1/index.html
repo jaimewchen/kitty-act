@@ -170,7 +170,8 @@
     var alternate_training_labels = ["tibble", "roozer", "guffy"];
     
 
-    var training_types = get_training_types(randomized_category_kinds,training_labels,alternate_training_labels,correct_category_label_levels);
+    var training_types = get_training_types(randomized_category_kinds,randomized_category_codes,category_kinds_assignment,
+  category_kinds_shortened_assignment,training_labels,alternate_training_labels,correct_category_label_levels);
 		var trial_order = get_trial_order(category_levels);
 
 		console.log(training_types)
