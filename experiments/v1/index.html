@@ -26,12 +26,8 @@
 
        <script src="js/helper.js"></script>
        <script src="js/settings.js"></script>
-       <!-- <script src="js/settings_a.js"></script> -->
-       <!-- <script src="js/settings_b.js"></script> -->
-       <script src="js/generate_trials_a.js"></script>
-       <!-- <script src="js/generate_trials_b.js"></script> -->
-       <script src="js/generate_blocks_3.js"></script>
-       <!-- <script src="js/generate_blocks_1.js"></script> -->
+       <script src="js/generate_trials.js"></script>
+       <script src="js/generate_blocks.js"></script>
     </head>
     <body>
     </body>
@@ -202,7 +198,7 @@ var training_image_names = [
 var category_kinds_assignment = {
   "c1": "fruit",
   "c2": "sea",
-  "c3": "vehicle"
+  "c3": "vehicles"
 }
 
 var category_kinds_shortened_assignment = {
@@ -320,7 +316,7 @@ var category_kinds_shortened_assignment = {
 		console.log(training_types)
 		console.log(trial_order)
 
-    var all_blocks = generate_all_blocks_3(trial_order,training_types);
+    var all_blocks = generate_all_blocks(trial_order,training_types);
 
     timeline = timeline.concat(all_blocks);
 

@@ -613,7 +613,7 @@ function generate_block(trial, training_types) {
 }
 
 // generate all blocks
-function generate_all_blocks_3(trial_order, training_types) {
+function generate_all_blocks(trial_order, training_types) {
 
   var all_blocks=[];
   for (var j = 0; j < trial_order.length; j++) {

@@ -154,6 +154,10 @@ function decode_category_kinds(category_kind_short,shuffled_category_kinds,array
     var current_category_kind = "vehicles";
   } else if (category_kind_short == "veg") {
     var current_category_kind = "vegetables";
+  } else if (category_kind_short == "fru") {
+    var current_category_kind = "fruit";
+  } else if (category_kind_short == "sea") {
+    var current_category_kind = "sea";
   } else {
     var current_category_kind = shuffled_category_kinds[array_index]
   }
