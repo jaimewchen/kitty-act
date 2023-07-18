@@ -61,7 +61,7 @@ var training_image_names = [
 var category_kinds_assignment = {
 	"c1": "fruit",
 	"c2": "sea",
-	"c3": "vehicle"
+	"c3": "vehicles"
 }
 
 var category_kinds_shortened_assignment = {

@@ -273,7 +273,7 @@ var category_kinds_shortened_assignment = {
           fullscreen_mode: true
         }
 
-        timeline.push(enter_fullscreen);
+        //timeline.push(enter_fullscreen);
 
 		// create game introduction and push to timeline
 
@@ -288,7 +288,7 @@ var category_kinds_shortened_assignment = {
 			stimulus: introduction_welcome_stimulus,
       choices: ["START"],
 		}
-		timeline.push(welcome);
+		//timeline.push(welcome);
 
     var starting_earth_background = '<div class="overlap-bubble"><figure><img src="stims_general/earth.png"></figure></div>';
 
@@ -300,7 +300,7 @@ var category_kinds_shortened_assignment = {
 		}
 
 
-		timeline.push(starting_background);
+		//timeline.push(starting_background);
 
     // BUILD TRIALS
     // key parameters
@@ -316,7 +316,7 @@ var category_kinds_shortened_assignment = {
 		console.log(training_types)
 		console.log(trial_order)
 
-    var all_blocks = generate_all_blocks(trial_order,training_types);
+    var all_blocks = generate_all_blocks(trial_order,training_types,1);
 
     timeline = timeline.concat(all_blocks);
 

@@ -6,23 +6,31 @@ rocket_animation += '<div class="rocket-animation"><figure><img src="stims_gener
 var introduction_alien_stimulus = '<div id="container">';
 introduction_alien_stimulus += '<div class="d-flex align-items-center"><figure class="floating"><img src="stims_general/alien.png" style="width:300px"></figure></div></div>';
 
-function generate_learning_instructions_pre(current_training_label, current_training_images) {
+function generate_learning_instructions_pre(current_training_label, current_training_images,number_training_images=3) {
   var current_learning_stimulus ='<div id="container" style="margin-top:12px">'
   current_learning_stimulus+= '<div class="d-flex align-items-center" style="margin-bottom:4px"><figure style="height:320px;"><img src="stims_general/alien_head.png" style="width:300px"></figure></div>';
   current_learning_stimulus+= '<div class="row" style="margin-bottom:5px;">';
+  if (number_training_images == 1) {
+    current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5); width:50%; margin:auto"><img src="'+current_training_images[0]+'" class="fade-in" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div>';
+  } else if (number_training_images == 3) {
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[0]+'" class="fade-in" style="width:100%; margin-bottom:-7px;"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
   current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div>';
+}
   return(current_learning_stimulus)
 }
 
-function generate_learning_instructions0(current_training_label, current_training_images) {
+function generate_learning_instructions0(current_training_label, current_training_images,number_training_images=3) {
     var current_learning_stimulus ='<div id="container">'
     current_learning_stimulus+= '<div class="d-flex align-items-center"><figure style="height:320px;"><img src="stims_general/alien_head.png" style="width:300px"></figure></div>';
     current_learning_stimulus+= '<div class="row" style="margin-bottom:11px;">';
+    if (number_training_images == 1) {
+      current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5);width:50%; margin:auto"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption class="fade-in" style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div>';
+    } else if (number_training_images == 3) {
     current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[0]+'" style="width:100%; margin-bottom:-7px;"></figure><figcaption class="fade-in" style="font-size:24px; color:white; margin-top:15px;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
     current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[1]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div>';
     current_learning_stimulus+= '<div class="column"><figure><figure style="border: 3px solid tomato; background-color:rgba(255,255,255,.5)"><img src="'+current_training_images[2]+'" style="width:100%; margin-bottom:-7px; opacity:0"></figure><figcaption style="font-size:24px; color:white; margin-top:15px; opacity:0;"><span style="background-color:white; border: 3px solid tomato;"><b>-<span style="color:tomato">'+current_training_label+'</span>-</b></span></figcaption></figure></div></div>';
+  }
     return(current_learning_stimulus)
 }
 
@@ -133,7 +141,7 @@ post_test_stimulus += '<div class="d-flex align-items-center" style="margin-bott
 
 
 // generate a block for CatAct
-function generate_block(trial, training_types) {
+function generate_block(trial, training_types,number_training_images) {
 
   var cur_block=[];
 	current_trial_info = training_types[trial];
@@ -236,10 +244,12 @@ function generate_block(trial, training_types) {
 
   console.log(sampling_image_words)
 
-  var current_learning_stimulus_pre = generate_learning_instructions_pre(current_training_label, current_training_images);
-  var current_learning_stimulus0 = generate_learning_instructions0(current_training_label, current_training_images)
-  var current_learning_stimulus1 = generate_learning_instructions1(current_training_label, current_training_images); 
-  var current_learning_stimulus2 = generate_learning_instructions2(current_training_label, current_training_images); 
+  var current_learning_stimulus_pre = generate_learning_instructions_pre(current_training_label, current_training_images,number_training_images);
+  var current_learning_stimulus0 = generate_learning_instructions0(current_training_label, current_training_images,number_training_images);
+  if (number_training_images==3) {
+    var current_learning_stimulus1 = generate_learning_instructions1(current_training_label, current_training_images); 
+    var current_learning_stimulus2 = generate_learning_instructions2(current_training_label, current_training_images); 
+  }
   var current_sampling_stimulus_hidden = generate_sampling_instructions_hidden(current_training_label, current_training_images, shuffled_sampling_images);
 	var current_sampling_stimulus = generate_sampling_instructions(current_training_label, current_training_images);
 
@@ -316,6 +326,8 @@ function generate_block(trial, training_types) {
 
   cur_block.push(learning_trial0);
 
+  if (number_training_images==3) {
+
   var learning_trial1 = {
     type: 'audio-button-response-adapted',
     stimulus: function(){
@@ -375,6 +387,7 @@ function generate_block(trial, training_types) {
   }
 
   cur_block.push(learning_trial2);
+}
 
   // display sampling trial
   var sampling_trial_hidden_button = {
@@ -613,12 +626,12 @@ function generate_block(trial, training_types) {
 }
 
 // generate all blocks
-function generate_all_blocks(trial_order, training_types) {
+function generate_all_blocks(trial_order, training_types,number_training_images) {
 
   var all_blocks=[];
   for (var j = 0; j < trial_order.length; j++) {
     trial=trial_order[j];
-    cur_block=generate_block(trial, training_types)
+    cur_block=generate_block(trial, training_types,number_training_images)
     all_blocks=all_blocks.concat(cur_block)
   }
 

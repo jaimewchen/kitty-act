@@ -465,10 +465,10 @@ figure {
    max-width: 800px;
 }
 
-figure {
+/*figure {
     margin-inline-start: 10px;
     margin-inline-end: 10px;
-}
+}*/
 
 textarea {
   font-size: 18px;
