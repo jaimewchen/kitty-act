@@ -1,0 +1,6 @@
+"0","paste(""When 1 training image was shown, confirmatory answers were made"", round(freq_confirm_num_1, digits = 2), ""% of the time. When 3 training images were shown, confirmatory answers were made"", round(freq_confirm_num_3, digits = 2), ""% of the time."")
+"
+"1","[1]"
+"1"," ""When 1 training image was shown, confirmatory answers were made 0 % of the time. When 3 training images were shown, confirmatory answers were made 66.67 % of the time."""
+"1","
+"

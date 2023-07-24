@@ -1,0 +1,281 @@
+---
+title: "Deidentifying collect data"
+author: "Martin Zettersten"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+knitr::opts_chunk$set(
+                prompt  = FALSE,
+                cache   = FALSE,
+                echo = TRUE,
+                warning=F,
+                message=F)
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(tidymodels)
+
+read_path <- here::here("..","data","processed_data")
+write_path <- here::here("..","data","processed_data")
+file_name <- "long2collect_deidentified_data.csv"
+```
+
+## Read in data and filter out incomplete responses
+
+```{r}
+d <- read_csv(here::here(read_path,file_name)) %>%
+  slice(-1,-2) %>%
+  clean_names() %>%
+  filter(!is.na(consent_form)) %>%
+  #filter(!is.na(collect_yn)) %>%
+  filter(progress=="100") 
+```
+
+## Cleaning
+
+```{r}
+identify_f <- c("Female","female","girl","Girl/female","F","Girl","f","FEMALE","female/girl")
+identify_m <- c("Male","m","male","M","He identifies as boy","He identifies as male", "He identies as male","Boy","male/boy")
+d <- d %>%
+  mutate(age_num = as.numeric(str_remove(age," years old"))) %>%
+  mutate(
+    gender_clean = case_when(
+      gender %in% identify_f ~ "girl",
+      gender %in% identify_m ~ "boy",
+      TRUE ~ "other"
+    )
+  ) %>%
+  mutate(
+    age_bin = case_when(
+      age_num < 5 & age_num>=3 ~ "3 to 4",
+      age_num < 7 & age_num>=5 ~ "5 to 6",
+      age_num < 9 & age_num>=7 ~ "7 to 8",
+      age_num < 11 & age_num>=9 ~ "9 to 10",
+      age_num < 13 & age_num>=11 ~ "11 to 12",
+    )
+  )
+```
+
+## Export list of free response collection items
+
+(need to update this for the new survey)
+
+```{r}
+d_interest_long <- d %>%
+  pivot_longer(
+    cols=starts_with("rating_questions"),
+    names_to="rating_question",
+    values_to = "rating_response",
+    names_prefix="rating_questions_"
+  ) %>%
+  separate(
+    col="rating_question",
+    into=c("item_number","rating_question_number"),
+    remove=FALSE
+  ) %>%
+  mutate(rating_response_numeric=case_when(
+    is.na(rating_response) ~ NA,
+    rating_response == "Strongly agree" ~ 7,
+    rating_response == "Agree" ~ 6,
+    rating_response == "Somewhat agree" ~ 5,
+    rating_response == "Neither agree nor disagree" ~ 4,
+    rating_response == "Somewhat disagree" ~ 3,
+    rating_response == "Disagree" ~ 2,
+    rating_response == "Strongly disagree" ~ 1
+  )) %>%
+  mutate(
+    rating_question_type = case_when(
+      rating_question_number=="1" ~ "learn_more",
+      rating_question_number=="2" ~"curious",
+      rating_question_number=="3" ~ "talks",
+      rating_question_number=="4" ~ "plays",
+      rating_question_number=="5" ~ "shows_to_others",
+      rating_question_number=="6" ~ "trades",
+      rating_question_number=="7" ~ "receives_gifts",
+      rating_question_number=="8" ~ "valued_by_others",
+      rating_question_number=="9" ~ "plays_on_their_own",
+      rating_question_number=="10" ~ "shares_with_others",
+      rating_question_number=="11" ~ "uses_imagination"
+    )
+  )
+d_interest_item <- d_interest_long %>%
+  ungroup() %>%
+  select(participant_id,multi_rid,response_id,age_num,gender_clean,collect_yn,collect_freelist_1,collect_freelist_2,collect_freelist_3, collect_freelist_4, collect_freelist_5,collect_freelist_7,item_number,rating_question_type,rating_response_numeric) %>%
+  group_by(participant_id,multi_rid,response_id,item_number) %>%
+  pivot_wider(
+    names_from = rating_question_type,
+    values_from = rating_response_numeric
+  ) %>%
+  mutate(
+    freelist_item = case_when(
+      item_number == "1" ~ collect_freelist_1,
+      item_number == "2" ~ collect_freelist_2,
+      item_number == "3" ~ collect_freelist_3,
+      item_number == "4" ~ collect_freelist_4,
+      item_number == "5" ~ collect_freelist_5,
+      item_number == "6" ~ collect_freelist_7,
+    )
+  ) %>%
+  select(-c(collect_freelist_1,collect_freelist_2,collect_freelist_3, collect_freelist_4, collect_freelist_5,collect_freelist_7))
+d_interest_item %>%
+  ungroup() %>%
+  filter(!is.na(freelist_item)) %>%
+  distinct(freelist_item) %>%
+  write.csv(here::here(write_path,"long2collect_questionnaire_v1_freelist_items.csv"),row.names=FALSE)
+```
+
+## export temperament questions
+
+```{r}
+questionnaire_d <- d %>%
+  select(
+    participant_id,
+    multi_rid,
+    age,
+    age_num,
+    gender,
+    gender_clean,
+    starts_with("temperament"),
+    starts_with("cs"),
+    starts_with("epistemic")
+  ) %>%
+  mutate(
+    temperament_questionnaire_version = case_when(
+      !is.na(temperament_3_8_1) ~ "cbq-very-short",
+      !is.na(temperament_9_15_1) ~"eatq=r-parent",
+      TRUE ~ "none"
+    )
+  )
+write_csv(questionnaire_d, here::here(write_path,"long2collect_questionnaire_v1_processed_data.csv"))
+```
+
+
+## Write
+
+```{r}
+write_csv(d,here::here(write_path,"long2collect_v1_processed_data.csv"))
+```
+
+## CBQ Score Processing and Writing
+
+```{r}
+questionnaire_d_cbq <- questionnaire_d %>% 
+  filter(temperament_questionnaire_version == "cbq-very-short") %>% 
+  select(participant_id,
+    multi_rid,
+    age,
+    age_num,
+    gender,
+    gender_clean,
+    temperament_questionnaire_version,
+    starts_with("temperament_3")
+  )
+
+cbq_longer <- questionnaire_d_cbq %>% 
+  pivot_longer(
+    cols = starts_with("temperament_3"),
+    names_to = "cbq_question",
+    values_to = "cbq_response",
+    )
+
+cbq_num <- cbq_longer %>% mutate(cbq_response_num = case_when(
+  cbq_response == "extremely true" ~ 7,
+  cbq_response == "quite true" ~ 6,
+  cbq_response == "slightly true" ~ 5,
+  cbq_response == "neither true or untrue" ~ 4,
+  cbq_response == "slightly untrue" ~ 3,
+  cbq_response == "quite untrue" ~ 2,
+  cbq_response == "extremely untrue" ~ 1
+  )) 
+
+cbq_rev <- cbq_num %>% mutate(cbq_question_rev = 
+  case_when(
+    cbq_question == "temperament_3_8_13" ~ TRUE, 
+    cbq_question == "temperament_3_8_19" ~ TRUE, 
+    cbq_question == "temperament_3_8_20" ~ TRUE, 
+    cbq_question == "temperament_3_8_22" ~ TRUE,
+    cbq_question == "temperament_3_8_26" ~ TRUE, 
+    cbq_question == "temperament_3_8_29" ~ TRUE, 
+    cbq_question == "temperament_3_8_31" ~ TRUE, 
+    cbq_question == "temperament_3_8_34" ~ TRUE,
+    .default = FALSE
+  )) %>% 
+  mutate(cbq_response_num = case_when(
+    cbq_question_rev == TRUE ~ (8 - cbq_response_num),
+    .default = cbq_response_num
+    )) %>%  
+  mutate(cbq_response_num = as.numeric(cbq_response_num))
+  
+questionnaire_d_cbq_num <- cbq_rev %>% select(
+    participant_id,
+    multi_rid,
+    age,
+    age_num,
+    gender,
+    gender_clean,
+    temperament_questionnaire_version,
+    cbq_question,
+    cbq_response_num
+  ) %>% 
+  pivot_wider(names_from = cbq_question, values_from = cbq_response_num)
+
+questionnaire_d_cbq_scores <- questionnaire_d_cbq_num %>% 
+  mutate(score_surgency = select(questionnaire_d_cbq_num, c(
+    temperament_3_8_1,
+    temperament_3_8_4,
+    temperament_3_8_7,
+    temperament_3_8_10,
+    temperament_3_8_13,
+    temperament_3_8_16,
+    temperament_3_8_19,
+    temperament_3_8_22,
+    temperament_3_8_25,
+    temperament_3_8_28,
+    temperament_3_8_31,
+    temperament_3_8_34
+  )) %>% rowMeans()
+  ) %>% 
+  mutate(score_negative_affect = select(questionnaire_d_cbq_num, c(
+    temperament_3_8_2,
+    temperament_3_8_5,
+    temperament_3_8_8,
+    temperament_3_8_11,
+    temperament_3_8_14,
+    temperament_3_8_17,
+    temperament_3_8_20,
+    temperament_3_8_23,
+    temperament_3_8_26,
+    temperament_3_8_29,
+    temperament_3_8_32,
+    temperament_3_8_35
+  )) %>% rowMeans()
+  ) %>% 
+  mutate(score_effortful_control = select(questionnaire_d_cbq_num, c(
+    temperament_3_8_3,
+    temperament_3_8_6,
+    temperament_3_8_9,
+    temperament_3_8_12,
+    temperament_3_8_15,
+    temperament_3_8_18,
+    temperament_3_8_21,
+    temperament_3_8_24,
+    temperament_3_8_27,
+    temperament_3_8_30,
+    temperament_3_8_33,
+    temperament_3_8_36
+  )) %>% rowMeans()
+  )
+
+write_csv(questionnaire_d_cbq_scores, here::here(write_path,"long2collect_questionnaire_v1_cbq_scores.csv"))
+```
+
