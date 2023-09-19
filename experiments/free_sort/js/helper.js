@@ -58,7 +58,7 @@ function create_debrief_questions() {
 var debrief_questions = {
     type: 'survey-text',
     questions: [
-      {prompt: "Did you encounter any issues during the task?", name: "issues", rows: 3,columns: 60}
+      {prompt: "Did you encounter any issues during the task?", name: "issues", rows: 3,columns: 60},
     {prompt: "Any additional comments?", name: "comments", rows: 3,columns: 60}
     ],
 
