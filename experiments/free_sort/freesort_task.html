@@ -55,17 +55,13 @@
                 '<b>The more similar two images are, the closer they should be.</b>'+"<br>" + "<br>"+
                 'To move the images, click and drag them with your mouse.'+"<br>" + "<br>"+
                 '<i>Click next to see an example.</i>',
-                '<font size="6"><b>EXAMPLE</b></font>'+"<br>" + "<br>" + 
-                '<center><img src="similarity_example.jpg" style="width:40%;height:40%;"></img></center>'+ "<br>" + 
-                'Among these five images, the three images of white houses are similar, and so they were moved close together.' +"<br>" + 
-                'Two of these three images in particular are highly similar and are slightly closer together than the third image.' +"<br>" + 
-                'The fourth image of a house is more dissimilar from the other three, so it is further from the other house images.'+"<br>" + 
-                'The fifth image is very dissimilar from all the other images, so it is the furthest away from the other four images.'+"<br>" + "<br>"+
+
+                '<font size="6"><b>EXAMPLE</b></font>'+"<br>" +
+                '<div id="container" style="width:1000px"><div class="row"><div class="column"><img src="similarity_example.jpg" style="width:150%;"></img></div class="column"><div class="column" style="margin-left:215px"><p align="left">Among these five images, the three images of white houses are similar, and so they were moved close together.' +"<br>" + "<br>" +'Two of these three images in particular are highly similar and are slightly closer together than the third image.' +"<br>" + "<br>" + 'The fourth image of a house is more dissimilar from the other three, so it is further from the other house images.'+"<br>" + "<br>" + 'The fifth image is very dissimilar from all the other images, so it is the furthest away from the other four images.</p></div></div></div>'+"<br>" +
                 '<i>Click next to continue.</i>',
-                '<font size="6"><b>HOW TO ORGANIZE IMAGES</b></font>'+"<br>" + "<br>" + 
-                '<center><div class="row"><figure style="width:400px"><img src="stacking_example.jpg" style="width:70%;"></img><figcaption>Do not stack images</figcaption></figure><figure style="width:400px"><img src="row_sorting_example.jpg" style="width:80%;"></img><figcaption>Do not focus on neatly sorting images</figcaption></figure></div></center>'+ "<br>" + 
-                'insert instructions' +"<br>" + 
-                'insert instructions'+"<br>" + "<br>"+
+
+                '<font size="6"><b>HOW TO ORGANIZE IMAGES</b></font>'+"<br>" +
+                '<div id="container" style="width:1000px"><div class="row"><div class="column"><figure><img src="row_sorting_example.jpg" style="width:150%;"></img><figcaption style="width:150%"><b>Do not focus on neatly sorting images</b></figcaption></figure></div class="column"><div class="column" style="margin-left:150px"><p align="left">Please form clusters of images instead of neatly formed rows or columns. Do not sort the images neatly as shown in the example (left).' +"<br>" + "<br>" +'In the example, the rightmost white house is unintentionally depicted as more similar to the brown house than the leftmost white house.' +"<br>" + "<br>" +'Keep all images visible as best as you can.</p></div></div></div>'+"<br>" +
                 '<i>Click next to begin the experiment.</i>'
             ],
             button_label_previous: "Back",
@@ -102,18 +98,22 @@
             var sort_trial = {
                 type: 'free-sort',
                 stimuli: stims_list,
-                stim_width: 75,
-                stim_height: 75,
-                scale_factor: 2,
-                sort_area_width: 600,
-                sort_area_height: 500,
-                prompt: "<p style='margin-bottom: -10px;'><b>Click and drag the images below to sort them so that similar items are close together.</b></p>"
+                stim_width: 100,
+                stim_height: 100,
+                scale_factor: 1.1,
+                sort_area_width: 750,
+                sort_area_height: 650,
+                column_spread_factor: 0.9,
+                prompt: "<p style='margin-bottom: -10px; margin-top:-25px'><b>Click and drag the images below to sort them so that similar items are close together.</b></p>"
             };
             timeline.push(sort_trial);
         };
         
         jsPsych.init({
-            timeline: timeline
+            timeline: timeline,
+            // on_finish: function() {
+            //     jsPsych.data.get().localSave('csv', 'freesort.csv');
+            // }
         })
 
     </script>

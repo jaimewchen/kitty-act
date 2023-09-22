@@ -195,9 +195,9 @@ jsPsych.plugins['free-sort'] = (function() {
     if (!trial.stim_starts_inside) {
       // determine number of rows and colums, must be a even number
       let num_rows = Math.ceil(Math.sqrt(trial.stimuli.length))
-      // if ( num_rows % 2 != 0) {
-      //   num_rows = num_rows + 1
-      // }
+      if ( num_rows % 2 == 0) {
+        num_rows = num_rows - 1
+      }
 
       // compute coords for left and right side of arena
       var r_coords = [];

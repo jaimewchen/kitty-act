@@ -207,21 +207,21 @@ jsPsych.plugins['free-sort'] = (function() {
           for (const y of make_arr(0, trial.sort_area_height - trial.stim_height, num_rows) ) {
             if ( x > ( (trial.sort_area_width - trial.stim_width)  * .5 ) ) {
               //r_coords.push({ x:x, y:y } )
-              r_coords.push({ x:x + (trial.sort_area_width)  * (.5*trial.column_spread_factor) , y:y });
+              r_coords.push({ x:x + (trial.sort_area_width)  * (.57*trial.column_spread_factor) , y:y });
             } else {
-              l_coords.push({ x:x - (trial.sort_area_width)  * (.5*trial.column_spread_factor) , y:y });
+              l_coords.push({ x:x - (trial.sort_area_width)  * (.57*trial.column_spread_factor) , y:y });
               //l_coords.push({ x:x, y:y } )
             }
           }
         }
       } else {
-        for (const x of make_arr(0, trial.sort_area_width - trial.stim_width, num_rows) ) {
+        for (const x of make_arr(0, trial.sort_area_width - trial.stim_width, num_rows + 2) ) {
           for (const y of make_arr(0, trial.sort_area_height - trial.stim_height, num_rows) ) {
             if ( x > ( (trial.sort_area_width - trial.stim_width)  * .5 ) ) {
               //r_coords.push({ x:x, y:y } )
-              r_coords.push({ x:x + (trial.sort_area_width)  * (.5*trial.column_spread_factor) , y:y });
+              r_coords.push({ x:x + (trial.sort_area_width)  * (.57*trial.column_spread_factor) , y:y });
             } else {
-              l_coords.push({ x:x - (trial.sort_area_width)  * (.5*trial.column_spread_factor) , y:y });
+              l_coords.push({ x:x - (trial.sort_area_width)  * (.57*trial.column_spread_factor) , y:y });
               //l_coords.push({ x:x, y:y } )
             }
           }
