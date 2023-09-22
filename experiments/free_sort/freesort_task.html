@@ -6,7 +6,12 @@
       <script src="jspsych-6.3.1/plugins/jspsych-free-sort-custom.js"></script>
       <script src="jspsych-6.3.1/plugins/jspsych-fullscreen.js"></script>
       <script src="jspsych-6.3.1/plugins/jspsych-instructions.js"></script>
+      <script src="jspsych-6.3.1/plugins/jspsych-survey-text.js"></script>
+       <script src="jspsych-6.3.1/plugins/jspsych-survey-multi-select.js"></script>
+       <script src="jspsych-6.3.1/plugins/jspsych-survey-multi-choice.js"></script>
       <link href="jspsych-6.3.1/css/jspsych.css" rel="stylesheet" type="text/css">
+
+      <script src="js/helper.js"></script>
     </head>
     <body>
     </body>
@@ -108,6 +113,16 @@
             };
             timeline.push(sort_trial);
         };
+
+        // add demographics and debrief questions
+        var demographics = create_demographics();
+        timeline = timeline.concat(demographics);
+        var debrief = create_debrief_questions();
+        timeline = timeline.concat(debrief);
+
+        //create random code for final message
+        var code = createCode("CatActIm");
+        console.log(code);
         
         jsPsych.init({
             timeline: timeline,
