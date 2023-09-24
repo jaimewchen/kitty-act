@@ -324,6 +324,9 @@ jsPsych.plugins['free-sort'] = (function() {
         let elem = event.currentTarget;
         elem.style.transform = "scale(" + trial.scale_factor + "," + trial.scale_factor + ")";
 
+        // bring item to the front while it is being moved
+        elem.style.zIndex = "100";
+
         let move_event = function(e){
           let clientX = e.clientX;
           let clientY = e.clientY;
@@ -350,9 +353,6 @@ jsPsych.plugins['free-sort'] = (function() {
               border.style.background = "None";
             }
           }
-
-          // bring item to the front while it is being moved
-          elem.style.zIndex = "100";
           
           // replace in overall array, grab index from item id
           var elem_number = elem.id.split("jspsych-free-sort-draggable-")[1];
