@@ -1,0 +1,106 @@
+---
+title: "analysis"
+author: "Martin Zettersten"
+date: "2024-04-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(knitr)
+knitr::opts_chunk$set(
+                prompt  = FALSE,
+                cache   = FALSE,
+                echo = TRUE,
+                warning=F,
+                message=F)
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(tidymodels)
+
+data_path <- here("processed_data")
+file_name <- "kitty-act-v1-alldata.csv"
+```
+
+# Read the data
+
+```{r}
+kitty_data_raw <- read.csv(here(data_path,file_name))
+```
+
+# Processing
+
+## Data Cleaning
+
+Select relevant data. We only need to keep the test trial kind to retain all key information.
+
+```{r}
+main_d <- kitty_data_raw %>%
+  filter(trial_kind=="test") %>%
+  # add a trial counter that increments with trial_index within participant
+  arrange(participant,round, trial_index) %>%
+  ungroup() %>%
+  group_by(participant) %>%
+  mutate(trial_counter = row_number()) %>%
+  relocate(trial_counter,.after=trial_index)
+```
+
+## Sampling Data
+
+```{r}
+# process sampled image
+main_d <- main_d %>%
+  mutate(
+    sampled_imagename = str_remove(sampled_image,"stims/"),
+    sampled_imagelabel = str_remove(sampled_imagename,".jpg")
+  ) %>%
+  rowwise() %>%
+  mutate(
+    sampled_category_kind_short = unlist(str_split(sampled_imagelabel,"_"))[1],
+    sampled_category_level = str_replace_all(unlist(str_split(sampled_imagelabel,"_"))[3], "[:digit:]","")
+  ) %>%
+  mutate(
+    sampled_category_kind  = case_when(
+      sampled_category_kind_short == "ani" ~ "animals",
+      sampled_category_kind_short == "veg" ~ "vegetables",
+      sampled_category_kind_short == "veh" ~ "vehicles",
+      sampled_category_kind_short == "fru" ~ "fruits",
+      sampled_category_kind_short == "sea" ~ "sea",
+      sampled_category_kind_short == "spo" ~ "sports",
+    )
+  ) %>%
+  mutate(
+    within_category_sample = ifelse(sampled_category_kind == current_category_kind,1,0),
+    within_category_sample_f =  ifelse(sampled_category_kind == current_category_kind,"within-category","other-category"),
+  ) %>%
+  mutate(
+    sampled_category_level_kind_info=ifelse(within_category_sample==0,"outside_category",sampled_category_level)
+  )
+
+
+main_d <- main_d |> 
+  mutate(
+    sampling_choice_type = case_when(
+      sampled_category_level_kind_info == "sub" ~ "confirm",
+      number_training_images == 3 & current_category_training_level == "intermediate" & sampled_category_level_kind_info == "bas" ~ "confirm",
+      number_training_images == 3 & current_category_training_level == "broad" & sampled_category_level_kind_info == "bas" ~ "confirm",
+      number_training_images == 3 & current_category_training_level == "broad" & sampled_category_level_kind_info == "sup" ~ "confirm",
+      TRUE ~ "explore"
+    )
+  ) |>
+  mutate(
+    chance_consistent = case_when(
+      number_training_images == 1 ~ 1/4,
+      current_category_training_level == "narrow" ~ 1/4,
+      current_category_training_level == "intermediate" ~ 2/4,
+      current_category_training_level == "broad" ~ 3/4
+    )
+  )
+```
+
+## Test Data
