@@ -400,7 +400,7 @@ library(tidyverse)</code></pre>
 ## ✖ dplyr::lag()      masks stats::lag()
 ## ✖ yardstick::spec() masks readr::spec()
 ## ✖ recipes::step()   masks stats::step()
-## • Dig deeper into tidy modeling with R at https://www.tmwr.org</code></pre>
+## • Learn how to get started at https://www.tidymodels.org/start/</code></pre>
 <pre class="r"><code>library(jsonlite)</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;jsonlite&#39;
@@ -440,7 +440,16 @@ retain all key information.</p>
   ungroup() %&gt;%
   group_by(participant) %&gt;%
   mutate(trial_counter = row_number()) %&gt;%
-  relocate(trial_counter,.after=trial_index)</code></pre>
+  relocate(trial_counter,.after=trial_index)
+
+#treat all training levels in the 1-item condition as &quot;narrow&quot;
+main_d &lt;- main_d %&gt;%
+  mutate(
+    current_category_training_level = case_when(
+      number_training_images == 1 ~ &quot;narrow&quot;,
+      TRUE ~ current_category_training_level
+    )
+  )</code></pre>
 </div>
 <div id="sampling-data" class="section level2">
 <h2>Sampling Data</h2>
@@ -631,6 +640,7 @@ test_array_options_clean &lt;- test_array_options %&gt;%
       current_category_label_level == &quot;hypernym&quot; ~ 8
     ),
     total_number_correct_options_training = case_when(
+      number_training_images == 1 ~ 1,
       current_category_training_level == &quot;narrow&quot; ~ 1,
       current_category_training_level == &quot;intermediate&quot; ~ 2,
       current_category_training_level == &quot;broad&quot; ~ 4

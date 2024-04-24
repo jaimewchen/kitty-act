@@ -51,6 +51,15 @@ main_d <- kitty_data_raw %>%
   group_by(participant) %>%
   mutate(trial_counter = row_number()) %>%
   relocate(trial_counter,.after=trial_index)
+
+#treat all training levels in the 1-item condition as "narrow"
+main_d <- main_d %>%
+  mutate(
+    current_category_training_level = case_when(
+      number_training_images == 1 ~ "narrow",
+      TRUE ~ current_category_training_level
+    )
+  )
 ```
 
 ## Sampling Data
@@ -250,6 +259,7 @@ test_array_options_clean <- test_array_options %>%
       current_category_label_level == "hypernym" ~ 8
     ),
     total_number_correct_options_training = case_when(
+      number_training_images == 1 ~ 1,
       current_category_training_level == "narrow" ~ 1,
       current_category_training_level == "intermediate" ~ 2,
       current_category_training_level == "broad" ~ 4
