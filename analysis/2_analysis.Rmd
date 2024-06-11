@@ -2,7 +2,9 @@
 title: "Kitty Act V1 Analysis"
 author: "Martin Zettersten"
 date: "2024-04-24"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
   
 ```{r setup, warning=FALSE, message=F}
@@ -286,3 +288,65 @@ ggplot(overall_test_prop_long,aes(choice_type_ord,avg_prop,fill=choice_type_ord)
   theme(legend.position="none")
 ```
 
+## Sampling by Age
+
+### Plot
+
+```{r fig.width=10, fig.height=4}
+
+# pulling participant age data
+
+participant_info <- read.csv("participant_info.csv") 
+participant_ages <- participant_info %>%
+  filter(pilot == "no") %>% 
+  select(subject_id, age_group, age_mos, age_day_count)
+
+# turning day counts into decimals
+
+age_day_decimal_list <- numeric()
+for (i in 1:83){
+  age_day_decimal_list[[i]] <- rep(participant_ages$age_day_count[i] / 31)
+}
+
+participant_ages_decimal <- participant_ages %>% 
+  mutate(age_decimal = participant_ages$age_mos+age_day_decimal_list) %>% 
+  select(subject_id, age_group, age_decimal)
+
+# combining age data with sampling data
+
+sampling_data_ages <- sampling_data_long_structure %>% 
+  mutate(age_decimal = rep(participant_ages$age_mos+age_day_decimal_list,24)) %>% 
+  mutate(age_group = rep(participant_ages$age_group,24))
+
+# summarizing
+
+sampling_data_ages_summarized <- sampling_data_ages %>%
+  group_by(age_group, 
+           number_training_images,
+           current_category_training_level,
+           sampling_choice_type) %>% 
+  summarize(
+    N=n(),
+    sampling_response_avg=mean(sampling_choice_chosen,na.rm=TRUE),
+    sampling_response_total=sum(sampling_choice_chosen,na.rm=TRUE),
+    sampling_response_binom_lower=binom.test(sampling_response_total,N)$conf.int[1],
+    sampling_response_binom_upper=binom.test(sampling_response_total,N)$conf.int[2],
+  ) 
+
+sampling_data_ages_summarized$current_category_training_level <- factor(sampling_data_ages_summarized$current_category_training_level,levels=c("narrow","intermediate","broad"))
+
+sampling_data_ages_summarized %>% filter(number_training_images == 1) %>% 
+  ggplot(aes(x = age_group, 
+             y = sampling_response_avg, 
+             color = sampling_choice_type)) + 
+  geom_point() +
+  geom_line()
+
+sampling_data_ages_summarized %>% filter(number_training_images == 3) %>% 
+  ggplot(aes(x = age_group, 
+             y = sampling_response_avg, 
+             color = sampling_choice_type)) + 
+  geom_point() +
+  geom_line() + 
+  facet_wrap(. ~ current_category_training_level, ncol = 3)
+```
