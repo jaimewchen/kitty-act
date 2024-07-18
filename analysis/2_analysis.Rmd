@@ -24,6 +24,7 @@ library(car)
 library(nnet)
 library(mlogit)
 library(lmerTest)
+library(assertthat)
 source("helper.R")
 
 data_path <- here("processed_data", "kitty-act-v1-alldata.csv")
@@ -44,6 +45,15 @@ sampling_data <- read_csv(sampling_data_path)
 test_array_clean <- read_csv(test_data_path)
 test_array_options_clean <- read_csv(test_data_long_path)
 ```
+
+## run a couple of tests on the data
+
+```{r}
+#check that we have all of the participants we expect
+assert_that(length(unique(sampling_data$subject_id))==length(unique(test_array_clean$subject_id)))
+assert_that(length(unique(sampling_data$subject_id))==83)
+```
+
 
 ## Summarize Test Data
 
