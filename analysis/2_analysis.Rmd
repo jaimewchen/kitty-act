@@ -25,12 +25,14 @@ library(nnet)
 library(mlogit)
 library(lmerTest)
 library(assertthat)
+library(knitr)
 source("helper.R")
 
 data_path <- here("processed_data", "kitty-act-v1-alldata.csv")
 sampling_data_path <- here("processed_data", "kitty-act-v1-processed_data_sampling.csv")
 test_data_path <- here("processed_data", "kitty-act-v1-processed_data.csv")
 test_data_long_path <- here("processed_data", "kitty-act-v1-processed_data_long.csv")
+participant_info_path <- here("processed_data","kitty-act-v1-participant_info.csv")
 write_path <- here("processed_data")
 figure_path <- here("figures")
 ```
@@ -40,11 +42,70 @@ figure_path <- here("figures")
 ## Read in data
 
 ```{r, warning=FALSE, message=F}
-d <- read_csv(data_path)
-sampling_data <- read_csv(sampling_data_path)
-test_array_clean <- read_csv(test_data_path)
-test_array_options_clean <- read_csv(test_data_long_path)
+d <- read_csv(data_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  ))
+sampling_data <- read_csv(sampling_data_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  ))
+test_array_clean <- read_csv(test_data_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  ))
+test_array_options_clean <- read_csv(test_data_long_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  ))
+#participant info
+participant_info <- read_csv(participant_info_path) %>%
+  filter(pilot == "no")
 ```
+
+## compute ages and integrate with main data
+
+```{r}
+participant_info <- participant_info %>%
+  mutate(resid_month_decimal=age_day_count/30.417) %>%
+  rename(age_mos_int=age_mos) %>%
+  mutate(age_mos = age_mos_int+resid_month_decimal,
+         age_years=age_mos/12) %>%
+  mutate(
+    age_years_c=age_years-mean(age_years)
+  )
+
+average_age <- participant_info %>%
+  summarize(
+    N=n(),
+    mean_age=mean(age_years,na.rm=TRUE),
+    sd_age=sd(age_years,na.rm=TRUE),
+    min_age=min(age_years,na.rm=TRUE),
+    max_age=max(age_years,na.rm=TRUE)
+  )
+
+average_age %>%
+  kable()
+
+#check that integration will work
+#all subject ids in the response data and the participant info are shared
+setdiff(unique(d$subject_id),unique(participant_info$subject_id))
+setdiff(unique(participant_info$subject_id),unique(d$subject_id))
+
+d <- d %>%
+  left_join(select(participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))
+sampling_data <- sampling_data %>%
+  left_join(select(participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))
+test_array_clean <- test_array_clean %>%
+  left_join(select(participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))
+test_array_options_clean <- test_array_options_clean %>%
+  left_join(select(participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))
+```
+
 
 ## run a couple of tests on the data
 
@@ -53,7 +114,6 @@ test_array_options_clean <- read_csv(test_data_long_path)
 assert_that(length(unique(sampling_data$subject_id))==length(unique(test_array_clean$subject_id)))
 assert_that(length(unique(sampling_data$subject_id))==83)
 ```
-
 
 ## Summarize Test Data
 
@@ -183,6 +243,131 @@ overall_accuracy_label_level_sampling_all <- subj_test_accuracy_all %>%
 
 ## Sampling
 
+### Models
+
+#### H1
+
+Do learners flexibly shift their sampling choices depending on the training condition? 
+
+```{r}
+sampling_data <- sampling_data %>%
+  mutate(
+    sampled_category_level_kind_info_choice_order = case_when(
+      sampled_category_level_kind_info == "outside_category" ~ "a_outside_category",
+      sampled_category_level_kind_info == "sub" ~ "b_sub",
+      sampled_category_level_kind_info == "bas" ~ "c_bas",
+      sampled_category_level_kind_info == "sup" ~ "d_sup"
+  ),
+  current_category_training_level_order = case_when(
+      current_category_training_level == "narrow" ~ "a_narrow",
+      current_category_training_level == "intermediate" ~ "b_intermediate",
+      current_category_training_level == "broad" ~ "c_broad"
+  )
+  )
+
+sampling_data_3_images_only <- sampling_data %>%
+  filter(number_training_images==3)
+
+#fit multinomial model
+nnetFixedModelStr <- 'sampled_category_level_kind_info_choice_order ~ current_category_training_level_order'
+nnetFixedFit <-  multinom(as.formula(nnetFixedModelStr), sampling_data_3_images_only, maxit=10000, abstol=1e-8, reltol=1e-10)
+summary(nnetFixedFit)
+Anova(nnetFixedFit,type="III")
+
+# Alternative (equivalent) approach with mlogit
+# reformat data for mlogit
+mlogit_sampling_data <-  mlogit.data(data=select(sampling_data_3_images_only,participant,sampled_category_level_kind_info_choice_order,current_category_training_level_order,current_category_kind), choice='sampled_category_level_kind_info_choice_order', shape="wide", id.var='participant')
+
+# specify model formula
+mlogit_sampling_formula_baseline <- ' sampled_category_level_kind_info_choice_order ~ 0 | 1 | 0'
+mlogit_sampling_formula_training <- 'sampled_category_level_kind_info_choice_order ~ 0 | current_category_training_level_order | 0'
+
+# fit models
+mlogit_sampling_baseline <- mlogit(as.formula(mlogit_sampling_formula_baseline), data=mlogit_sampling_data, panel=FALSE, iterlim=10000, tol = 1e-8)
+print(summary(mlogit_sampling_baseline))
+mlogit_sampling_training <- mlogit(as.formula(mlogit_sampling_formula_training), data=mlogit_sampling_data, panel=FALSE, iterlim=10000, tol = 1e-8)
+print(summary(mlogit_sampling_training))
+
+# overall test of condition (identical result to nnet method above)
+lrtest(mlogit_sampling_baseline,mlogit_sampling_training)
+```
+
+#### H1 across age
+
+```{r}
+#fit multinomial model
+nnetFixedModelStr <- 'sampled_category_level_kind_info_choice_order ~ current_category_training_level_order*age_years'
+nnetFixedFit <-  multinom(as.formula(nnetFixedModelStr), sampling_data_3_images_only, maxit=10000, abstol=1e-8, reltol=1e-10)
+summary(nnetFixedFit)
+Anova(nnetFixedFit,type="III")
+```
+
+#### 1-Narrow vs. 3-Narrow
+
+```{r}
+#filter relevant conditions
+sampling_data_1_vs_3 <- sampling_data %>%
+  filter(current_category_training_level=="narrow") %>%
+  mutate(
+    number_training_images_c=(number_training_images-2)/2
+  )
+
+#fit multinomial model
+nnetFixedModelStr <- 'sampled_category_level_kind_info_choice_order ~ number_training_images_c'
+nnetFixedFit <-  multinom(as.formula(nnetFixedModelStr), sampling_data_1_vs_3, maxit=10000, abstol=1e-8, reltol=1e-10)
+summary(nnetFixedFit)
+Anova(nnetFixedFit,type="III")
+```
+
+#### 1-Narrow vs. 3-Narrow across age
+
+```{r}
+#fit multinomial model
+nnetFixedModelStr <- 'sampled_category_level_kind_info_choice_order ~ number_training_images_c*age_years'
+nnetFixedFit <-  multinom(as.formula(nnetFixedModelStr), sampling_data_1_vs_3, maxit=10000, abstol=1e-8, reltol=1e-10)
+summary(nnetFixedFit)
+Anova(nnetFixedFit,type="III")
+```
+
+
+### Robustness Checks
+
+#### Controlling for Category Type
+
+```{r}
+nnetFixedModelStr <- 'sampled_category_level_kind_info_choice_order ~ current_category_training_level_order+current_category_kind'
+nnetFixedFit <-  multinom(as.formula(nnetFixedModelStr), sampling_data_3_images_only, maxit=10000, abstol=1e-8, reltol=1e-10)
+summary(nnetFixedFit)
+Anova(nnetFixedFit,type="II")
+```
+
+#### Adding by-participant random effects
+
+```{r}
+#set up random effects and model fitting parameters
+parNames=names(mlogit_sampling_training$coefficients)[1:3]
+print(parNames)
+rparArg=rep('n',length(parNames))
+names(rparArg)=parNames
+print(rparArg)
+NRCRDRAWS=1000
+
+#fit models
+if (NRCRDRAWS>0){
+mlogit_sampling_baseline_re=mlogit(as.formula(mlogit_sampling_baseline), data=mlogit_sampling_data, rpar=rparArg, 
+                panel=TRUE, R=NRCRDRAWS,print.level=1)
+print(summary(mlogit_sampling_baseline_re))
+}
+if (NRCRDRAWS>0){
+mlogit_sampling_training_re=mlogit(as.formula(mlogit_sampling_formula_training), data=mlogit_sampling_data, rpar=rparArg, 
+                panel=TRUE, R=NRCRDRAWS,print.level=1)
+print(summary(mlogit_sampling_training_re))
+}
+
+# LR Test
+lrtest(mlogit_sampling_baseline_re,mlogit_sampling_training_re)
+```
+
 ### Plot
 
 ```{r}
@@ -196,10 +381,10 @@ ggplot(sampling_data,aes(current_category_training_level_ord,fill=sampled_catego
   scale_fill_brewer(name="Sampling Choice Type",palette="RdYlBu")+
   xlab("Training Condition")+
   ylab("Proportion of Sampling Choices")+
-  facet_wrap(~number_training_images)+
-  theme_cowplot(font_size=24)+
-  theme(axis.title = element_text(face="bold", size=20),
-        axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4))
+  facet_wrap(~number_training_images)#+
+  # theme_cowplot(font_size=24)+
+  # theme(axis.title = element_text(face="bold", size=20),
+  #       axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4))
 
 ## Sampling Choices - individual bars
 sampling_data_long_structure <- expand.grid(
@@ -208,8 +393,9 @@ sampling_data_long_structure <- expand.grid(
   sampling_choice_type = c("subordinate","basic","superordinate","outside category")
 )
 sampling_data_long <-  sampling_data %>%
-  group_by(participant,number_training_images,trial_counter, current_category_training_level) %>%
-  summarize(sampling_response = sampled_category_level_kind_info_ord)
+  group_by(participant,age_group,age_years,number_training_images,trial_counter, current_category_training_level) %>%
+  summarize(sampling_response = sampled_category_level_kind_info_ord) %>%
+  arrange(participant,trial_counter)
 sampling_data_long_structure <- sampling_data_long_structure %>%
   left_join(sampling_data_long) %>%
   mutate(
@@ -234,7 +420,7 @@ sampling_data_long_structure_summarized$current_category_training_level_ord <- f
 ggplot(sampling_data_long_structure_summarized,aes(current_category_training_level_ord,sampling_response_avg, group=sampling_choice_type,fill=sampling_choice_type))+
   geom_errorbar(aes(ymin=sampling_response_binom_lower, ymax=sampling_response_binom_upper),width=0.3, color="black",position=position_dodge(width=0.9))+
   geom_bar(stat="identity",position=position_dodge())+
-  theme_cowplot(font_size=30)+
+  #theme_cowplot(font_size=30)+
   scale_fill_brewer(name="Sampling Choice Type",palette="RdYlBu")+
   scale_color_brewer(name="Sampling Choice Type",palette="RdYlBu")+
   xlab("Training Condition")+
@@ -249,7 +435,12 @@ ggplot(sampling_data_long_structure_summarized,aes(current_category_training_lev
 ```{r}
 ## Test Plot
 subj_test_prop <- test_array_options_clean %>%
-  group_by(participant,number_training_images,trial_counter,current_category_training_level,current_category_label_level,current_category_kind) %>%
+  mutate(training_condition = case_when(
+    number_training_images == 1 ~ "1-Item",
+    TRUE ~ paste0("3-Item ", stringr::str_to_title(current_category_training_level))
+  )) %>%
+  ungroup() %>%
+  group_by(participant,age_years,age_group,number_training_images,current_category_training_level,training_condition,current_category_label_level,current_category_kind) %>%
   summarize(
     N_subordinate = sum(test_image_type=="subordinate" & test_image_match_category==1),
     prop_subordinate = sum(test_image_type=="subordinate" & test_image_match_category==1 & is_chosen == 1)/sum(test_image_type=="subordinate" & test_image_match_category==1),
@@ -263,7 +454,7 @@ subj_test_prop_long <- subj_test_prop %>%
   pivot_longer(N_subordinate:prop_superordinate,names_to=c(".value","choice_type"),names_sep="\\_")
 
 overall_test_prop <- subj_test_prop %>%
-  group_by(number_training_images,current_category_training_level) %>%
+  group_by(training_condition,number_training_images,current_category_training_level) %>%
   summarize(
     N=n(),
     subordinate_percent = mean(prop_subordinate),
@@ -272,7 +463,7 @@ overall_test_prop <- subj_test_prop %>%
   )
 
 overall_test_prop_long <- subj_test_prop_long %>%
-  group_by(number_training_images,current_category_training_level,choice_type) %>%
+  group_by(training_condition,number_training_images,current_category_training_level,choice_type) %>%
   summarize(
     N=n(),
     avg_prop = mean(prop),
@@ -281,21 +472,24 @@ overall_test_prop_long <- subj_test_prop_long %>%
     prop_upper_ci=avg_prop+prop_ci,
   )
 overall_test_prop_long$choice_type_ord <- factor(overall_test_prop_long$choice_type,levels=c("subordinate","basic","superordinate"))
-overall_test_prop_long$current_category_training_level_ord <- factor(overall_test_prop_long$current_category_training_level,levels=c("narrow","intermediate","broad"))
+overall_test_prop_long$training_condition_ord <- factor(overall_test_prop_long$training_condition,levels=c("1-Item","3-Item Narrow", "3-Item Intermediate","3-Item Broad"))
 
 ggplot(overall_test_prop_long,aes(choice_type_ord,avg_prop,fill=choice_type_ord))+
   geom_bar(stat="identity")+
   geom_errorbar(aes(ymin=prop_lower_ci,ymax=prop_upper_ci),width=0.1)+
-  facet_wrap(~number_training_images+current_category_training_level_ord)+
-  theme_cowplot(font_size=20)+
+  facet_wrap(~training_condition_ord)+
+  theme_cowplot(font_size=12)+
   scale_fill_manual(
     name="Test Choice Type",
     values=c("#d7191c","#fdae61","#abd9e9"))+
   xlab("Test Choice Type")+
   ylab("Average Proportion\nof Test Choices")+
-  theme(axis.title = element_text(face="bold", size=24),
-        axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4))+
-  theme(legend.position="none")
+  theme(legend.position="none")+
+  theme(axis.title = element_text(face="bold", size=14),
+        #axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4)
+        )
+ggsave(here(figure_path,"kitty-act-test.png"),width=6,height=6)
+  
 ```
 
 ## Sampling by Age
@@ -304,32 +498,7 @@ ggplot(overall_test_prop_long,aes(choice_type_ord,avg_prop,fill=choice_type_ord)
 
 ```{r fig.width=10, fig.height=4}
 
-# pulling participant age data
-
-participant_info <- read.csv("participant_info.csv") 
-participant_ages <- participant_info %>%
-  filter(pilot == "no") %>% 
-  select(subject_id, age_group, age_mos, age_day_count)
-
-# turning day counts into decimals
-
-age_day_decimal_list <- numeric()
-for (i in 1:83){
-  age_day_decimal_list[[i]] <- rep(participant_ages$age_day_count[i] / 31)
-}
-
-participant_ages_decimal <- participant_ages %>% 
-  mutate(age_decimal = participant_ages$age_mos+age_day_decimal_list) %>% 
-  select(subject_id, age_group, age_decimal)
-
-# combining age data with sampling data
-
-sampling_data_ages <- sampling_data_long_structure %>% 
-  mutate(age_decimal = rep(participant_ages$age_mos+age_day_decimal_list,24)) %>% 
-  mutate(age_group = rep(participant_ages$age_group,24))
-
 # summarizing
-
 sampling_data_ages_summarized <- sampling_data_ages %>%
   group_by(age_group, 
            number_training_images,
@@ -360,3 +529,128 @@ sampling_data_ages_summarized %>% filter(number_training_images == 3) %>%
   geom_line() + 
   facet_wrap(. ~ current_category_training_level, ncol = 3)
 ```
+
+Continuous plot
+
+```{r}
+ggplot(sampling_data_long_structure,aes(age_years,sampling_choice_chosen,color=sampling_choice_type))+
+  geom_smooth(method="loess")+
+  facet_wrap(~number_training_images+current_category_training_level)
+```
+
+## Exploratory
+
+### investigate the proportion of exploratory choices
+
+```{r}
+sampling_data <- sampling_data %>%
+  mutate(is_exploratory=ifelse(sampling_choice_type=="explore",1,0)) %>%
+  mutate(training_condition = case_when(
+    number_training_images == 1 ~ "1-Item",
+    TRUE ~ paste0("3-Item ", stringr::str_to_title(current_category_training_level))
+  )) 
+
+subj_exploratory <- sampling_data %>%
+  mutate(
+    age_bins=case_when(
+      age_years<5.5 ~ 5,
+      age_years<6.5 ~ 6,
+      age_years<7.5 ~ 7,
+      age_years<8.5 ~ 8,
+      age_years<9.5 ~ 9,
+      TRUE ~ NA
+      
+    )
+  ) %>%
+  group_by(participant,age_bins) %>%
+  summarize(
+    N=n(),
+    prop_exploratory=mean(is_exploratory)
+  )
+
+#exploratory averages by age group
+overall_exploratory_age_group <- subj_exploratory %>%
+  group_by(age_bins) %>%
+  summarize(
+    N=n(),
+    mean_explore=mean(prop_exploratory),
+    sd(prop_exploratory,na.rm=T)/sqrt(N),
+    se = sd(prop_exploratory,na.rm=T)/sqrt(N),
+    ci=qt(0.975, N-1)*se,
+    lower_se = mean_explore-se,
+    upper_se = mean_explore+se,
+    lower_ci=mean_explore-ci,
+    upper_ci=mean_explore+ci,
+  )
+
+ggplot(sampling_data,aes(age_years,is_exploratory))+
+  geom_hline(yintercept=0.5,linetype="dashed")+
+  geom_smooth(method="lm",color="black")+
+  geom_errorbar(data=overall_exploratory_age_group,aes(age_bins,y=mean_explore,ymin=lower_se,ymax=upper_se),width=0,color="#0A5C36")+
+  geom_point(data=overall_exploratory_age_group,aes(age_bins,mean_explore),color="#0A5C36",size=2)+
+  ylab("Proportion of Exploratory Sampling Choices")+
+  xlab("Age (in years)")+
+  theme_cowplot(font_size=12)+
+  theme(axis.title = element_text(face="bold", size=14),
+        #axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4)
+        )
+ggsave(here(figure_path,"kitty-act-sampling-by-age.png"),width=6,height=6)
+ 
+
+ggplot(sampling_data,aes(age_years,is_exploratory, color=training_condition))+
+  geom_smooth(method="lm",se=F)+
+  geom_smooth(method="lm",color="black")
+
+#model
+m <- glmer(is_exploratory~ age_years_c*training_condition+(1|participant),data=sampling_data,family="binomial")
+summary(m)
+Anova(m,type="III")
+  
+```
+
+## H4: Test Choices
+
+## Training condition modulated participants’ choices at test (Proportion choices)
+
+```{r}
+# fit individual lmer models
+## subordinate choices
+m_sub <- lmer(prop_subordinate~training_condition+(1|participant),data=subj_test_prop)
+summary(m_sub)
+Anova(m_sub,type="III")
+
+## basic choices
+m_bas <- lmer(prop_basic~training_condition+(1|participant),data=subj_test_prop)
+summary(m_bas)
+Anova(m_bas,type="III")
+
+## superordinate choices
+m_sup <- lmer(prop_superordinate~training_condition+(1|participant),data=subj_test_prop)
+summary(m_sup)
+Anova(m_sup,type="III")
+
+```
+
+### H5: Proportion basic-level choices
+
+#### Test
+
+```{r}
+subj_test_prop <- subj_test_prop %>%
+  mutate(number_training_images_c=(number_training_images-2)/2)
+
+m <- glmer(prop_basic ~ number_training_images_c+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,current_category_training_level=="narrow"),family="binomial")
+summary(m)
+#replicates the basic Xu/ Tenenbaum effect
+```
+
+Does this interact with Age?
+
+```{r}
+m <- glmer(prop_basic ~ number_training_images_c*age_years_c+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,current_category_training_level=="narrow"),family="binomial")
+summary(m)
+```
+
+
+
+
