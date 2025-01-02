@@ -54,7 +54,17 @@ body {
   width: 100%;
   left: 50%;
   top: 50%;
-  transform: translate(-51%, -50%);
+  transform: translate(-51%, -50%) scale(1.1);
+  z-index: -1;
+}
+
+.overlap-confetti {
+  position: absolute;
+  align-items: center;
+  width: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-77%, -50%) scale(1.1);
   z-index: -1;
 }
 
@@ -69,9 +79,9 @@ body {
 }
 
 @keyframes rocket {
-  0% { transform: translate(0,  1000px); }
-  50%  { transform: translate(0, -2000px); }
-  100%   { transform: translate(0, -5000px); }   
+  0% { transform: translate(-24px,  1000px); }
+  50%  { transform: translate(-24px, -2000px); }
+  100%   { transform: translate(-24px, -5000px); }   
 }
 
 .background-animation {
@@ -79,6 +89,7 @@ body {
   animation-duration: 2s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 @keyframes background-anim {
@@ -91,6 +102,7 @@ body {
   animation-duration: 2s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 @keyframes background-anim-to-earth {
@@ -137,6 +149,7 @@ body {
 }
 
 .frame1 {
+  align-items: center;
   animation-name: frame1;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -150,6 +163,7 @@ body {
 }
 
 .frame2 {
+  align-items: center;
   animation-name: frame2;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -165,6 +179,7 @@ body {
 }
 
 .frame3 {
+  align-items: center;
   animation-name: frame3;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -180,6 +195,7 @@ body {
 }
 
 .frame4 {
+  align-items: center;
   animation-name: frame4;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -195,6 +211,7 @@ body {
 }
 
 .frame5 {
+  align-items: center;
   animation-name: frame5;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -210,6 +227,7 @@ body {
 }
 
 .frame6 {
+  align-items: center;
   animation-name: frame6;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -225,6 +243,7 @@ body {
 }
 
 .frame7 {
+  align-items: center;
   animation-name: frame7;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -240,6 +259,7 @@ body {
 }
 
 .frame8 {
+  align-items: center;
   animation-name: frame8;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -255,6 +275,7 @@ body {
 }
 
 .frame9 {
+  align-items: center;
   animation-name: frame9;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -270,6 +291,7 @@ body {
 }
 
 .frame10 {
+  align-items: center;
   animation-name: frame10;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -284,6 +306,7 @@ body {
   100% {opacity: 0}
 }
 .frame11 {
+  align-items: center;
   animation-name: frame11;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -298,6 +321,7 @@ body {
   100% {opacity: 0}
 }
 .frame12 {
+  align-items: center;
   animation-name: frame12;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -313,6 +337,7 @@ body {
 }
 
 .frame13 {
+  align-items: center;
   animation-name: frame13;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -327,6 +352,7 @@ body {
 }
 
 .frame14 {
+  align-items: center;
   animation-name: frame14;
   animation-duration: 2.0s;
   animation-iteration-count: 1;
@@ -465,10 +491,10 @@ figure {
    max-width: 800px;
 }
 
-/*figure {
+figure {
     margin-inline-start: 10px;
     margin-inline-end: 10px;
-}*/
+}
 
 textarea {
   font-size: 18px;

@@ -6,12 +6,16 @@ function get_training_types(
 	category_kinds_assignment,
 	category_kinds_shortened_assignment,
 	training_labels,
-	alternate_training_labels,
-	correct_category_labels) {
+	correct_category_labels
+	) {
 
 	//shuffle elements
 	var training_labels_shuffled = jsPsych.randomization.shuffle(training_labels);
-	var alternate_training_labels_shuffled = jsPsych.randomization.shuffle(alternate_training_labels);
+	var alternate_training_labels_shuffled = [];
+	for (var i = 0; i < training_labels_shuffled.length; i++) {
+		alternate_training_labels_shuffled.push("not a " + training_labels_shuffled[i]);
+	}
+
 
 	//get possible hyperhym assignment
 	//var hypernym_dict_keys_in_order = ["animals", "vegetables","vehicles"] - just to show the order of the keys in the dictionary
@@ -67,7 +71,7 @@ function get_training_types(
 			category_label_level: correct_category_labels["broad"],
 			training_label: training_labels_shuffled[2],
 			alternate_training_label: alternate_training_labels_shuffled[2],
-			training_image_path_info: ["sub1.jpg","sup2.jpg","sup5.jpg"],
+			training_image_path_info: ["sub1.jpg","sup1.jpg","sup2.jpg"],
 			hypernym_kind: category_kinds_assignment[hypernym_dict[category_codes["broad"]]],
 			hypernym_kind_shortened: category_kinds_shortened_assignment[hypernym_dict[category_codes["broad"]]],
 			hypernym_code: hypernym_dict[category_codes["broad"]],
@@ -116,7 +120,7 @@ function create_category_codes(category_codes,narrow_category_code,intermediate_
   return(category_codes_assigned_dict)
 }
 
-function create_category_kinds(category_codes_dict) {
+function create_category_kinds(category_codes_dict,category_kinds_assignment) {
 
 	var category_kind_assigned_dict = {
     narrow: category_kinds_assignment[category_codes_dict["narrow"]],
@@ -150,14 +154,16 @@ function create_correct_category_labels(narrow_category_level,intermediate_categ
 function decode_category_kinds(category_kind_short,shuffled_category_kinds,array_index) {
   if (category_kind_short == "ani") {
     var current_category_kind = "animals";
-  } else if (category_kind_short == "veh") {
-    var current_category_kind = "vehicles";
+  } else if (category_kind_short == "spo") {
+    var current_category_kind = "sports";
   } else if (category_kind_short == "veg") {
     var current_category_kind = "vegetables";
   } else if (category_kind_short == "fru") {
     var current_category_kind = "fruit";
   } else if (category_kind_short == "sea") {
     var current_category_kind = "sea";
+  } else if (category_kind_short == "veh") {
+    var current_category_kind = "vehicles";
   } else {
     var current_category_kind = shuffled_category_kinds[array_index]
   }

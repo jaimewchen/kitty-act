@@ -18,12 +18,12 @@
        <script src="jspsych-6.3.1/plugins/jspsych-html-button-response-catact.js"></script>
        <script src="jspsych-6.3.1/plugins/jspsych-image-button-response.js"></script>
        <script src="jspsych-6.3.1/plugins/jspsych-html-keyboard-response.js"></script>
+       <script type="text/javascript" src="js/jspsych-pavlovia-3.2.5-id-modified.js"></script>
+       <script type="text/javascript" src="js/papaparse.min.js"></script>
+       <script type="text/javascript" src="js/seedrandom.min.js"></script>
+       <script type="text/javascript" src="lib/vendors/jquery-2.2.0.min.js"></script>
        <link rel="stylesheet" href="jspsych-6.3.1/css/jspsych.css">
        <link rel="stylesheet" href="jspsych-6.3.1/css/catAct.css">
-
-<!--   <script type="text/javascript" src="lib/vendors/jquery-2.2.0.min.js"></script>
-  <script type="text/javascript" src="lib/jspsych-pavlovia-3.2.5.js"></script> -->
-
        <script src="js/helper.js"></script>
        <script src="js/settings.js"></script>
        <script src="js/generate_trials.js"></script>
@@ -33,357 +33,612 @@
     </body>
         
     <script>
-        // ORGANIZE SUBJECT ID & GENERAL PARAMETERS
-        // generate a random subject ID (just to be safe)
-        var subject_id = Math.floor(Math.random()*1000000);
-        subject_id="p"+subject_id.toString();
-        //console.log(subject_id);
+      $('body,html').addClass('stop-scrolling');
 
-        // get participant-specific url parameters from mTurk study link
-        var workerId = getParamFromURL('workerId');
-        var assignmentId = getParamFromURL('assignmentId');
-        var hitId = getParamFromURL('hitId');
+      /* init connection with pavlovia.org */
+  var pavlovia_init = {
+    type: "pavlovia",
+    command: "init"
+  };
 
-        //make sure that nobody can enter anything damaging
-        workerId.replace(/[^A-Za-z0-9_]/g, "");
-        hitId.replace(/[^A-Za-z0-9_]/g, "");
-        assignmentId.replace(/[^A-Za-z0-9_]/g, "");
 
-        //set up category conditions
-        var n_cat_level = getParamFromURL('n_cat_level');
-        var i_cat_level = getParamFromURL('i_cat_level');
-        var b_cat_level = getParamFromURL('b_cat_level');
+        
 
-        var catk_n = getParamFromURL('catk_n');
-        var catk_i = getParamFromURL('catk_i');
-        var catk_b = getParamFromURL('catk_b');
+  // INITIAL SUBJECT AND ROUND PROMPT
+  var subject_id_prompt = {
+    type: 'survey-text',
+    questions: [
+    {prompt: 'Please enter the participant ID:', name: "subject_id"},
+    ],
+    on_finish: function() {
+      console.log(jsPsych.data.get().last(1).values()[0].response.subject_id)
+      jsPsych.data.addProperties({
+    subject_id: jsPsych.data.get().last(1).values()[0].response.subject_id
+  });
+    }
+  }
 
-        //make sure that nobody can enter anything damaging
-        n_cat_level.replace(/[^A-Za-z0-9_]/g, "");
-        i_cat_level.replace(/[^A-Za-z0-9_]/g, "");
-        b_cat_level.replace(/[^A-Za-z0-9_]/g, "");
-        catk_n.replace(/[^A-Za-z0-9_]/g, "");
-        catk_i.replace(/[^A-Za-z0-9_]/g, "");
-        catk_b.replace(/[^A-Za-z0-9_]/g, "");
+  var round_array = ["INIT","ONE","TWO"]
 
-        var stim_type_options = ["a","b"];
+  var round_prompt = {
+    type: 'html-button-response',
+    stimulus: "",
+    prompt: "Choose which round to begin.",
+    choices: round_array,
+    margin_horizontal: "10px",
+    on_finish: function() {
+      console.log(jsPsych.data.get().last(1).values()[0])
+      var round_button_name = round_array[jsPsych.data.get().last(1).values()[0].response];
+      if (round_button_name == "INIT") {
+        var round_name = "init";
+        var round_index = "init";
+      } else if (round_button_name == "ONE") {
+        var round_name = "1";
+        var round_index = 0;
+      } else if (round_button_name == "TWO") {
+        var round_name = "2";
+        var round_index = 1;
+      } 
 
-        var stim_type = jsPsych.randomization.sampleWithoutReplacement(stim_type_options,1)[0];
+      jsPsych.data.addProperties({
+    round_name: round_name,
+    round_index: round_index
+  });
+    }
+  }
 
-        console.log(stim_type)
+  var init_params_prompt = {
+        type: 'survey-text',
+        questions: [
+        {stim_set: 'Please enter the stimulus set:', name: "stim_set"},
+        {seed: 'Please enter the participant seed:', name: "seed"},],
+    on_finish: function() {
+      console.log(jsPsych.data.get().last(1).values()[0].response.stim_set)
+      var cur_data = jsPsych.data.get().last(1).values()[0];
+      jsPsych.data.addProperties({
+        stim_set: cur_data.response.stim_set,
+        seed: cur_data.response.seed
+      });
+    }
+  };
 
-        if (stim_type == "a") {
+  function initialize_experiment(participant_id, round) {
+    
+    if (round == "init") {
+        var current_timeline = [];
+        current_timeline.push(pavlovia_init);
 
-var image_path="stims/"
+        var condition_prompt = {
+          type: 'survey-text',
+          questions: [
+          {prompt: 'Please enter the stimulus parameter:', name: "stim_set"},
+          {prompt: 'Enter the training number order:', name: "number_training_image_order"},
+          {prompt: 'Please enter the seed:', name: "seed"},
+          {prompt: 'Please enter the category kind parameter 1:', name: "catk_1"},
+          {prompt: 'Please enter the category kind parameter 2:', name: "catk_2"},
 
-// store names of test phase image files
-var grid_image_names = [
-"stims/ani_c3_sup3.jpg",
-"stims/ani_c3_sup4.jpg",
-"stims/ani_c3_bas3.jpg",
-"stims/ani_c3_sub4.jpg",
-"stims/veg_c1_sup3.jpg",
-"stims/veg_c1_sup4.jpg",
-"stims/veg_c1_bas3.jpg",
-"stims/veg_c1_sub4.jpg",
-"stims/veh_c2_sup4.jpg",
-"stims/veh_c2_sup1.jpg",
-"stims/veh_c2_bas3.jpg",
-"stims/veh_c2_sub4.jpg"];
+          ],
+          on_finish: function() {
 
-console.log(grid_image_names)
+      //set up seed
+      var seed = jsPsych.data.get().last(1).values()[0].response.seed
+      //check to make sure it looks ok
+      //set seed for randomization
 
-// store names of sampling phase image files - reduced sampling image set in v3 is created per block
-var sampling_image_names = [
-"stims/ani_c3_sub4.jpg",
-"stims/ani_c3_sup3.jpg",
-"stims/ani_c3_bas3.jpg",
-"stims/veg_c1_sub4.jpg",
-"stims/veg_c1_sup3.jpg",
-"stims/veg_c1_bas3.jpg",
-"stims/veh_c2_sub4.jpg",
-"stims/veh_c2_sup3.jpg",
-"stims/veh_c2_bas3.jpg"];
+      var stim_set_index = jsPsych.data.get().last(1).values()[0].response.stim_set
+      stim_set_index = parseInt(stim_set_index);
+      console.log(stim_set_index)
 
-var training_image_names = [
-"stims/ani_c3_sub1.jpg",
-"stims/ani_c3_sub2.jpg",
-"stims/ani_c3_sub3.jpg",
-"stims/ani_c3_bas1.jpg",
-"stims/ani_c3_bas2.jpg",
-"stims/ani_c3_sup1.jpg",
-"stims/ani_c3_sup2.jpg",
-"stims/veg_c1_sub1.jpg",
-"stims/veg_c1_sub2.jpg",
-"stims/veg_c1_sub3.jpg",
-"stims/veg_c1_bas1.jpg",
-"stims/veg_c1_bas2.jpg",
-"stims/veg_c1_sup1.jpg",
-"stims/veg_c1_sup2.jpg",
-"stims/veh_c2_sub1.jpg",
-"stims/veh_c2_sub2.jpg",
-"stims/veh_c2_sub3.jpg",
-"stims/veh_c2_bas1.jpg",
-"stims/veh_c2_bas2.jpg",
-"stims/veh_c2_sup1.jpg",
-"stims/veh_c2_sup2.jpg",];
+      if (stim_set_index == 0) {
+        var stim_set_vector = ["a","b"]
+      } else if (stim_set_index == 1) {
+        var stim_set_vector = ["b","a"]
+      } else {
+        var stim_set_vector = jsPsych.randomization.sampleWithoutReplacement([["a","b"],["b","a"]],1)[0];
+      }
 
-var category_kinds_assignment = {
-  "c1": "vegetables",
-  "c2": "vehicles",
-  "c3": "animals"
-}
+      var number_training_image_order_index = jsPsych.data.get().last(1).values()[0].response.number_training_image_order;
+      number_training_image_order_index = parseInt(number_training_image_order_index);
+      console.log(number_training_image_order_index)
 
-var category_kinds_shortened_assignment = {
-  "c1": "veg",
-  "c2": "veh",
-  "c3": "ani"
-}
+      if (number_training_image_order_index == 0) {
+        var number_training_image_order_vector = [1,3]
+      } else if (number_training_image_order_index == 1) {
+        var number_training_image_order_vector = [3,1]
+      } else {
+        var number_training_image_order_vector = jsPsych.randomization.sampleWithoutReplacement([[1,3],[3,1]],1)[0];
+      }
 
-        } else if (stim_type == "b") {
-          var image_path="stims/"
+      var catk_1_index = parseInt(jsPsych.data.get().last(1).values()[0].response.catk_1)
+      var catk_2_index = parseInt(jsPsych.data.get().last(1).values()[0].response.catk_2)
+      console.log(catk_1_index);
+      console.log(catk_2_index);
+      var catk_vector = [
+        ["c1","c2","c3"],
+        ["c1","c3","c2"],
+        ["c2","c1","c3"],
+        ["c2","c3","c1"],
+        ["c3","c1","c2"],
+        ["c3","c2","c1"]
+        ];
 
-// store names of test phase image files
-var grid_image_names = [
-"stims/sea_c2_sup3.jpg",
-"stims/sea_c2_sup4.jpg",
-"stims/sea_c2_bas3.jpg",
-"stims/sea_c2_sub4.jpg",
-"stims/fru_c1_sup3.jpg",
-"stims/fru_c1_sup4.jpg",
-"stims/fru_c1_bas3.jpg",
-"stims/fru_c1_sub4.jpg",
-"stims/veh_c3_sup4.jpg",
-"stims/veh_c3_sup1.jpg",
-"stims/veh_c3_bas3.jpg",
-"stims/veh_c3_sub4.jpg"];
+      //if an index is entered that is too large, make a random choice
+      var catk_vector_index_array=[];
+      for (var m = 0; m < catk_vector.length; m++) {
+        catk_vector_index_array.push(m);
+      }
+      console.log(catk_vector_index_array)
 
-console.log(grid_image_names)
+      if (!(catk_vector_index_array.includes(catk_1_index))) {
+        catk_1_index = jsPsych.randomization.sampleWithoutReplacement(catk_vector_index_array,1)[0]
+        console.log("resampled catk_1_index")
+        console.log("new catk_1_index value:")
+        console.log(catk_1_index)
+      }
 
-// store names of sampling phase image files - reduced sampling image set in v3 is created per block
-var sampling_image_names = [
-"stims/sea_c2_sub4.jpg",
-"stims/sea_c2_sup3.jpg",
-"stims/sea_c2_bas3.jpg",
-"stims/fru_c1_sub4.jpg",
-"stims/fru_c1_sup3.jpg",
-"stims/fru_c1_bas3.jpg",
-"stims/veh_c3_sub4.jpg",
-"stims/veh_c3_sup3.jpg",
-"stims/veh_c3_bas3.jpg"];
+      if (!(catk_vector_index_array.includes(catk_2_index))) {
+        catk_2_index = jsPsych.randomization.sampleWithoutReplacement(catk_vector_index_array,1)[0]
+        console.log("resampled catk_2_index")
+        console.log("new catk_2_index value:")
+        console.log(catk_2_index)
+      }
 
-var training_image_names = [
-"stims/sea_c2_sub1.jpg",
-"stims/sea_c2_sub2.jpg",
-"stims/sea_c2_sub3.jpg",
-"stims/sea_c2_bas1.jpg",
-"stims/sea_c2_bas2.jpg",
-"stims/sea_c2_sup1.jpg",
-"stims/sea_c2_sup2.jpg",
-"stims/fru_c1_sub1.jpg",
-"stims/fru_c1_sub2.jpg",
-"stims/fru_c1_sub3.jpg",
-"stims/fru_c1_bas1.jpg",
-"stims/fru_c1_bas2.jpg",
-"stims/fru_c1_sup1.jpg",
-"stims/fru_c1_sup2.jpg",
-"stims/veh_c3_sub1.jpg",
-"stims/veh_c3_sub2.jpg",
-"stims/veh_c3_sub3.jpg",
-"stims/veh_c3_bas1.jpg",
-"stims/veh_c3_bas2.jpg",
-"stims/veh_c3_sup1.jpg",
-"stims/veh_c3_sup2.jpg",];
+      var catk_assignment = [catk_vector[catk_1_index],catk_vector[catk_2_index]];
+      console.log(catk_assignment);
 
-var category_kinds_assignment = {
-  "c1": "fruit",
-  "c2": "sea",
-  "c3": "vehicles"
-}
 
-var category_kinds_shortened_assignment = {
-  "c1": "fru",
-  "c2": "sea",
-  "c3": "veh"
-}
-        }
-
-        var correct_category_label_levels = create_correct_category_labels(n_cat_level,i_cat_level,b_cat_level);
-        console.log(correct_category_label_levels);
-
-        var category_codes = ["c1","c2","c3"];
-
-        var randomized_category_codes = create_category_codes(category_codes,catk_n,catk_i,catk_b);
-
-        console.log(randomized_category_codes);
-
-        var randomized_category_kinds = create_category_kinds(randomized_category_codes);
-
-        console.log(randomized_category_kinds);
-
-        jsPsych.data.addProperties({
-          subject: subject_id,
-          workerId: workerId,
-          hitId: hitId,
-          assignmentId: assignmentId,
-          n_cat_level: n_cat_level,
-          narrow_category_label_level: correct_category_label_levels["narrow"],
-          i_cat_level: i_cat_level,
-          intermediate_category_label_level: correct_category_label_levels["intermediate"],
-          b_cat_level: b_cat_level,
-          broad_category_label_level: correct_category_label_levels["broad"],
-          catk_n: catk_n,
-          narrow_category_kind: randomized_category_kinds["narrow"],
-          catk_i: catk_i,
-          intermediate_category_kind: randomized_category_kinds["intermediate"],
-          catk_b: catk_b,
-          broad_category_kind: randomized_category_kinds["broad"],
+      jsPsych.data.addProperties({
+        seed: seed,
+        stim_set: stim_set_index,
+        stim_set_vector: stim_set_vector,
+        number_training_image_order_index: number_training_image_order_index,
+        number_training_image_order_vector: number_training_image_order_vector,
+        catk_parameter_1: catk_1_index,
+        catk_parameter_2: catk_2_index,
+        catk_assignment: catk_assignment,
         });
 
-        //create image array for preloading
-        var all_grid_images = grid_image_names.concat(sampling_image_names);
-        var all_images = all_grid_images.concat(training_image_names);
-        console.log(all_images);
+      //set seed
+      Math.seedrandom(seed);
 
-        // create timeline
-        var timeline = [];
+     //set round parameters
+      var num_sets = 2;
+      var all_training_labels = ["beppo","guffy","kita","roozer","sibu","tibble"];
+      var all_training_labels_shuffled = jsPsych.randomization.shuffle(all_training_labels);
 
-        // /* init connection with pavlovia.org */
-        // var pavlovia_init = {
-        //   type: "pavlovia",
-        //   command: "init"
-        // };
+      //split into rounds
+      var round_stims = [];
+      var cat_levels = [];
+      var training_labels_vector = [];
+      for (i=0; i<num_sets; i++) {
+        var cur_round_set = [];
+        var cur_stim_set = stim_set_vector[i];
+        var cur_round_stimulus_dict = set_stimuli(cur_stim_set);
+        console.log(cur_round_stimulus_dict);
 
-        // timeline.push(pavlovia_init);
+        var narrow_category_labels = ["n","i"];
+        var intermediate_category_labels = ["i","b"];
+        var broad_category_labels = ["b","h"];
 
-        var preload = {
+        //set up category conditions
+        var n_cat_level = jsPsych.randomization.sampleWithoutReplacement(narrow_category_labels,1)[0];
+        var i_cat_level = jsPsych.randomization.sampleWithoutReplacement(intermediate_category_labels,1)[0];
+        var b_cat_level = jsPsych.randomization.sampleWithoutReplacement(broad_category_labels,1)[0];
+
+        console.log(n_cat_level);
+        console.log(i_cat_level);
+        console.log(b_cat_level);
+
+        var cur_cat_levels = [n_cat_level,i_cat_level,b_cat_level];
+
+        var round_training_labels=[
+          all_training_labels_shuffled[0+i*3],
+          all_training_labels_shuffled[1+i*3],
+          all_training_labels_shuffled[2+i*3]
+          ];
+
+        round_stims.push(cur_round_stimulus_dict);
+        cat_levels.push(cur_cat_levels);
+        training_labels_vector.push(round_training_labels);
+        };
+
+        var alien_list = jsPsych.randomization.shuffle(["alien1","alien2"]);
+
+        console.log(round_stims);
+        console.log(training_labels_vector);
+        console.log(alien_list);
+
+        jsPsych.data.addProperties({
+          round_stims: round_stims,
+          cat_levels: cat_levels,
+          training_labels_vector:training_labels_vector,
+          alien_list: alien_list
+        })
+    }
+  }
+
+  current_timeline.push(condition_prompt);
+
+  /* finish connection with pavlovia.org */
+      var pavlovia_finish = {
+        type: "pavlovia",
+        command: "finish",
+        participantId: participant_id,
+        sessionId: round
+      };
+
+      current_timeline.push(pavlovia_finish)
+
+
+        //trial to show once initialization is complete
+      var init_complete = {
+        type: "html-button-response",
+        stimulus: "",
+        choices: ["OK"],
+        prompt: "Initialization complete! Refresh the browser and run the first round."
+      }
+
+      //run  
+      jsPsych.init({
+        timeline: current_timeline,
+        on_finish: function() {
+
+          //show final message
+          jsPsych.init({
+         timeline: [init_complete]
+       });
+        }
+      });
+
+    } else {
+      //create url
+      var init_url = "https://run.pavlovia.org/mzettersten/kitty-act-v1/data/kitty-act-v1_" + participant_id + "_init.csv";
+
+      //load init url
+      Papa.parse(init_url, {
+        download: true,
+        header: true,
+        error: function(err) {
+          console.log("no init file found!")
+          //trial to show if file doesn't exist
+          var init_file_error = {
+            type: "html-button-response",
+            stimulus: "",
+            choices: ["OK"],
+            prompt: "There is no existing init file for this participant! Please refresh the browser and create an init file for this participant in order to show a round."
+          };
+
+          jsPsych.init({
+            timeline: [init_file_error]
+          });
+        },
+        complete: function(results) {
+            console.log(round)
+          console.log("init file found!")
+          var data = results.data;
+          console.log(data);
+          start_round(data, participant_id,round);
+        }
+      });
+    }
+  }
+
+  function start_round(data, participant_id,round) {
+
+    var current_timeline = [];
+
+    /* init connection with pavlovia.org */
+    var pavlovia_init = {
+      type: "pavlovia",
+      command: "init"
+    };
+
+    current_timeline.push(pavlovia_init)
+
+    console.log("Here's the data at the start of the round");
+    console.log(data)
+
+    //key trial index to reference
+    var key_index = 1
+    var info_dict = data[key_index];
+    console.log(info_dict);
+
+    //get participant id
+    var participant_id_from_data = info_dict["subject_id"];
+    console.log(participant_id)
+    console.log(round)
+    console.log(participant_id_from_data)
+    //get round and condition info
+    if (round == "1") {
+      var round_index = 0;
+    } else if (round == "2") {
+      var round_index = 1;
+    }
+
+    var stim_set_vector = JSON.parse(info_dict["stim_set_vector"]);
+    var catk_assignment = JSON.parse(info_dict["catk_assignment"]);
+    var round_stims = JSON.parse(info_dict["round_stims"]);
+    var cat_levels = JSON.parse(info_dict["cat_levels"]);
+    if ("alien_list" in info_dict) {
+      var current_alien_list = JSON.parse(info_dict["alien_list"]);
+      console.log("alien list found!")
+    } else {
+      // fall back to default if alien list not in init
+      current_alien_list = ["alien1","alien2"];
+    }
+    var seed = parseInt(info_dict["seed"]);
+    //change the seed for round 2 systematically to avoid duplication between rounds
+    if (round_index == 1) {
+      seed = seed + 100;
+    }
+    var number_training_image_order_vector = JSON.parse(info_dict["number_training_image_order_vector"]);
+    var training_labels_vector = JSON.parse(info_dict["training_labels_vector"]);
+    console.log(round_index);
+    console.log(round_stims);
+    console.log(seed);
+    console.log(cat_levels);
+    console.log(catk_assignment);
+    console.log(number_training_image_order_vector);
+
+    var current_stim_set = stim_set_vector[round_index];
+    var current_catk_assignment = catk_assignment[round_index];
+    var current_cat_levels = cat_levels[round_index];
+    var current_round_stims = round_stims[round_index];
+    var current_number_training_image = number_training_image_order_vector[round_index];
+    var training_labels = training_labels_vector[round_index];
+    var current_alien = current_alien_list[round_index];
+
+    Math.seedrandom(seed);
+
+    console.log(current_stim_set);
+    console.log(current_catk_assignment);
+    console.log(current_cat_levels);
+    console.log(current_round_stims);
+    console.log(current_number_training_image);
+    console.log(training_labels);
+    console.log(current_alien);
+
+    var n_cat_level = current_cat_levels[0];
+    var i_cat_level = current_cat_levels[1];
+    var b_cat_level = current_cat_levels[2];
+
+    var correct_category_label_levels = create_correct_category_labels(n_cat_level,i_cat_level,b_cat_level);
+    console.log(correct_category_label_levels);
+
+    var category_codes = ["c1","c2","c3"];
+    var catk_n = current_catk_assignment[0];
+    var catk_i = current_catk_assignment[1];
+    var catk_b = current_catk_assignment[2];
+
+    //set up current round stimulus vectors and dictionaries
+    var grid_image_names = current_round_stims["grid_image_names"];
+    var sampling_image_names = current_round_stims["sampling_image_names"];
+    var training_image_names = current_round_stims["training_image_names"];
+    var category_kinds_assignment = current_round_stims["category_kinds_assignment"];
+    var category_kinds_shortened_assignment = current_round_stims["category_kinds_shortened_assignment"];
+
+    var randomized_category_codes = create_category_codes(category_codes,catk_n,catk_i,catk_b);
+
+    console.log(randomized_category_codes);
+
+    var randomized_category_kinds = create_category_kinds(randomized_category_codes,category_kinds_assignment);
+
+    console.log(randomized_category_kinds);
+
+    jsPsych.data.addProperties({
+      participant: participant_id,
+      round: round,
+      seed: seed,
+      stim_set_vector: stim_set_vector,
+      catk_assignment: catk_assignment,
+      round_stims: round_stims,
+      cat_levels: cat_levels,
+      number_training_image_order_vector: number_training_image_order_vector,
+      n_cat_level: n_cat_level,
+      narrow_category_label_level: correct_category_label_levels["narrow"],
+      i_cat_level: i_cat_level,
+      intermediate_category_label_level: correct_category_label_levels["intermediate"],
+      b_cat_level: b_cat_level,
+      broad_category_label_level: correct_category_label_levels["broad"],
+      catk_n: catk_n,
+      narrow_category_kind: randomized_category_kinds["narrow"],
+      catk_i: catk_i,
+      intermediate_category_kind: randomized_category_kinds["intermediate"],
+      catk_b: catk_b,
+      broad_category_kind: randomized_category_kinds["broad"],
+      number_training_images: current_number_training_image,
+      current_alien: current_alien
+    });
+
+    //create image array for preloading
+    var all_grid_images = grid_image_names.concat(sampling_image_names);
+    var all_exp_images = all_grid_images.concat(training_image_names);
+    var general_images = ["stims/general/alien1_head.png","stims/general/alien1_sticker.png","stims/general/alien1.png","stims/general/alien2_head.png","stims/general/alien2_sticker.png","stims/general/alien2.png","stims/general/earth.jpeg","stims/general/earth.png","stims/general/Rocket.png","stims/general/space2.jpg","stims/general/sticker.png","stims/general/confetti_frames/Frame01.png","stims/general/confetti_frames/Frame02.png","stims/general/confetti_frames/Frame03.png","stims/general/confetti_frames/Frame04.png","stims/general/confetti_frames/Frame05.png","stims/general/confetti_frames/Frame06.png","stims/general/confetti_frames/Frame07.png","stims/general/confetti_frames/Frame08.png","stims/general/confetti_frames/Frame09.png","stims/general/confetti_frames/Frame10.png","stims/general/confetti_frames/Frame11.png","stims/general/confetti_frames/Frame12.png","stims/general/confetti_frames/Frame13.png","stims/general/confetti_frames/Frame14.png"];
+    var all_images = all_exp_images.concat(general_images);
+    console.log(all_images);
+
+    var preload = {
           type: 'preload',
           auto_preload: true,
           images: all_images,
-          audio: ["stims_general/audio/sibu.wav","stims_general/audio/beppo.wav","stims_general/audio/kita.wav"],
+          audio: ["stims/audio/sibu.m4a","stims/audio/beppo.m4a","stims/audio/kita.m4a","stims/audio/guffy.m4a","stims/audio/tibble.m4a","stims/audio/roozer.m4a"],
           message: "Please wait while the experiment loads.",
           continue_after_error: true,
           max_load_time: 15000
         }
-        timeline.push(preload);
+    current_timeline.push(preload);
 
+    var enter_fullscreen = {
+      type: 'fullscreen',
+      fullscreen_mode: true
+    }
 
-        var enter_fullscreen = {
-          type: 'fullscreen',
-          fullscreen_mode: true
-        }
+    //current_timeline.push(enter_fullscreen);
 
-        //timeline.push(enter_fullscreen);
+    // create game introduction and push to timeline
 
-		// create game introduction and push to timeline
-
-		var introduction_welcome_stimulus = '<div id="container">';
+    var introduction_welcome_stimulus = '<div id="container">';
       introduction_welcome_stimulus += '<div class="p-closer"><p><b><i><font size="4"">Hi Friend! Let'+"'"+'s play...</font></i></b></p></div>';
-      introduction_welcome_stimulus += '<div class="p-closer2"><p><b><font size="6"">Miss Alien'+"'"+'s</font></b></p></div>';
+      introduction_welcome_stimulus += '<div class="p-closer2"><p><b><font size="6"">Space Alien</font></b></p></div>';
       introduction_welcome_stimulus += '<p><b><font size="10"">EARTH SEARCH</font></b></p>';
-      introduction_welcome_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure class="floating"><img src="stims_general/Rocket.png" style="width:100px"></figure></div>';
+      introduction_welcome_stimulus += '<div class="d-flex align-items-center" style="margin-bottom:30px"><figure class="floating"><img src="stims/general/Rocket.png" style="width:100px"></figure></div>';
 
-		var welcome = {
-			type: 'html-button-response',
-			stimulus: introduction_welcome_stimulus,
+    var welcome = {
+      type: 'html-button-response',
+      stimulus: introduction_welcome_stimulus,
       choices: ["START"],
-		}
-		//timeline.push(welcome);
+    }
+    current_timeline.push(welcome);
 
-    var starting_earth_background = '<div class="overlap-bubble"><figure><img src="stims_general/earth.png"></figure></div>';
+    var starting_earth_background = '<div class="overlap-bubble"><figure><img src="stims/general/earth.png"></figure></div>';
 
     var starting_background = {
-			type: 'html-button-response-cols',
-			stimulus: starting_earth_background,
+      type: 'html-button-response-cols',
+      stimulus: starting_earth_background,
       button_html: '<button class="jspsych-btn" style="width:300px; height:400px; border:none; background-color: rgba(0,0,0,0)">%choice%</button>',
-      choices: ["<img src='stims_general/Rocket.png' style='width:250px; margin-top:25px'>"],
-		}
+      choices: ["<img src='stims/general/Rocket.png' style='width:250px; margin-top:25px'>"],
+    }
 
 
-		//timeline.push(starting_background);
+    current_timeline.push(starting_background);
 
     // BUILD TRIALS
     // key parameters
     var category_levels = ["narrow","intermediate","broad"];
-    var training_labels = ["sibu","kita","beppo"];
-    var alternate_training_labels = ["tibble", "roozer", "guffy"];
     
 
-    var training_types = get_training_types(randomized_category_kinds,randomized_category_codes,category_kinds_assignment,
-  category_kinds_shortened_assignment,training_labels,alternate_training_labels,correct_category_label_levels);
-		var trial_order = get_trial_order(category_levels);
+    var training_types = get_training_types(randomized_category_kinds,randomized_category_codes,category_kinds_assignment,category_kinds_shortened_assignment,training_labels,correct_category_label_levels);
+    var trial_order = get_trial_order(category_levels);
 
-		console.log(training_types)
-		console.log(trial_order)
+    console.log(training_types)
+    console.log(trial_order)
 
-    var all_blocks = generate_all_blocks(trial_order,training_types,1);
+    var all_blocks = generate_all_blocks(trial_order,training_types,grid_image_names,current_number_training_image,current_alien);
 
-    timeline = timeline.concat(all_blocks);
+    current_timeline = current_timeline.concat(all_blocks);
 
-    console.log(timeline)
+    console.log(current_timeline)
 
-	 // create end of experiment instruction and lead-in to demographics.
-	 var alien_sticker_stimulus = '<div id="container"><div><figure><img src="stims_general/alien_sticker.png" style="width:500px"></figure></div>';
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame1"><img src="stims_general/confetti_frames/Frame01.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame2"><img src="stims_general/confetti_frames/Frame02.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame3"><img src="stims_general/confetti_frames/Frame03.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame4"><img src="stims_general/confetti_frames/Frame04.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame5"><img src="stims_general/confetti_frames/Frame05.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame6"><img src="stims_general/confetti_frames/Frame06.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame7"><img src="stims_general/confetti_frames/Frame07.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame8"><img src="stims_general/confetti_frames/Frame08.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame9"><img src="stims_general/confetti_frames/Frame09.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame10"><img src="stims_general/confetti_frames/Frame10.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame11"><img src="stims_general/confetti_frames/Frame11.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame12"><img src="stims_general/confetti_frames/Frame12.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame13"><img src="stims_general/confetti_frames/Frame13.png" style="width:1500px"></figure></div>'
-   alien_sticker_stimulus += '<div class="overlap-bubble"><figure class="frame14"><img src="stims_general/confetti_frames/Frame14.png" style="width:1500px"></figure></div>'
+   // create end of experiment
+   var alien_sticker_stimulus = '<div id="container"><div><figure><img src="stims/general/'+current_alien+'_sticker.png" style="width:500px"></figure></div>';
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame1"><img src="stims/general/confetti_frames/Frame01.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame2"><img src="stims/general/confetti_frames/Frame02.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame3"><img src="stims/general/confetti_frames/Frame03.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame4"><img src="stims/general/confetti_frames/Frame04.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame5"><img src="stims/general/confetti_frames/Frame05.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame6"><img src="stims/general/confetti_frames/Frame06.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame7"><img src="stims/general/confetti_frames/Frame07.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame8"><img src="stims/general/confetti_frames/Frame08.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame9"><img src="stims/general/confetti_frames/Frame09.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame10"><img src="stims/general/confetti_frames/Frame10.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame11"><img src="stims/general/confetti_frames/Frame11.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame12"><img src="stims/general/confetti_frames/Frame12.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame13"><img src="stims/general/confetti_frames/Frame13.png" style="width:2000px"></figure></div>'
+   alien_sticker_stimulus += '<div class="overlap-confetti"><figure class="frame14"><img src="stims/general/confetti_frames/Frame14.png" style="width:2000px"></figure></div>'
 
-   var alien_sticker_stimulus_still = '<div id="container"><div class="floating"><figure><img src="stims_general/alien_sticker.png" style="width:500px"></figure></div>';
+   var alien_sticker_stimulus_still = '<div id="container"><div class="floating"><figure><img src="stims/general/'+current_alien+'_sticker.png" style="width:500px"></figure></div>';
 
-		// display conclusion page
-		var rocket_animation_transition = {
-      type: 'audio-keyboard-response',
-      stimulus: 'stims_general/audio/rocket_sound.wav',
-      prompt: rocket_animation, 
-      choices: ['NO_KEYS'],
-      trial_duration: 2000
-    }
-    timeline.push(rocket_animation_transition)
+    // display conclusion page
+    // var rocket_animation_transition = {
+    //   type: 'audio-keyboard-response',
+    //   stimulus: 'stims/audio/rocket_sound.wav',
+    //   prompt: rocket_animation, 
+    //   choices: ['NO_KEYS'],
+    //   trial_duration: 2000
+    // }
+   var rocket_animation_transition = {
+    type: 'html-keyboard-response',
+    stimulus: rocket_animation, 
+    choices: ['NO_KEYS'],
+    trial_duration: 2000
+  }
+    current_timeline.push(rocket_animation_transition)
     
     var alien_sticker_animated = {
-			type: 'html-keyboard-response',
+      type: 'html-keyboard-response',
       stimulus: alien_sticker_stimulus,
-			choices: ["NO_KEYS"],
+      choices: ["NO_KEYS"],
       trial_duration: 2000,
       on_start: function(){
-        jsPsych.setProgressBar(1);
+        //jsPsych.setProgressBar(1);
       }
-		}
-		timeline.push(alien_sticker_animated); 
+    }
 
     var alien_sticker_still = {
-			type: 'html-keyboard-response',
+      type: 'html-keyboard-response',
       stimulus: alien_sticker_stimulus_still,
-			choices: ["NO_KEYS"],
+      choices: ["NO_KEYS"],
       on_start: function(){
-        jsPsych.setProgressBar(1);
+        //jsPsych.setProgressBar(1);
       }
-		}
-    timeline.push(alien_sticker_still); 
-   
-   // initiate timeline, display data on finish
+    }
+
+  console.log(participant_id)
+  console.log(round)
+
+  /* finish connection with pavlovia.org */
+  var pavlovia_finish = {
+    type: "pavlovia",
+    command: "finish",
+    participantId: participant_id,
+    sessionId: round
+  };
+
+  current_timeline.push(pavlovia_finish)
+
+  console.log(current_timeline)
+
+  jsPsych.init({
+    timeline: current_timeline,
+    on_finish: function() {
+
+      //show final message
+      jsPsych.init({
+     timeline: [alien_sticker_animated,alien_sticker_still]
+   });
+    }
+  });
+
+}
+
+    //initialize participant id and round information
     jsPsych.init({
-       timeline: timeline,
-       show_progress_bar: true,
-       on_finish: function() {
-        //jsPsych.data.displayData();
-        //jsPsych.data.get().localSave('csv','catAct_test.csv');
-        jsPsych.init({
-          timeline: experimentFinal
-        });
+    timeline: [subject_id_prompt,round_prompt],
+    on_finish: function() {
+      //get url for corresponding data file
+      var last_data = jsPsych.data.get().last(1).values()[0];
+      console.log(file_url);
+      var file_url = "https://run.pavlovia.org/mzettersten/kitty-act-v1/data/kitty-act-v1_" + last_data.subject_id + "_" + last_data.round_name + ".csv";
+
+      //trial to show if file doesn't exist
+      var file_exists_error = {
+        type: "html-button-response",
+        stimulus: "",
+        choices: ["OK"],
+        prompt: "There is already an existing file for this participant and round! Please refresh the browser and try re-entering parameters again."
       }
-    });
+
+      //check if file exists
+      $.ajax({
+        url: file_url,
+        type:'HEAD',
+        error: function()
+        {
+        console.log("file doesn't exist - we're good")
+        //start experiment procedure
+        initialize_experiment(last_data.subject_id,last_data.round_name);
+      },
+      success: function()
+      { 
+        console.log("file exists - uh oh")
+        // otherwise show error trial and end
+        jsPsych.init({
+         timeline: [file_exists_error]
+       });
+      }
+    })
+    }
+  })
 
     </script>
 </html>

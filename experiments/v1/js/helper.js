@@ -45,3 +45,25 @@ function createCode(secretCode,codelength_begin=7,codelength_end=10) {
 	return code
 }
 
+//check if a file exists
+function check_no_existing_file(url) {
+    var return_value = null
+    //check if file exists
+      $.ajax({
+        url: url,
+    type:'HEAD',
+    error: function()
+    {
+        console.log("file doesn't exist - we're good")
+        return_value = true;
+    },
+    success: function()
+    { 
+        console.log("file exists - uh oh")
+        return_value = false;
+    }
+  })
+      console.log(return_value)
+    return return_value
+  };
+
