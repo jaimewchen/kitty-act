@@ -188,8 +188,19 @@
     var current_round_stims = round_stims[round_index];
     var current_number_training_image = number_training_image_order_vector[round_index];
     var training_labels = training_labels_vector[round_index];
+
+    console.log(current_stim_set);
+    console.log(current_catk_assignment);
+    console.log(current_cat_levels);
+    console.log(current_round_stims);
+    console.log(current_number_training_image);
+    console.log(training_labels);
     
-    var correct_category_label_levels = create_correct_category_labels(current_cat_levels[0], current_cat_levels[1], current_cat_levels[2]);
+    var n_cat_level = current_cat_levels[0];
+    var i_cat_level = current_cat_levels[1];
+    var b_cat_level = current_cat_levels[2];
+
+    var correct_category_label_levels = create_correct_category_labels(n_cat_level,i_cat_level,b_cat_level);
     console.log(correct_category_label_levels);
 
     var category_codes = ["c1", "c2", "c3"];
@@ -197,10 +208,70 @@
     var catk_i = current_catk_assignment[1];
     var catk_b = current_catk_assignment[2];
 
-    var category_kinds = ["animals", "vegetables", "vehicles"];
-    var randomized_category_kinds = create_category_kinds(category_kinds, catk_n, catk_i, catk_b);
+       //set up current round stimulus vectors and dictionaries
+       var grid_image_names = current_round_stims["grid_image_names"];
+    var sampling_image_names = current_round_stims["sampling_image_names"];
+    var training_image_names = current_round_stims["training_image_names"];
+    var category_kinds_assignment = current_round_stims["category_kinds_assignment"];
+    var category_kinds_shortened_assignment = current_round_stims["category_kinds_shortened_assignment"];
+
+    var randomized_category_codes = create_category_codes(category_codes,catk_n,catk_i,catk_b);
+
+    console.log(randomized_category_codes);
+
+    var randomized_category_kinds = create_category_kinds(randomized_category_codes,category_kinds_assignment);
+
     console.log(randomized_category_kinds);
+
+    jsPsych.data.addProperties({
+      participant: participant_id,
+      round: round,
+      seed: seed,
+      stim_set_vector: stim_set_vector,
+      catk_assignment: catk_assignment,
+      round_stims: round_stims,
+      cat_levels: cat_levels,
+      number_training_image_order_vector: number_training_image_order_vector,
+      n_cat_level: n_cat_level,
+      narrow_category_label_level: correct_category_label_levels["narrow"],
+      i_cat_level: i_cat_level,
+      intermediate_category_label_level: correct_category_label_levels["intermediate"],
+      b_cat_level: b_cat_level,
+      broad_category_label_level: correct_category_label_levels["broad"],
+      catk_n: catk_n,
+      narrow_category_kind: randomized_category_kinds["narrow"],
+      catk_i: catk_i,
+      intermediate_category_kind: randomized_category_kinds["intermediate"],
+      catk_b: catk_b,
+      broad_category_kind: randomized_category_kinds["broad"],
+      number_training_images: current_number_training_image,
+      current_alien: current_alien
+    });
+
+    //create image array for preloading
+    var all_grid_images = grid_image_names.concat(sampling_image_names);
+    var all_exp_images = all_grid_images.concat(training_image_names);
+    var general_images = ["stims/general/alien1_head.png","stims/general/alien1_sticker.png","stims/general/alien1.png","stims/general/alien2_head.png","stims/general/alien2_sticker.png","stims/general/alien2.png","stims/general/earth.jpeg","stims/general/earth.png","stims/general/Rocket.png","stims/general/space2.jpg","stims/general/sticker.png","stims/general/confetti_frames/Frame01.png","stims/general/confetti_frames/Frame02.png","stims/general/confetti_frames/Frame03.png","stims/general/confetti_frames/Frame04.png","stims/general/confetti_frames/Frame05.png","stims/general/confetti_frames/Frame06.png","stims/general/confetti_frames/Frame07.png","stims/general/confetti_frames/Frame08.png","stims/general/confetti_frames/Frame09.png","stims/general/confetti_frames/Frame10.png","stims/general/confetti_frames/Frame11.png","stims/general/confetti_frames/Frame12.png","stims/general/confetti_frames/Frame13.png","stims/general/confetti_frames/Frame14.png"];
+    var all_images = all_exp_images.concat(general_images);
+    console.log(all_images);
   }
+
+    // BUILD TRIALS
+    // key parameters
+    var category_levels = ["narrow","intermediate","broad"];
+    
+
+    var training_types = get_training_types(randomized_category_kinds,randomized_category_codes,category_kinds_assignment,category_kinds_shortened_assignment,training_labels,correct_category_label_levels);
+    var trial_order = get_trial_order(category_levels);
+
+    console.log(training_types)
+    console.log(trial_order)
+
+    var all_blocks = generate_all_blocks(trial_order,training_types,grid_image_names,current_number_training_image,current_alien);
+
+    current_timeline = current_timeline.concat(all_blocks);
+
+    console.log(current_timeline)
 
 
 
