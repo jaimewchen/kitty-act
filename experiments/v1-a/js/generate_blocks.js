@@ -105,17 +105,17 @@ function generate_test_instructions(current_training_label, current_sampling_lab
   current_test_stimulus += '<p style="margin-block-start:0.1em;margin-block-end:0.1em"><font size="4.5"><b>Now, pick <u>all of the other ' + current_training_label + 's</u>. </b></font><style="text-align:center;" /p>';
   current_test_stimulus += '<div class="row">';
   if (number_training_images == 1) {
-    current_test_stimulus += '<div class="column"><figure style="opacity:0"><img src="'+current_training_images[0]+'" style="width:70%"><figcaption style="font-size:24px">'+current_training_label+'</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:70%"><figcaption style="font-size:24px">'+current_training_label+'</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%"><figcaption style="font-size:24px">'+current_sampling_label+'</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure style="opacity:0"><img src="'+current_training_images[0]+'" style="width:70%"><figcaption style="font-size:24px">'+current_training_label+'</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:70%"><figcaption style="font-size:24px">' + current_sampling_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
     current_test_stimulus += '</div class="column"></div class="column"></div class="column"></div class="column">';
   } else if (number_training_images == 3) {
-    current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[0]+'" style="width:70%"><figcaption style="font-size:24px">'+current_training_label+'</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[1]+'" style="width:70%"><figcaption style="font-size:24px">'+current_training_label+'</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="'+current_training_images[2]+'" style="width:70%"><figcaption style="font-size:24px">'+current_training_label+'</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="'+current_sampling_image+'" style="width:70%"><figcaption style="font-size:24px">'+current_sampling_label+'</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">';
-  
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:70%"><figcaption style="font-size:24px">' + current_sampling_label + '</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">';
+
   }
   current_test_stimulus += '<p style="margin-block-start:0em;margin-block-end:0em"><font size="3"><i>Select ' + current_training_label + 's by clicking on them below. You can also unselect objects by clicking on them again.<br>';
   current_test_stimulus += 'When you are finished selecting <u>all</u> of the objects you think are ' + current_training_label + 's, click SUBMIT at the bottom of the page.</i></font><style="text-align:center /p>';
@@ -124,7 +124,7 @@ function generate_test_instructions(current_training_label, current_sampling_lab
 
 
 
-// generate a block for CatAct
+// generate a block for KittyAct V1 Adult
 function generate_block(trial, training_types) {
 
   var cur_block = [];
@@ -512,6 +512,160 @@ function create_debrief_questions() {
   debrief_block.push(debrief_questions);
 
   return (debrief_block)
+
+}
+
+function set_stimuli(stim_type) {
+  if (stim_type == "a") {
+
+    // store names of test phase image files
+    var grid_image_names = [
+      "stims/ani_c3_sup5.jpg",
+      "stims/ani_c3_sup6.jpg",
+      "stims/ani_c3_bas4.jpg",
+      "stims/ani_c3_sub5.jpg",
+      "stims/veg_c1_sup5.jpg",
+      "stims/veg_c1_sup6.jpg",
+      "stims/veg_c1_bas4.jpg",
+      "stims/veg_c1_sub5.jpg",
+      "stims/spo_c2_sup5.jpg",
+      "stims/spo_c2_sup6.jpg",
+      "stims/spo_c2_bas4.jpg",
+      "stims/spo_c2_sub5.jpg"];
+
+    console.log(grid_image_names)
+
+    // store names of sampling phase image files - reduced sampling image set in v3 is created per block
+    var sampling_image_names = [
+      "stims/ani_c3_sub4.jpg",
+      "stims/ani_c3_sup3.jpg",
+      "stims/ani_c3_sup4.jpg",
+      "stims/ani_c3_bas3.jpg",
+      "stims/veg_c1_sub4.jpg",
+      "stims/veg_c1_sup3.jpg",
+      "stims/veg_c1_sup4.jpg",
+      "stims/veg_c1_bas3.jpg",
+      "stims/spo_c2_sub4.jpg",
+      "stims/spo_c2_sup3.jpg",
+      "stims/spo_c2_sup4.jpg",
+      "stims/spo_c2_bas3.jpg"];
+
+    var training_image_names = [
+      "stims/ani_c3_sub1.jpg",
+      "stims/ani_c3_sub2.jpg",
+      "stims/ani_c3_sub3.jpg",
+      "stims/ani_c3_bas1.jpg",
+      "stims/ani_c3_bas2.jpg",
+      "stims/ani_c3_sup1.jpg",
+      "stims/ani_c3_sup2.jpg",
+      "stims/veg_c1_sub1.jpg",
+      "stims/veg_c1_sub2.jpg",
+      "stims/veg_c1_sub3.jpg",
+      "stims/veg_c1_bas1.jpg",
+      "stims/veg_c1_bas2.jpg",
+      "stims/veg_c1_sup1.jpg",
+      "stims/veg_c1_sup2.jpg",
+      "stims/spo_c2_sub1.jpg",
+      "stims/spo_c2_sub2.jpg",
+      "stims/spo_c2_sub3.jpg",
+      "stims/spo_c2_bas1.jpg",
+      "stims/spo_c2_bas2.jpg",
+      "stims/spo_c2_sup1.jpg",
+      "stims/spo_c2_sup2.jpg",];
+
+    var category_kinds_assignment = {
+      "c1": "vegetables",
+      "c2": "sports",
+      "c3": "animals"
+    }
+
+    var category_kinds_shortened_assignment = {
+      "c1": "veg",
+      "c2": "spo",
+      "c3": "ani"
+    }
+
+  } else if (stim_type == "b") {
+
+    // store names of test phase image files
+    var grid_image_names = [
+      "stims/sea_c2_sup5.jpg",
+      "stims/sea_c2_sup6.jpg",
+      "stims/sea_c2_bas4.jpg",
+      "stims/sea_c2_sub5.jpg",
+      "stims/fru_c1_sup5.jpg",
+      "stims/fru_c1_sup6.jpg",
+      "stims/fru_c1_bas4.jpg",
+      "stims/fru_c1_sub5.jpg",
+      "stims/veh_c3_sup5.jpg",
+      "stims/veh_c3_sup6.jpg",
+      "stims/veh_c3_bas4.jpg",
+      "stims/veh_c3_sub5.jpg"];
+
+    console.log(grid_image_names)
+
+    // store names of sampling phase image files - reduced sampling image set in v3 is created per block
+    var sampling_image_names = [
+      "stims/sea_c2_sub4.jpg",
+      "stims/sea_c2_sup3.jpg",
+      "stims/sea_c2_sup4.jpg",
+      "stims/sea_c2_bas3.jpg",
+      "stims/fru_c1_sub4.jpg",
+      "stims/fru_c1_sup3.jpg",
+      "stims/fru_c1_sup4.jpg",
+      "stims/fru_c1_bas3.jpg",
+      "stims/veh_c3_sub4.jpg",
+      "stims/veh_c3_sup3.jpg",
+      "stims/veh_c3_sup4.jpg",
+      "stims/veh_c3_bas3.jpg"];
+
+    var training_image_names = [
+      "stims/sea_c2_sub1.jpg",
+      "stims/sea_c2_sub2.jpg",
+      "stims/sea_c2_sub3.jpg",
+      "stims/sea_c2_bas1.jpg",
+      "stims/sea_c2_bas2.jpg",
+      "stims/sea_c2_sup1.jpg",
+      "stims/sea_c2_sup2.jpg",
+      "stims/fru_c1_sub1.jpg",
+      "stims/fru_c1_sub2.jpg",
+      "stims/fru_c1_sub3.jpg",
+      "stims/fru_c1_bas1.jpg",
+      "stims/fru_c1_bas2.jpg",
+      "stims/fru_c1_sup1.jpg",
+      "stims/fru_c1_sup2.jpg",
+      "stims/veh_c3_sub1.jpg",
+      "stims/veh_c3_sub2.jpg",
+      "stims/veh_c3_sub3.jpg",
+      "stims/veh_c3_bas1.jpg",
+      "stims/veh_c3_bas2.jpg",
+      "stims/veh_c3_sup1.jpg",
+      "stims/veh_c3_sup2.jpg",];
+
+    var category_kinds_assignment = {
+      "c1": "fruit",
+      "c2": "sea",
+      "c3": "vehicles"
+    }
+
+    var category_kinds_shortened_assignment = {
+      "c1": "fru",
+      "c2": "sea",
+      "c3": "veh"
+    }
+  }
+
+  stimulus_dict = {
+    "grid_image_names": grid_image_names,
+    "sampling_image_names": sampling_image_names,
+    "training_image_names": training_image_names,
+    "category_kinds_assignment": category_kinds_assignment,
+    "category_kinds_shortened_assignment": category_kinds_shortened_assignment
+
+  }
+  console.log(stimulus_dict)
+
+  return (stimulus_dict)
 
 }
 
