@@ -168,28 +168,21 @@
 
   console.log(round_stims);
   console.log(training_labels_vector);
-  console.log(alien_list);
 
   jsPsych.data.addProperties({
     round_stims: round_stims,
     cat_levels: cat_levels,
-    training_labels_vector: training_labels_vector,
-    alien_list: alien_list
+    training_labels_vector: training_labels_vector
   })
 
   //set up category conditions
-  var n_cat_level = getParamFromURL('n_cat_level');
-  var i_cat_level = getParamFromURL('i_cat_level');
-  var b_cat_level = getParamFromURL('b_cat_level');
+
 
   var catk_n = getParamFromURL('catk_n');
   var catk_i = getParamFromURL('catk_i');
   var catk_b = getParamFromURL('catk_b');
 
   //make sure that nobody can enter anything damaging
-  n_cat_level.replace(/[^A-Za-z0-9_]/g, "");
-  i_cat_level.replace(/[^A-Za-z0-9_]/g, "");
-  b_cat_level.replace(/[^A-Za-z0-9_]/g, "");
   catk_n.replace(/[^A-Za-z0-9_]/g, "");
   catk_i.replace(/[^A-Za-z0-9_]/g, "");
   catk_b.replace(/[^A-Za-z0-9_]/g, "");
