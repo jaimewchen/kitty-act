@@ -349,7 +349,7 @@
     show_progress_bar: true,
     on_finish: function () {
       //jsPsych.data.displayData();
-      //jsPsych.data.get().localSave('csv','catAct_test.csv');
+      jsPsych.data.get().localSave('csv','catAct_test.csv');
       jsPsych.init({
         timeline: experimentFinal
       });
