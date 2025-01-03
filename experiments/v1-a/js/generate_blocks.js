@@ -242,6 +242,7 @@ function generate_block(trial, training_types, grid_image_names,number_training_
     stimulus: current_learning_stimulus,
     choices: ["Next"],
     data: {
+      number_training_images: number_training_images,
       current_training_images: current_training_images,
       current_training_label: current_training_label,
       shuffled_sampling_images: shuffled_sampling_images,
@@ -264,6 +265,7 @@ function generate_block(trial, training_types, grid_image_names,number_training_
     autofocus: 'test-resp-box',
     button_label: "Next",
     data: {
+      number_training_images: number_training_images,
       current_training_images: current_training_images,
       current_training_label: current_training_label,
       shuffled_sampling_images: shuffled_sampling_images,
@@ -287,6 +289,7 @@ function generate_block(trial, training_types, grid_image_names,number_training_
     choices: current_sample_array,
     button_html: '<button class="jspsych-btn-image-array">%choice%</button>',
     data: {
+      number_training_images: number_training_images,
       current_training_images: current_training_images,
       current_training_label: current_training_label,
       shuffled_sampling_images: shuffled_sampling_images,
@@ -322,6 +325,7 @@ function generate_block(trial, training_types, grid_image_names,number_training_
     },
     choices: ["Next"],
     data: {
+      number_training_images: number_training_images,
       current_training_images: current_training_images,
       current_training_label: current_training_label,
       shuffled_sampling_images: shuffled_sampling_images,
@@ -363,6 +367,7 @@ function generate_block(trial, training_types, grid_image_names,number_training_
     margin_vertical: '2px',
     button_html: '<button class="jspsych-btn-image-array">%choice%</button>',
     data: {
+      number_training_images: number_training_images,
       current_training_images: current_training_images,
       current_training_label: current_training_label,
       shuffled_sampling_images: shuffled_sampling_images,
@@ -390,6 +395,7 @@ function generate_block(trial, training_types, grid_image_names,number_training_
     autofocus: 'test-resp-box',
     button_label: "Next",
     data: {
+      number_training_images: number_training_images,
       current_training_images: current_training_images,
       current_training_label: current_training_label,
       shuffled_sampling_images: shuffled_sampling_images,
