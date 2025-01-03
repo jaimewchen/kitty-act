@@ -125,8 +125,9 @@ function generate_test_instructions(current_training_label, current_sampling_lab
 
 
 // generate a block for KittyAct V1 Adult
-function generate_block(trial, training_types) {
+function generate_block(trial, training_types, grid_image_names,number_training_images) {
 
+  console.log(number_training_images);
   var cur_block = [];
   current_trial_info = training_types[trial];
   console.log(current_trial_info);
@@ -135,33 +136,15 @@ function generate_block(trial, training_types) {
   var current_training_label = current_trial_info["training_label"];
   var current_alternate_training_label = current_trial_info["alternate_training_label"];
   var current_category_kind = current_trial_info["category_kind"];
+  var current_category_label = current_trial_info["category_label"];
+  var current_category_kind_shortened = current_trial_info["category_kind_shortened"];
   var current_category_training_level = current_trial_info["category_training_level"];
   var current_category_label_level = current_trial_info["category_label_level"];
   var current_training_image_path_info = current_trial_info["training_image_path_info"]
   //select hypernym category (if needed)
   var current_hypernym_category_kind = current_trial_info["hypernym_kind"];
-
-  if (current_category_kind == "vegetables") {
-    var current_category_label = "c1";
-    var current_category_kind_shortened = "veg";
-  } else if (current_category_kind == "vehicles") {
-    var current_category_label = "c2";
-    var current_category_kind_shortened = "veh";
-  } else {
-    var current_category_label = "c3";
-    var current_category_kind_shortened = "ani";
-  }
-
-  if (current_hypernym_category_kind == "vegetables") {
-    var current_hypernym_category_label = "c1";
-    var current_hypernym_category_kind_shortened = "veg";
-  } else if (current_hypernym_category_kind == "vehicles") {
-    var current_hypernym_category_label = "c2";
-    var current_hypernym_category_kind_shortened = "veh";
-  } else {
-    var current_hypernym_category_label = "c3";
-    var current_hypernym_category_kind_shortened = "ani";
-  }
+  var current_hypernym_category_label = current_trial_info["hypernym_code"];
+  var current_hypernym_category_kind_shortened = current_trial_info["hypernym_kind_shortened"];
 
   console.log(current_training_label);
   console.log(current_alternate_training_label);
@@ -169,6 +152,8 @@ function generate_block(trial, training_types) {
   console.log(current_category_label_level);
   console.log(current_category_label);
   console.log(current_hypernym_category_kind);
+  console.log(current_hypernym_category_label);
+  console.log(current_hypernym_category_kind_shortened);
 
   // PREPPTING THE SELECTION ARRAYS
 
@@ -187,7 +172,7 @@ function generate_block(trial, training_types) {
     current_sampling_images.push('stims/' + current_category_kind_shortened + '_' + current_category_label + '_' + within_cat_sampling_names[i])
   };
   //add fourth hypernym image
-  current_sampling_images.push('stims/' + current_hypernym_category_kind_shortened + '_' + current_hypernym_category_label + '_' + 'sup3.jpg')
+  current_sampling_images.push('stims/' + current_hypernym_category_kind_shortened + '_' + current_hypernym_category_label + '_' + 'sup4.jpg')
   console.log(current_sampling_images);
 
   // shuffle sampling array
@@ -200,13 +185,16 @@ function generate_block(trial, training_types) {
 
   //create training images
   var current_training_images = [];
-  for (var i = 0; i < current_training_image_path_info.length; i++) {
-    current_training_images.push('stims/' + current_category_kind_shortened + '_' + current_category_label + '_' + current_training_image_path_info[i])
+  if (number_training_images == 1) {
+    for (var i = 0; i < 1; i++) {
+      current_training_images.push('stims/'+current_category_kind_shortened+'_'+current_category_label+'_'+current_training_image_path_info[i])
+    };
+  } else if (number_training_images == 3) {
+    for (var i = 0; i < current_training_image_path_info.length; i++) {
+      current_training_images.push('stims/'+current_category_kind_shortened+'_'+current_category_label+'_'+current_training_image_path_info[i])
+    };
   };
-
   console.log(current_training_images);
-
-
 
   //create words
   var sampling_image_words = [];
@@ -244,9 +232,9 @@ function generate_block(trial, training_types) {
 
   console.log(sampling_image_words)
 
-  var current_learning_stimulus = generate_learning_instructions(current_training_label, current_training_images);
-  var current_check_stimulus = generate_check_instructions(current_training_label, current_training_images);
-  var current_sampling_stimulus = generate_sampling_instructions(current_training_label, current_training_images);
+  var current_learning_stimulus = generate_learning_instructions(current_training_label, current_training_images, number_training_images);
+  var current_check_stimulus = generate_check_instructions(current_training_label, current_training_images, number_training_images);
+  var current_sampling_stimulus = generate_sampling_instructions(current_training_label, current_training_images, number_training_images);
 
   // display learning trial
   var learning_trial = {
@@ -261,7 +249,7 @@ function generate_block(trial, training_types) {
       shuffled_test_images: shuffled_images,
       current_category_label_level: current_category_label_level,
       current_category_kind: current_category_kind,
-      current_category_training_level,
+      current_category_training_level: current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
       trial_type: "learning"
@@ -283,7 +271,7 @@ function generate_block(trial, training_types) {
       shuffled_test_images: shuffled_images,
       current_category_label_level: current_category_label_level,
       current_category_kind: current_category_kind,
-      current_category_training_level,
+      current_category_training_level: current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
       trial_type: "label_check"
@@ -306,7 +294,7 @@ function generate_block(trial, training_types) {
       shuffled_test_images: shuffled_images,
       current_category_label_level: current_category_label_level,
       current_category_kind: current_category_kind,
-      current_category_training_level,
+      current_category_training_level: current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
       trial_type: "sampling"
@@ -329,7 +317,8 @@ function generate_block(trial, training_types) {
         last_trial_data.current_training_label,
         last_trial_data.sampling_image_words[last_trial_data.response],
         last_trial_data.current_training_images,
-        last_trial_data.shuffled_sampling_images[last_trial_data.response])
+        last_trial_data.shuffled_sampling_images[last_trial_data.response],
+        last_trial_data.number_training_images)
     },
     choices: ["Next"],
     data: {
@@ -340,7 +329,7 @@ function generate_block(trial, training_types) {
       shuffled_test_images: shuffled_images,
       current_category_label_level: current_category_label_level,
       current_category_kind: current_category_kind,
-      current_category_training_level,
+      current_category_training_level: current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
       trial_type: "sampling_feedback"
@@ -363,7 +352,8 @@ function generate_block(trial, training_types) {
         last_trial_data.current_training_label,
         last_trial_data.sampled_label,
         last_trial_data.current_training_images,
-        last_trial_data.sampled_image
+        last_trial_data.sampled_image,
+        last_trial_data.number_training_images
       )
     },
     choices: current_grid_array,
@@ -380,7 +370,7 @@ function generate_block(trial, training_types) {
       shuffled_test_images: shuffled_images,
       current_category_label_level: current_category_label_level,
       current_category_kind: current_category_kind,
-      current_category_training_level,
+      current_category_training_level: current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
       trial_type: "test"
@@ -407,7 +397,7 @@ function generate_block(trial, training_types) {
       shuffled_test_images: shuffled_images,
       current_category_label_level: current_category_label_level,
       current_category_kind: current_category_kind,
-      current_category_training_level,
+      current_category_training_level: current_category_training_level,
       current_alternate_training_label: current_alternate_training_label,
       current_hypernym_category_kind: current_hypernym_category_kind,
       trial_type: "test_meaning"
@@ -421,12 +411,12 @@ function generate_block(trial, training_types) {
 }
 
 // generate all blocks
-function generate_all_blocks(trial_order, training_types) {
+function generate_all_blocks(trial_order, training_types,grid_image_names,number_training_images) {
 
   var all_blocks = [];
   for (var j = 0; j < trial_order.length; j++) {
     trial = trial_order[j];
-    cur_block = generate_block(trial, training_types)
+    cur_block = generate_block(trial, training_types,grid_image_names,number_training_images)
     all_blocks = all_blocks.concat(cur_block)
 
     if (j < trial_order.length - 1) {
