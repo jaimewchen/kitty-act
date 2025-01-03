@@ -114,8 +114,16 @@
   var catk_assignment = [catk_vector[catk_1_index], catk_vector[catk_2_index]];
   console.log(catk_assignment);
 
+  //create random code for final message
+  var code = createCode("CatAct");
 
+  //add properties to data
   jsPsych.data.addProperties({
+    code: code,
+    subject: subject_id,
+    workerId: workerId,
+    hitId: hitId,
+    assignmentId: assignmentId,
     stim_set: stim_set_index,
     stim_set_vector: stim_set_vector,
     number_training_image_order_index: number_training_image_order_index,
@@ -134,6 +142,7 @@
   var round_stims = [];
   var cat_levels = [];
   var training_labels_vector = [];
+  var all_images = [];
   for (i = 0; i < num_sets; i++) {
     var cur_round_set = [];
     var cur_stim_set = stim_set_vector[i];
@@ -164,19 +173,24 @@
     round_stims.push(cur_round_stimulus_dict);
     cat_levels.push(cur_cat_levels);
     training_labels_vector.push(round_training_labels);
+
+
+    //create image array for preloading
+    var cur_round_all_grid_images = cur_round_stimulus_dict["grid_image_names"].concat(cur_round_stimulus_dict["sampling_image_names"]);
+    var cur_round_all_images = cur_round_all_grid_images.concat(cur_round_stimulus_dict["training_image_names"]);
+    console.log(cur_round_all_images);
+    all_images.concat(cur_round_all_images);
   };
 
   console.log(round_stims);
   console.log(training_labels_vector);
+  console.log(all_images);
 
   jsPsych.data.addProperties({
     round_stims: round_stims,
     cat_levels: cat_levels,
     training_labels_vector: training_labels_vector
   })
-
-  //create random code for final message
-  var code = createCode("CatAct");
 
   // create timeline
   var timeline = [];
@@ -188,26 +202,6 @@
   // };
 
   // timeline.push(pavlovia_init);
-
-  jsPsych.data.addProperties({
-    code: code,
-    subject: subject_id,
-    workerId: workerId,
-    hitId: hitId,
-    assignmentId: assignmentId,
-    n_cat_level: n_cat_level,
-    narrow_category_label_level: correct_category_label_levels["narrow"],
-    i_cat_level: i_cat_level,
-    intermediate_category_label_level: correct_category_label_levels["intermediate"],
-    b_cat_level: b_cat_level,
-    broad_category_label_level: correct_category_label_levels["broad"],
-    catk_n: catk_n,
-    narrow_category_kind: randomized_category_kinds["narrow"],
-    catk_i: catk_i,
-    intermediate_category_kind: randomized_category_kinds["intermediate"],
-    catk_b: catk_b,
-    broad_category_kind: randomized_category_kinds["broad"],
-  });
 
   var preload = {
     type: 'preload',
@@ -279,35 +273,6 @@
     var randomized_category_kinds = create_category_kinds(randomized_category_codes, category_kinds_assignment);
 
     console.log(randomized_category_kinds);
-
-    jsPsych.data.addProperties({
-      participant: participant_id,
-      round: round,
-      seed: seed,
-      stim_set_vector: stim_set_vector,
-      catk_assignment: catk_assignment,
-      round_stims: round_stims,
-      cat_levels: cat_levels,
-      number_training_image_order_vector: number_training_image_order_vector,
-      n_cat_level: n_cat_level,
-      narrow_category_label_level: correct_category_label_levels["narrow"],
-      i_cat_level: i_cat_level,
-      intermediate_category_label_level: correct_category_label_levels["intermediate"],
-      b_cat_level: b_cat_level,
-      broad_category_label_level: correct_category_label_levels["broad"],
-      catk_n: catk_n,
-      narrow_category_kind: randomized_category_kinds["narrow"],
-      catk_i: catk_i,
-      intermediate_category_kind: randomized_category_kinds["intermediate"],
-      catk_b: catk_b,
-      broad_category_kind: randomized_category_kinds["broad"],
-      number_training_images: current_number_training_image
-    });
-
-    //create image array for preloading
-    var all_grid_images = grid_image_names.concat(sampling_image_names);
-    var all_images = all_grid_images.concat(training_image_names);
-    console.log(all_images);
 
     // BUILD TRIALS
     // key parameters
