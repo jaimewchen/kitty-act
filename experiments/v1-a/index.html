@@ -175,29 +175,37 @@
     training_labels_vector: training_labels_vector
   })
 
-  //set up category conditions
-
-
-  var catk_n = getParamFromURL('catk_n');
-  var catk_i = getParamFromURL('catk_i');
-  var catk_b = getParamFromURL('catk_b');
-
-  //make sure that nobody can enter anything damaging
-  catk_n.replace(/[^A-Za-z0-9_]/g, "");
-  catk_i.replace(/[^A-Za-z0-9_]/g, "");
-  catk_b.replace(/[^A-Za-z0-9_]/g, "");
-
-
-
-  var correct_category_label_levels = create_correct_category_labels(n_cat_level, i_cat_level, b_cat_level);
-  console.log(correct_category_label_levels);
-
-  var category_kinds = ["animals", "vegetables", "vehicles"];
-  var randomized_category_kinds = create_category_kinds(category_kinds, catk_n, catk_i, catk_b);
-  console.log(randomized_category_kinds);
-
   //create random code for final message
   var code = createCode("CatAct");
+
+  var current_timeline = [];
+
+  // create rounds
+  for (round_index = 0; round_index < num_sets; round_index++) {
+    var current_stim_set = stim_set_vector[round_index];
+    var current_catk_assignment = catk_assignment[round_index];
+    var current_cat_levels = cat_levels[round_index];
+    var current_round_stims = round_stims[round_index];
+    var current_number_training_image = number_training_image_order_vector[round_index];
+    var training_labels = training_labels_vector[round_index];
+    
+    var correct_category_label_levels = create_correct_category_labels(current_cat_levels[0], current_cat_levels[1], current_cat_levels[2]);
+    console.log(correct_category_label_levels);
+
+    var category_codes = ["c1", "c2", "c3"];
+    var catk_n = current_catk_assignment[0];
+    var catk_i = current_catk_assignment[1];
+    var catk_b = current_catk_assignment[2];
+
+    var category_kinds = ["animals", "vegetables", "vehicles"];
+    var randomized_category_kinds = create_category_kinds(category_kinds, catk_n, catk_i, catk_b);
+    console.log(randomized_category_kinds);
+  }
+
+
+
+
+
 
   jsPsych.data.addProperties({
     code: code,
