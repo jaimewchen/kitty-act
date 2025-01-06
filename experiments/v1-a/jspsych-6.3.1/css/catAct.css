@@ -78,7 +78,7 @@ figure {
     grid-template-columns: auto auto auto auto;
     grid-template-rows: auto auto auto auto;
     width: auto;
-    max-width: 500px;
+    max-width: 615px;
     align-items:  center;
     justify-items: center;
     padding: 2px;
@@ -92,7 +92,7 @@ figure {
     grid-template-columns: auto auto auto auto;
     grid-template-rows: auto auto auto;
     width: auto;
-    max-width: 515px;
+    max-width: 615px;
     align-items:  center;
     justify-items: center;
     padding: 2px;

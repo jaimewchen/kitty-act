@@ -4,19 +4,17 @@ function generate_learning_instructions(current_training_label, current_training
   if (number_training_images == 1) {
     current_learning_stimulus += '<p><b><font size="4.5">This is a ' + current_training_label + '.</font></b><style="text-align:center;" /p>';
     current_learning_stimulus += '<div class="row">';
-    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:50%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
     current_learning_stimulus += '</div>';
     current_learning_stimulus += '<p><b><font size="4.5">On the next page, we will check your memory of this new word. Make sure you look at the example and the new word carefully.</font></b><style="text-align:center;" /p>';
   } else if (number_training_images == 3) {
     current_learning_stimulus += '<p><b><font size="4.5">These are 3 ' + current_training_label + 's.</font></b><style="text-align:center;" /p>';
     current_learning_stimulus += '<div class="row">';
-    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:85%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:85%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:85%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
     current_learning_stimulus += '</div>';
     current_learning_stimulus += '<p><b><font size="4.5">On the next page, we will check your memory of this new word. Make sure you look at the three examples and the new word carefully.</font></b><style="text-align:center;" /p>';
   }
@@ -28,17 +26,15 @@ function generate_check_instructions(current_training_label, current_training_im
   var current_learning_stimulus = '<div id="container"><p><b><font size="4.5">Please enter the new word you just saw.</font></b><style="text-align:center;" /p>';
   current_learning_stimulus += '<div class="row">';
   if (number_training_images == 1) {
-    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px"></figcaption></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:50%"><figcaption style="font-size:24px"></figcaption></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px"></figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px"></figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px"></figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px"></figcaption></figure></div>';
     current_learning_stimulus += '</div>';
     current_learning_stimulus += '<p> What is the word you just learned for this object?</p><p><input name="name_check" type="text" id="test-resp-box" size="20" required/></p>';
   } else if (number_training_images == 3) {
-    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:85%"></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:85%"></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:85%"></figure></div>';
-    current_learning_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px"></figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:60%"><figcaption style="font-size:24px"></figcaption></figure></div>';
+    current_learning_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:60%"><figcaption style="font-size:24px"></figcaption></figure></div>';
     current_learning_stimulus += '</div>';
     current_learning_stimulus += '<p> What is the word you just learned for these three objects?</p><p><input name="name_check" type="text" id="test-resp-box" size="20" required/></p>';
   }
@@ -52,18 +48,16 @@ function generate_sampling_instructions(current_training_label, current_training
   if (number_training_images == 1) {
     current_sampling_stimulus += '<p><b><font size="4.5">This is a ' + current_training_label + '.</font></b><style="text-align:center;" /p>';
     current_sampling_stimulus += '<div class="row">';
-    current_sampling_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_sampling_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:50%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_sampling_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_sampling_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_sampling_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_sampling_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
     current_sampling_stimulus += '</div>';
   } else if (number_training_images == 3) {
     current_sampling_stimulus += '<p><b><font size="4.5">These are 3 ' + current_training_label + 's.</font></b><style="text-align:center;" /p>';
     current_sampling_stimulus += '<div class="row">';
-    current_sampling_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_sampling_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:85%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_sampling_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:85%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_sampling_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:85%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_sampling_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_sampling_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_sampling_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_sampling_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:60%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
     current_sampling_stimulus += '</div>';
   }
   current_sampling_stimulus += '<p><b><font size="4.5">Which of these four objects would you like to learn the name of? You can only make one choice, so choose carefully!</font></b></p>'
@@ -88,16 +82,16 @@ function generate_selection_instructions(current_training_label, current_samplin
   }
   current_selection_stimulus += '<div class="row">';
   if (number_training_images == 1) {
-    current_selection_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_selection_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:70%; border: 5px solid #FFFFFF; padding: 6px"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_selection_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px;color:#ff0000">' + current_sampling_label + '</figcaption></figure></div>';
-    current_selection_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_selection_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:80%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_selection_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:80%; border: 5px solid #FFFFFF; padding: 6px"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_selection_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:80%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px;color:#ff0000">' + current_sampling_label + '</figcaption></figure></div>';
+    current_selection_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:80%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
     current_selection_stimulus += '</div class="column"></div class="column"></div class="column"></div class="column">';
   } else if (number_training_images == 3) {
-    current_selection_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:70%; border: 5px solid #FFFFFF; padding: 6px"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_selection_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:70%; border: 5px solid #FFFFFF; padding: 6px"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_selection_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:70%; border: 5px solid #FFFFFF; padding: 6px"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_selection_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:70%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px;color:#ff0000">' + current_sampling_label + '</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">';
+    current_selection_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:80%; border: 5px solid #FFFFFF; padding: 6px"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_selection_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:80%; border: 5px solid #FFFFFF; padding: 6px"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_selection_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:80%; border: 5px solid #FFFFFF; padding: 6px"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_selection_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:80%; border: 5px solid #ff0000; padding: 6px"><figcaption style="font-size:24px;color:#ff0000">' + current_sampling_label + '</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">';
   }
   current_selection_stimulus += '<div id="container"><p><b><font size="4.5">Next, you will see a set of 12 new objects and decide which of them are ' + current_training_label + 's.</font></b>';
   current_selection_stimulus += '<div id="container"><p><b><font size="4.5">Your goal is to select <u>all</u> of the ' + current_training_label + 's.</font></b>';
@@ -111,16 +105,16 @@ function generate_test_instructions(current_training_label, current_sampling_lab
   current_test_stimulus += '<p style="margin-block-start:0.1em;margin-block-end:0.1em"><font size="4.5"><b>Now, pick <u>all of the other ' + current_training_label + 's</u>. </b></font><style="text-align:center;" /p>';
   current_test_stimulus += '<div class="row">';
   if (number_training_images == 1) {
-    current_test_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:70%"><figcaption style="font-size:24px">' + current_sampling_label + '</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:80%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:80%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:80%"><figcaption style="font-size:24px">' + current_sampling_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure style="opacity:0"><img src="' + current_training_images[0] + '" style="width:80%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
     current_test_stimulus += '</div class="column"></div class="column"></div class="column"></div class="column">';
   } else if (number_training_images == 3) {
-    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:70%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
-    current_test_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:70%"><figcaption style="font-size:24px">' + current_sampling_label + '</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[0] + '" style="width:80%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[1] + '" style="width:80%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_training_images[2] + '" style="width:80%"><figcaption style="font-size:24px">' + current_training_label + '</figcaption></figure></div>';
+    current_test_stimulus += '<div class="column"><figure><img src="' + current_sampling_image + '" style="width:80%"><figcaption style="font-size:24px">' + current_sampling_label + '</figcaption></figure></div class="column"></div class="column"></div class="column"></div class="column">';
 
   }
   current_test_stimulus += '<p style="margin-block-start:0em;margin-block-end:0em"><font size="3"><i>Select ' + current_training_label + 's by clicking on them below. You can also unselect objects by clicking on them again.<br>';
@@ -391,7 +385,7 @@ function generate_block(trial, training_types, grid_image_names,number_training_
   cur_block.push(test_trial);
 
 
-  var current_test_meaning_stimulus = '<div id="container"><p> What do you think that <b>' + current_training_label + '</b> means?</p><p><input name="word_meaning" type="text" id="test-resp-box" size="20" required/></p>';
+  var current_test_meaning_stimulus = '<div id="container"><p> What do you think that <b>' + current_training_label + '</b> means?</p><p><input name="word_meaning" type="text" id="test-resp-box" size="40" required/></p>';
   current_test_meaning_stimulus += '<p><i>Click Next to continue.</font></i><style="text-align:center;" /p></div>';
 
 
@@ -505,7 +499,7 @@ function create_debrief_questions() {
     type: 'survey-text',
     questions: [
       { prompt: "Did you use a strategy to figure out what each word meant? If yes, please explain.", name: "strategy", rows: 3, columns: 60, required: true },
-      { prompt: "After seeing a new word and the first example(s), how did you choose which next object to see a word?", name: "choice_strategy", rows: 3, columns: 60, required: true },
+      { prompt: "After seeing a new word and the first example(s), how did you choose which object to see a word for next?", name: "choice_strategy", rows: 3, columns: 60, required: true },
       { prompt: "Any additional comments?", name: "comments", rows: 3, columns: 60 }
     ],
 
