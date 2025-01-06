@@ -89,10 +89,10 @@ figure {
 .grid-container-test {
     border: 0px solid black;
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto;
-    grid-template-rows: auto auto auto auto;
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: auto auto auto;
     width: auto;
-    max-width: 800px;
+    max-width: 515px;
     align-items:  center;
     justify-items: center;
     padding: 2px;
