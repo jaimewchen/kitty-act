@@ -2,6 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width:640px;
+  margin:auto;
 }
 
 .column {
