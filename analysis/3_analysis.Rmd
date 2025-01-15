@@ -70,9 +70,10 @@ participant_info <- read_csv(participant_info_path) %>%
 ## compute ages and integrate with main data
 
 ```{r}
+participant_info$age_mos_int <- participant_info$age_mos
+
 participant_info <- participant_info %>%
   mutate(resid_month_decimal=age_day_count/30.417) %>%
-  rename(age_mos_int=age_mos) %>%
   mutate(age_mos = age_mos_int+resid_month_decimal,
          age_years=age_mos/12) %>%
   mutate(
@@ -152,6 +153,8 @@ overall_accuracy_by_condition <- subj_test_accuracy_long %>%
     choice_type = str_remove(choice_type,"_percent")
   )
 
+# looking at if 1- or 3-Item first has an effect
+
 overall_accuracy_by_condition_round <- subj_test_accuracy_long %>%
   ungroup() %>%
   group_by(round,number_training_images,current_category_training_level,choice_type) %>%
@@ -164,6 +167,8 @@ overall_accuracy_by_condition_round <- subj_test_accuracy_long %>%
     choice_type = str_remove(choice_type,"_percent")
   )
 
+# accuracy based on training condition (N, I, B) and ground-truth (same level or 1 level up)
+
 overall_accuracy_label_level_by_condition <- subj_test_accuracy_long %>%
   ungroup() %>%
   group_by(number_training_images,current_category_training_level,current_category_label_level,choice_type) %>%
@@ -175,6 +180,8 @@ overall_accuracy_label_level_by_condition <- subj_test_accuracy_long %>%
     choice_type = str_remove(choice_type,"training_category_match_"),
     choice_type = str_remove(choice_type,"_percent")
   )
+
+# again, looking at if 1- or 3-Item first has an effect on above accuracy
 
 overall_accuracy_label_level_by_condition_round <- subj_test_accuracy_long %>%
   ungroup() %>%

@@ -1,0 +1,82 @@
+---
+title: "Kitty Act V1 Demographics Processing"
+author: "Jaime Chen"
+date: "2025-01-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(knitr)
+knitr::opts_chunk$set(
+                prompt  = FALSE,
+                cache   = FALSE,
+                echo = TRUE,
+                warning=F,
+                message=F)
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(tidymodels)
+library(jsonlite)
+library(tidyjson)
+source("helper.R")
+```
+
+Adding anonymized demographic information
+
+```{r}
+demographics_raw <- read_csv("/Users/jaimechen/Desktop/demographics.csv")
+
+
+# selecting for important data and kitty-act studies
+
+demographics_clean <- demographics_raw %>%
+  select(
+    study, 
+    subject_id, 
+    age, 
+    gender, 
+    l1, 
+    l1_percent, 
+    languages_additional, 
+    race, 
+    race_7_TEXT, 
+    dev_concerns, 
+    dev_concerns_details, 
+    education, 
+    education_8_TEXT, 
+    education_10_TEXT, 
+    country_origin, 
+    income
+  ) %>% 
+  filter(study == "kitty-act") %>%
+  filter(subject_id != "p003") %>% 
+  drop_na(age)
+
+
+# fixing parent-reported survey input errors
+
+## changing age of p046
+
+demographics_clean$age[demographics_clean$subject_id == "p046"] <- 7
+
+## swapping p049 with p050
+
+### preventing a mix-up of subject_id values
+demographics_clean$subject_id[demographics_clean$subject_id == "p049"] <- "p049x"
+demographics_clean$subject_id[demographics_clean$subject_id == "p050"] <- "p050x"
+
+demographics_clean$subject_id[demographics_clean$subject_id == "p049x"] <- "p050"
+demographics_clean$subject_id[demographics_clean$subject_id == "p050x"] <- "p049"
+
+
+# normalizing responses within each column
+
+
+```
