@@ -31,7 +31,7 @@ source("helper.R")
 Adding anonymized demographic information
 
 ```{r}
-demographics_raw <- read_csv("/Users/jaimechen/Desktop/demographics.csv")
+demographics_raw <- read_csv("raw_data/demographics_raw.csv")
 
 
 # selecting for important data and kitty-act studies
@@ -56,6 +56,7 @@ demographics_clean <- demographics_raw %>%
     income
   ) %>% 
   filter(study == "kitty-act") %>%
+# remove pilot participant
   filter(subject_id != "p003") %>% 
   drop_na(age)
 
@@ -78,5 +79,182 @@ demographics_clean$subject_id[demographics_clean$subject_id == "p050x"] <- "p049
 
 # normalizing responses within each column
 
+demographics_norm <- demographics_clean %>% 
+  mutate(
+    age = as.integer(age)) %>% 
+  mutate(
+    gender = tolower(substr(gender, 1, 1))) %>% 
+  mutate(
+    l1 = case_when(
+      l1 == "emglish" ~ "english",
+      l1 == "ENGLISH" ~ "english",
+      l1 == "English" ~ "english",
+      l1 == "english and spanish" ~ "english",
+      l1 == "english;ish" ~ "english",
+      TRUE ~ l1)) %>% 
+  mutate(
+    l1_percent = as.numeric(gsub("\\D", "", demographics_clean$l1_percent))) %>% 
+  mutate(languages_additional = gsub(" and", ",", demographics_clean$languages_additional)) %>% 
+  mutate(
+    languages_additional = tolower(case_when(
+      languages_additional == "none" ~ NA,
+      languages_additional == "no" ~ NA,
+      languages_additional == "0" ~ NA,
+      languages_additional == "None on regular basis" ~ NA,
+      languages_additional == "na" ~ NA,
+      languages_additional == "n/a" ~ NA,
+      languages_additional == "spamish" ~ "spanish",
+      languages_additional == "Chinese at chinese school" ~ "chinese",
+      languages_additional == "spanish in a short biweekly class at school" ~ "spanish",
+      languages_additional == "ukrainian, polish, spanish at school" ~ "ukrainian, polish, spanish",
+      languages_additional == "just spanish, mandarin at school" ~ "spanish, mandarin",
+      languages_additional == "Spanish in school, during Spanish class" ~ "spanish",
+      languages_additional == "spanish twice a week in school during Spanish class" ~ "spanish",
+      languages_additional == "spanish (at school)" ~ "spanish",
+      TRUE ~ languages_additional))) %>% 
+  mutate(languages_additional = gsub(", ", ",", languages_additional)) %>% 
+  mutate(race_7_TEXT = case_when(
+    race_7_TEXT == "japanese" ~ NA,
+    race_7_TEXT == "half white half asian" ~ "White,Asian",
+    race_7_TEXT == "mixed asian/white" ~ "White,Asian",
+    race_7_TEXT == "Brazilian" ~ "Hispanic or Latino",
+    race_7_TEXT == "incan roots" ~ NA,
+    race_7_TEXT == "turkish" ~ "Turkish",
+    TRUE ~ race_7_TEXT
+  )) %>% 
+  mutate(race = gsub(",Some other race or origin \\(please specify\\)", "", demographics_clean$race)) %>% 
+  mutate(race = gsub("Some other race or origin \\(please specify\\)", "", race)) %>% 
+  mutate(race = case_when(
+    is.na(race_7_TEXT) == FALSE & race != "" ~ paste(race, race_7_TEXT, sep = ","),
+    is.na(race_7_TEXT) == FALSE & race == "" ~ paste(race, race_7_TEXT, sep = ""),
+    TRUE ~ race)) %>% 
+  mutate(dev_concerns_details = case_when(
+    dev_concerns == "No" ~ NA,
+    TRUE ~ dev_concerns_details)) %>% 
+  mutate(country_origin = tolower(country_origin)) %>% 
+  mutate(education = case_when(
+    education_8_TEXT == "medical doctor" ~ "Doctoral degree",
+    education_8_TEXT == "PharmD" ~ "Doctoral degree",
+    education_10_TEXT == "pre k" ~ NA,
+    TRUE ~ education)) %>%
+  select(-c(race_7_TEXT, education_8_TEXT, education_10_TEXT))
 
+demographics_norm <- demographics_norm %>% sort_by(demographics_norm$subject_id)
+```
+
+Normalizing Country Origin
+
+```{r}
+country_list <- c()
+
+for (i in demographics_norm$country_origin){
+  if (grepl("united states", i)){country_list <- c(country_list, "usa")}
+  else if (grepl("us", i)){country_list <- c(country_list, "usa")}
+  else if (grepl("america", i)){country_list <- c(country_list, "usa")}
+  else {country_list <- c(country_list, "")}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("abudhabi", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "abu dhabi", sep = ",")}
+  else if (grepl("abudhabi", demographics_norm$country_origin[i])){country_list[i] <- "abu dhabi"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("canada", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "canada", sep = ",")}
+  else if (grepl("canada", demographics_norm$country_origin[i])){country_list[i] <- "canada"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("china", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "china", sep = ",")}
+  else if (grepl("china", demographics_norm$country_origin[i])){country_list[i] <- "china"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("costa rica", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "costa rica", sep = ",")}
+  else if (grepl("costa rica", demographics_norm$country_origin[i])){country_list[i] <- "costa rica"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("ecuador", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "ecuador", sep = ",")}
+  else if (grepl("ecuador", demographics_norm$country_origin[i])){country_list[i] <- "ecuador"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("germany", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "germany", sep = ",")}
+  else if (grepl("germany", demographics_norm$country_origin[i])){country_list[i] <- "germany"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("guatemala", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "guatemala", sep = ",")}
+  else if (grepl("guatemala", demographics_norm$country_origin[i])){country_list[i] <- "guatemala"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("haiti", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "haiti", sep = ",")}
+  else if (grepl("haiti", demographics_norm$country_origin[i])){country_list[i] <- "haiti"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("hong kong", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "hong kong", sep = ",")}
+  else if (grepl("hong kong", demographics_norm$country_origin[i])){country_list[i] <- "hong kong"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("india", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "india", sep = ",")}
+  else if (grepl("india", demographics_norm$country_origin[i])){country_list[i] <- "india"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("iran", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "iran", sep = ",")}
+  else if (grepl("iran", demographics_norm$country_origin[i])){country_list[i] <- "iran"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("ireland", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "ireland", sep = ",")}
+  else if (grepl("ireland", demographics_norm$country_origin[i])){country_list[i] <- "ireland"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("japan", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "japan", sep = ",")}
+  else if (grepl("japan", demographics_norm$country_origin[i])){country_list[i] <- "japan"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("korea", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "korea", sep = ",")}
+  else if (grepl("korea", demographics_norm$country_origin[i])){country_list[i] <- "korea"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("lebanon", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "lebanon", sep = ",")}
+  else if (grepl("lebanon", demographics_norm$country_origin[i])){country_list[i] <- "lebanon"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("peru", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "peru", sep = ",")}
+  else if (grepl("peru", demographics_norm$country_origin[i])){country_list[i] <- "peru"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("philippines", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "philippines", sep = ",")}
+  else if (grepl("philippines", demographics_norm$country_origin[i])){country_list[i] <- "philippines"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("south africa", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "south africa", sep = ",")}
+  else if (grepl("south africa", demographics_norm$country_origin[i])){country_list[i] <- "south africa"}
+}
+
+for (i in 1:length(country_list)){
+  if (grepl("turkish", demographics_norm$country_origin[i]) & country_list[i] != ""){country_list[i] <- paste(country_list[i], "turkey", sep = ",")}
+  else if (grepl("turkish", demographics_norm$country_origin[i])){country_list[i] <- "turkey"}
+}
+
+demographics <- demographics_norm %>% mutate(country_origin = country_list)
+```
+
+Saving .csv file
+
+```{r}
+data_path <- here("processed_data")
+write_csv(demographics,here(data_path,"kitty-act-v1-demographics.csv"))
 ```

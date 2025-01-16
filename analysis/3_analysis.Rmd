@@ -238,6 +238,8 @@ subj_test_accuracy_all <- test_array_options_clean %>%
 subj_test_accuracy_all <- subj_test_accuracy_all %>%
   left_join(sampling_data)
 
+# gives accuracy based on training level, ground-truth level, and if sampling was confirm/explore
+
 overall_accuracy_label_level_sampling_all <- subj_test_accuracy_all %>%
   ungroup() %>%
   group_by(sampling_choice_type,current_category_training_level,current_category_label_level) %>%
