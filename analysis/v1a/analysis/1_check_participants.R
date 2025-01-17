@@ -43,16 +43,24 @@ sessions_per_id <- d %>%
   group_by(prolific_id) %>%
   count()
 
-condition_assignment_1 <- d %>%
+condition_assignment <- d %>%
   distinct(prolific_id,stim_set,number_training_image_order_index) %>%
   group_by(stim_set,number_training_image_order_index) %>%
   summarize(
     n=n()
   )
 
+
+condition_assignment_1 <- d %>%
+  distinct(prolific_id,stim_set,number_training_image_order_index,catk_parameter_1) %>%
+  group_by(stim_set,number_training_image_order_index,catk_parameter_1) %>%
+  summarize(
+    n=n()
+  )
+
 condition_assignment_2 <- d %>%
-  distinct(prolific_id,stim_set,number_training_image_order_index,catk_parameter_1,catk_parameter_2) %>%
-  group_by(stim_set,number_training_image_order_index,catk_parameter_1,catk_parameter_2) %>%
+  distinct(prolific_id,stim_set,number_training_image_order_index,catk_parameter_2) %>%
+  group_by(stim_set,number_training_image_order_index,catk_parameter_2) %>%
   summarize(
     n=n()
   )
