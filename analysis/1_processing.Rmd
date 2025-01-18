@@ -290,3 +290,36 @@ test_array_options_clean <- test_array_options %>%
 write_csv(test_array_options_clean,here(data_path,"kitty-act-v1-processed_data_long.csv"))
 ```
 
+Separating v1 and v1.1 participants
+```{r}
+v1_participants = c("p004", "p005", "p006", "p007", "p008", "p009", "p010", "p011", "p012", "p013", "p014", "p015", "p016", "p017", "p018", "p019", "p020", "p021", "p022", "p023", "p024", "p025", "p026")
+
+# All Data
+
+
+
+# Sampling
+
+main_d_v1 <- main_d %>% filter(subject_id %in% v1_participants)
+main_d_v1_1 <- main_d %>% filter(! subject_id %in% v1_participants)
+
+write_csv(main_d_v1,here(data_path,"kitty-act-v1-processed_data_sampling_v1.csv"))
+write_csv(main_d_v1_1,here(data_path,"kitty-act-v1-processed_data_sampling_v1_1.csv"))
+
+# Test
+
+test_array_clean_v1 <- test_array_clean %>% filter(subject_id %in% v1_participants)
+test_array_clean_v1_1 <- test_array_clean %>% filter(! subject_id %in% v1_participants)
+
+write_csv(test_array_clean_v1,here(data_path,"kitty-act-v1-processed_data_v1.csv"))
+write_csv(test_array_clean_v1_1,here(data_path,"kitty-act-v1-processed_data_v1_1.csv"))
+
+# Test Long
+
+test_array_options_clean_v1 <- test_array_options_clean %>% filter(subject_id %in% v1_participants)
+test_array_options_clean_v1_1 <- test_array_options_clean %>% filter(! subject_id %in% v1_participants)
+
+write_csv(test_array_options_clean_v1,here(data_path,"kitty-act-v1-processed_data_long_v1.csv"))
+write_csv(test_array_options_clean_v1_1,here(data_path,"kitty-act-v1-processed_data_long_v1_1.csv"))
+```
+
