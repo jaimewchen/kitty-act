@@ -69,7 +69,7 @@ test_array_options_clean <- read_csv(test_data_long_path) %>%
 ```{r}
 #check that we have all of the participants we expect
 assert_that(length(unique(sampling_data$subject))==length(unique(test_array_clean$subject)))
-assert_that(length(unique(filter(sampling_data, exclude_participant==0)$subject))==59)
+assert_that(length(unique(filter(sampling_data, exclude_participant==0)$subject))==60)
 ```
 
 ## Summarize Test Data
