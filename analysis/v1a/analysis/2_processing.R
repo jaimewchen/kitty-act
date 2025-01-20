@@ -115,7 +115,7 @@ exclude_test_location <- test_location_num %>%
 
 exclusions <- unique(c(exclude_open_responses,exclude_fail_name_check,exclude_sampling_location,exclude_test_location))
 
-write_csv(data.frame(subject=exclusions),here(write_path,"catact_v3_exclusions.csv"))
+write_csv(data.frame(subject=exclusions),here(write_path,"kitty-act_v1a_exclusions.csv"))
 
 ## add participant-level indicator for exclusions to dataset
 d <- d %>%
@@ -143,13 +143,15 @@ condition_assignment %>%
   group_by(stim_set,number_training_image_order_index,catk_parameter_1) %>%
   summarize(
     total_n=sum(n)
-  )
+  ) %>%
+  View()
 
 condition_assignment %>%
   group_by(stim_set,number_training_image_order_index,catk_parameter_2) %>%
   summarize(
     total_n=sum(n)
-  )
+  ) %>%
+  View()
 
 #### process sampling data ####
 # process sampled image
@@ -183,7 +185,7 @@ d <- d %>%
 
 sampling_data <- d %>%
   filter(trial_type == "html-button-response-catact") %>%
-  select(subject,stim_set,number_training_image_order_index,exclude_participant,trial_index,current_training_images,current_training_label,name_check,shuffled_sampling_images,current_category_label_level, current_category_kind,current_category_training_level,sampled_image, sampled_label,sampled_imagename,sampled_imagelabel,sampled_category_kind_short,sampled_category_kind,sampled_category_level,within_category_sample,within_category_sample_f,sampled_category_level_kind_info) %>%
+  select(subject,stim_set,number_training_image_order_index,number_training_images,exclude_participant,trial_index,current_training_images,current_training_label,name_check,shuffled_sampling_images,current_category_label_level, current_category_kind,current_category_training_level,sampled_image, sampled_label,sampled_imagename,sampled_imagelabel,sampled_category_kind_short,sampled_category_kind,sampled_category_level,within_category_sample,within_category_sample_f,sampled_category_level_kind_info) %>%
   mutate(
     trial_number = case_when(
       trial_index==8 ~ 1,
@@ -199,20 +201,20 @@ sampling_data <- d %>%
 #categorizing choice types
 sampling_data <- sampling_data %>%
   mutate(
-    sampling_choice_consistent = case_when(
-      current_category_training_level == "narrow" & sampled_category_level_kind_info == "sub" ~ "consistent",
-      current_category_training_level == "intermediate" & sampled_category_level_kind_info == "sub" ~ "consistent",
-      current_category_training_level == "intermediate" & sampled_category_level_kind_info == "bas" ~ "consistent",
-      current_category_training_level == "broad" & sampled_category_level_kind_info == "sub" ~ "consistent",
-      current_category_training_level == "broad" & sampled_category_level_kind_info == "bas" ~ "consistent",
-      current_category_training_level == "broad" & sampled_category_level_kind_info == "sup" ~ "consistent",
-      TRUE ~ "inconsistent"
-    ),
-    sampling_choice_narrowly_constraining = case_when(
-      current_category_training_level == "narrow" & sampled_category_level_kind_info == "bas" ~ "constraining",
-      current_category_training_level == "intermediate" & sampled_category_level_kind_info == "sup" ~ "constraining",
-      current_category_training_level == "broad" & sampled_category_level_kind_info == "outside_category" ~ "constraining",
-      TRUE ~ sampling_choice_consistent
+    sampling_choice_type = case_when(
+      sampled_category_level_kind_info == "sub" ~ "confirm",
+      number_training_images == 3 & current_category_training_level == "intermediate" & sampled_category_level_kind_info == "bas" ~ "confirm",
+      number_training_images == 3 & current_category_training_level == "broad" & sampled_category_level_kind_info == "bas" ~ "confirm",
+      number_training_images == 3 & current_category_training_level == "broad" & sampled_category_level_kind_info == "sup" ~ "confirm",
+      TRUE ~ "explore"
+    )
+  ) |>
+  mutate(
+    chance_consistent = case_when(
+      number_training_images == 1 ~ 1/4,
+      current_category_training_level == "narrow" ~ 1/4,
+      current_category_training_level == "intermediate" ~ 2/4,
+      current_category_training_level == "broad" ~ 3/4
     )
   ) %>%
   #add levenshtein distance
@@ -221,27 +223,8 @@ sampling_data <- sampling_data %>%
     levenshtein_distance = stringdist(current_training_label,name_check_edited)
   )
 
-#adding chance levels
-sampling_data <- sampling_data %>%
-  mutate(
-    chance_consistent = case_when(
-      current_category_training_level == "narrow" ~ 1/4,
-      current_category_training_level == "intermediate" ~ 2/4,
-      current_category_training_level == "broad" ~ 3/4,
-    ),
-    chance_narrowly_constraining = case_when(
-      current_category_training_level == "narrow" ~ 1/4,
-      current_category_training_level == "intermediate" ~ 1/4,
-      current_category_training_level == "broad" ~ 1/4,
-    )
-  ) %>%
-  mutate(
-    sampling_choice_consistent_b = ifelse(sampling_choice_consistent=="consistent",1,0),
-    sampling_choice_narrow_constraining_b = ifelse(sampling_choice_narrowly_constraining=="constraining",1,0),
-  )
-
 # write sampling data
-write_csv(sampling_data,here(write_path,"catact-v3-sampling-data.csv"))
+write_csv(sampling_data,here(write_path,"kitty-act_v1a-sampling-data.csv"))
 
 # representing sampling in long format with all image options
 sampling_data_long <- sampling_data %>%
@@ -267,7 +250,10 @@ sampling_data_long <- sampling_data_long %>%
     sampling_image_category = case_when(
       str_detect(sampling_image,"ani") ~ "animals",
       str_detect(sampling_image,"veg") ~ "vegetables",
-      str_detect(sampling_image,"veh") ~ "vehicles"
+      str_detect(sampling_image,"veh") ~ "vehicles",
+      str_detect(sampling_image,"fru") ~ "fruit",
+      str_detect(sampling_image,"sea") ~ "sea",
+      str_detect(sampling_image,"spo") ~ "sports",
     )
   )
 
@@ -275,7 +261,7 @@ sampling_data_long <- sampling_data_long %>%
 #### test data ####
 test_array <- d %>% 
   filter(trial_type == "html-button-response-catact") %>%
-  select(subject,exclude_participant,trial_index,trial_type,current_category_training_level,current_category_label_level,current_category_kind,current_hypernym_category_kind,final_choice_array) %>%
+  select(subject,stim_set,number_training_image_order_index,number_training_images,exclude_participant,trial_index,trial_type,current_category_training_level,current_category_label_level,current_category_kind,current_hypernym_category_kind,final_choice_array) %>%
   mutate(choices = map(final_choice_array, ~ convert_array(.,column_name="test_choice"))) %>%
   unnest(choices) %>%
   mutate(
@@ -283,6 +269,9 @@ test_array <- d %>%
       trial_index==8 ~ 1,
       trial_index==15 ~ 2,
       trial_index==22 ~ 3,
+      trial_index==29 ~ 4,
+      trial_index==36 ~ 5,
+      trial_index==43 ~ 6,
       TRUE ~ NA
     )
   )
@@ -299,7 +288,10 @@ test_array_clean <- test_array %>%
     test_choice_category = case_when(
       str_detect(test_choice,"ani") ~ "animals",
       str_detect(test_choice,"veg") ~ "vegetables",
-      str_detect(test_choice,"veh") ~ "vehicles"
+      str_detect(test_choice,"veh") ~ "vehicles",
+      str_detect(test_choice,"fru") ~ "fruit",
+      str_detect(test_choice,"sea") ~ "sea",
+      str_detect(test_choice,"spo") ~ "sports",
     )
   ) %>%
   mutate(
@@ -312,6 +304,7 @@ test_array_clean <- test_array %>%
   ) %>%
   mutate(
     test_choice_type_training_consistent = case_when(
+      number_training_images == 1 &  test_choice_type %in% c("subordinate") & test_choice_match_category == 1 ~ 1,
       current_category_training_level == "narrow" &  test_choice_type %in% c("subordinate") & test_choice_match_category == 1 ~ 1,
       current_category_training_level == "intermediate" &  test_choice_type %in% c("subordinate","basic") & test_choice_match_category == 1 ~ 1,
       current_category_training_level == "broad" &  test_choice_type %in% c("subordinate","basic","superordinate")& test_choice_match_category == 1 ~ 1,
@@ -329,10 +322,10 @@ test_array_clean <- test_array %>%
   ) %>%
   mutate(
     total_number_correct_options = case_when(
-      current_category_label_level == "narrow" ~ 2,
-      current_category_label_level == "intermediate" ~ 4,
-      current_category_label_level == "broad" ~ 8,
-      current_category_label_level == "hypernym" ~ 16
+      current_category_label_level == "narrow" ~ 1,
+      current_category_label_level == "intermediate" ~ 2,
+      current_category_label_level == "broad" ~ 4,
+      current_category_label_level == "hypernym" ~ 8
     )
   )
 
@@ -341,13 +334,13 @@ test_array_clean <- test_array_clean %>%
   left_join(sampling_data)
 
 # write test data (shorter representation)
-write_csv(test_array_clean,here(write_path,"catact-v3-test-data.csv"))
+write_csv(test_array_clean,here(write_path,"kitty-act_v1a-test-data.csv"))
 
 
 #### test data - representing all images in long format ####
 test_array_options <- d %>% 
   filter(trial_type == "html-button-response-catact") %>%
-  select(subject,exclude_participant,trial_index,trial_type,current_category_training_level,current_category_label_level,current_category_kind,current_hypernym_category_kind,shuffled_test_images,final_choice_array) %>%
+  select(subject,stim_set,number_training_image_order_index,number_training_images,exclude_participant,trial_index,trial_type,current_category_training_level,current_category_label_level,current_category_kind,current_hypernym_category_kind,shuffled_test_images,final_choice_array) %>%
   mutate(test_options = map(shuffled_test_images, ~ convert_array(.,column_name="test_image"))) %>%
   unnest(test_options) %>%
   mutate(
@@ -355,6 +348,9 @@ test_array_options <- d %>%
       trial_index==8 ~ 1,
       trial_index==15 ~ 2,
       trial_index==22 ~ 3,
+      trial_index==29 ~ 4,
+      trial_index==36 ~ 5,
+      trial_index==43 ~ 6,
       TRUE ~ NA
     )
   )
@@ -381,7 +377,10 @@ test_array_options_clean <- test_array_options %>%
     test_image_category = case_when(
       str_detect(test_image,"ani") ~ "animals",
       str_detect(test_image,"veg") ~ "vegetables",
-      str_detect(test_image,"veh") ~ "vehicles"
+      str_detect(test_image,"veh") ~ "vehicles",
+      str_detect(test_image,"spo") ~ "sports",
+      str_detect(test_image,"fru") ~ "fruit",
+      str_detect(test_image,"sea") ~ "sea"
     )
   ) %>%
   mutate(
@@ -394,6 +393,7 @@ test_array_options_clean <- test_array_options %>%
   ) %>%
   mutate(
     test_image_type_training_consistent = case_when(
+      number_training_images == 1 &  test_image_type %in% c("subordinate") & test_image_match_category == 1 ~ 1,
       current_category_training_level == "narrow" &  test_image_type %in% c("subordinate") & test_image_match_category == 1 ~ 1,
       current_category_training_level == "intermediate" &  test_image_type %in% c("subordinate","basic") & test_image_match_category == 1 ~ 1,
       current_category_training_level == "broad" &  test_image_type %in% c("subordinate","basic","superordinate")& test_image_match_category == 1 ~ 1,
@@ -411,15 +411,16 @@ test_array_options_clean <- test_array_options %>%
   ) %>%
   mutate(
     total_number_correct_options_label = case_when(
-      current_category_label_level == "narrow" ~ 2,
-      current_category_label_level == "intermediate" ~ 4,
-      current_category_label_level == "broad" ~ 8,
-      current_category_label_level == "hypernym" ~ 16
+      current_category_label_level == "narrow" ~ 1,
+      current_category_label_level == "intermediate" ~ 2,
+      current_category_label_level == "broad" ~ 4,
+      current_category_label_level == "hypernym" ~ 8
     ),
     total_number_correct_options_training = case_when(
-      current_category_training_level == "narrow" ~ 2,
-      current_category_training_level == "intermediate" ~ 4,
-      current_category_training_level == "broad" ~ 8
+      number_training_images == 1 ~ 1,
+      current_category_training_level == "narrow" ~ 1,
+      current_category_training_level == "intermediate" ~ 2,
+      current_category_training_level == "broad" ~ 4
     )
   ) %>%
   mutate(
@@ -448,7 +449,7 @@ test_array_options_clean <- test_array_options_clean %>%
   left_join(sampling_data)
 
 # write test data (longer representation)
-write_csv(test_array_options_clean,here(write_path,"catact-v3-test-data-long.csv"))
+write_csv(test_array_options_clean,here(write_path,"kitty-act_v1a-test-data-long.csv"))
 
 #write final data set
-write_csv(d,here(write_path,"catact-v3-alldata-processed.csv"))
+write_csv(d,here(write_path,"kitty-act_v1a-alldata-processed.csv"))
