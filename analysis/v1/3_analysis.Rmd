@@ -506,9 +506,8 @@ ggsave(here(figure_path,"kitty-act-test.png"),width=6,height=6)
 ### Plot
 
 ```{r fig.width=10, fig.height=4}
-
 # summarizing
-sampling_data_ages_summarized <- sampling_data_ages %>%
+sampling_data_ages_summarized <- sampling_data_long_structure %>%
   group_by(age_group, 
            number_training_images,
            current_category_training_level,
