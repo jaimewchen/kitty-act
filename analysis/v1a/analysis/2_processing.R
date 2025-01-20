@@ -69,7 +69,8 @@ manage_exclusion_d %>%
 # strategy/ choices/ comments: some likely non-L1 English participants, but no obvious bot-like/ gibberish responses
 # word meaning: some definite strangeness here, marking a few for exclusion
 exclude_open_responses <- c(
-  "p55845" #unusual word meaning responses
+  "p55845", #unusual word meaning responses
+  "p32877" #chatgpt-like responses to word meaning
 ) 
 
 #2. investigate name check responses
@@ -154,6 +155,15 @@ condition_assignment %>%
   View()
 
 #### process sampling data ####
+#treat all training levels in the 1-item condition as "narrow"
+d <- d %>%
+  mutate(
+    current_category_training_level = case_when(
+      number_training_images == 1 ~ "narrow",
+      TRUE ~ current_category_training_level
+    )
+  )
+
 # process sampled image
 d <- d %>%
   mutate(
@@ -185,7 +195,7 @@ d <- d %>%
 
 sampling_data <- d %>%
   filter(trial_type == "html-button-response-catact") %>%
-  select(subject,stim_set,number_training_image_order_index,number_training_images,exclude_participant,trial_index,current_training_images,current_training_label,name_check,shuffled_sampling_images,current_category_label_level, current_category_kind,current_category_training_level,sampled_image, sampled_label,sampled_imagename,sampled_imagelabel,sampled_category_kind_short,sampled_category_kind,sampled_category_level,within_category_sample,within_category_sample_f,sampled_category_level_kind_info) %>%
+  select(subject,stim_set,number_training_image_order_index,number_training_image_order_vector,number_training_images,exclude_participant,trial_index,current_training_images,current_training_label,name_check,shuffled_sampling_images,current_category_label_level, current_category_kind,current_category_training_level,sampled_image, sampled_label,sampled_imagename,sampled_imagelabel,sampled_category_kind_short,sampled_category_kind,sampled_category_level,within_category_sample,within_category_sample_f,sampled_category_level_kind_info) %>%
   mutate(
     trial_number = case_when(
       trial_index==8 ~ 1,
@@ -261,7 +271,7 @@ sampling_data_long <- sampling_data_long %>%
 #### test data ####
 test_array <- d %>% 
   filter(trial_type == "html-button-response-catact") %>%
-  select(subject,stim_set,number_training_image_order_index,number_training_images,exclude_participant,trial_index,trial_type,current_category_training_level,current_category_label_level,current_category_kind,current_hypernym_category_kind,final_choice_array) %>%
+  select(subject,stim_set,number_training_image_order_index,number_training_image_order_vector,number_training_images,exclude_participant,trial_index,trial_type,current_category_training_level,current_category_label_level,current_category_kind,current_hypernym_category_kind,final_choice_array) %>%
   mutate(choices = map(final_choice_array, ~ convert_array(.,column_name="test_choice"))) %>%
   unnest(choices) %>%
   mutate(
@@ -340,7 +350,7 @@ write_csv(test_array_clean,here(write_path,"kitty-act_v1a-test-data.csv"))
 #### test data - representing all images in long format ####
 test_array_options <- d %>% 
   filter(trial_type == "html-button-response-catact") %>%
-  select(subject,stim_set,number_training_image_order_index,number_training_images,exclude_participant,trial_index,trial_type,current_category_training_level,current_category_label_level,current_category_kind,current_hypernym_category_kind,shuffled_test_images,final_choice_array) %>%
+  select(subject,stim_set,number_training_image_order_index,number_training_image_order_vector,number_training_images,exclude_participant,trial_index,trial_type,current_category_training_level,current_category_label_level,current_category_kind,current_hypernym_category_kind,shuffled_test_images,final_choice_array) %>%
   mutate(test_options = map(shuffled_test_images, ~ convert_array(.,column_name="test_image"))) %>%
   unnest(test_options) %>%
   mutate(
