@@ -70,9 +70,11 @@ participant_info <- read_csv(participant_info_path) %>%
 ## compute ages and integrate with main data
 
 ```{r}
+participant_info$age_mos_int <- participant_info$age_mos
+
 participant_info <- participant_info %>%
   mutate(resid_month_decimal=age_day_count/30.417) %>%
-  mutate(age_dec = age_mos+resid_month_decimal,
+  mutate(age_mos = age_mos_int+resid_month_decimal,
          age_years=age_mos/12) %>%
   mutate(
     age_years_c=age_years-mean(age_years)
@@ -95,12 +97,14 @@ average_age %>%
 setdiff(unique(d$subject_id),unique(participant_info$subject_id))
 setdiff(unique(participant_info$subject_id),unique(d$subject_id))
 
-participant_info_ages <- participant_info %>% select(subject_id,age_group,age_dec,age_years,age_years_c)
-
-d <- merge(d, participant_info_ages)
-sampling_data <- merge(sampling_data, participant_info_ages)
-test_array_clean <- merge(test_array_clean, participant_info_ages)
-test_array_options_clean <- merge(test_array_options_clean, participant_info_ages)
+d <- d %>%
+  left_join(select(participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))
+sampling_data <- sampling_data %>%
+  left_join(select(participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))
+test_array_clean <- test_array_clean %>%
+  left_join(select(participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))
+test_array_options_clean <- test_array_options_clean %>%
+  left_join(select(participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))
 ```
 
 
@@ -502,9 +506,8 @@ ggsave(here(figure_path,"kitty-act-test.png"),width=6,height=6)
 ### Plot
 
 ```{r fig.width=10, fig.height=4}
-
 # summarizing
-sampling_data_ages_summarized <- sampling_data %>%
+sampling_data_ages_summarized <- sampling_data_long_structure %>%
   group_by(age_group, 
            number_training_images,
            current_category_training_level,
