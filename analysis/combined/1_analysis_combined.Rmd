@@ -1,0 +1,218 @@
+---
+title: "Combined Analysis - Kitty Act V1/ V1a"
+author: "Martin Zettersten"
+date: "2025-01-20"
+output: html_document
+---
+
+```{r setup, warning=FALSE, message=F}
+library(here)
+library(tidyverse)
+library(ggplot2)
+library(viridisLite)
+library(lme4)
+library(ggstance)
+library(cowplot)
+library(AICcmodavg)
+library(RColorBrewer)
+library(jsonlite)
+library(tidyjson)
+library(rlang)
+library(car)
+library(nnet)
+library(mlogit)
+library(lmerTest)
+library(assertthat)
+library(knitr)
+source("helper.R")
+```
+
+# Read and combine child and adult data
+
+## Read in Adult Data
+
+```{r, warning=FALSE, message=F}
+adult_data_path <- here("..","v1a","data","processed", "kitty-act_v1a-alldata-processed.csv")
+adult_sampling_data_path <- here("..","v1a","data","processed", "kitty-act_v1a-sampling-data.csv")
+adult_test_data_path <- here("..","v1a","data","processed", "kitty-act_v1a-test-data.csv")
+adult_test_data_long_path <- here("..","v1a","data","processed", "kitty-act_v1a-test-data-long.csv")
+write_path <- here("processed_data")
+figure_path <- here("figures")
+
+adult_d <- read_csv(adult_data_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  )) %>%
+  mutate(
+    sample_group = "adults"
+  ) %>%
+  rename(participant=subject)
+adult_sampling_data <- read_csv(adult_sampling_data_path) %>%
+  mutate(number_training_image_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  )) %>%
+  mutate(
+    sample_group = "adults"
+  )%>%
+  rename(participant=subject)
+adult_test_array_clean <- read_csv(adult_test_data_path) %>%
+  mutate(number_training_image_order_vector = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  )) %>%
+  mutate(
+    sample_group = "adults"
+  )%>%
+  rename(participant=subject)
+adult_test_array_options_clean <- read_csv(adult_test_data_long_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  )) %>%
+  mutate(
+    sample_group = "adults"
+  )%>%
+  rename(participant=subject)
+```
+
+## Read in Child Data
+
+```{r}
+kid_data_path <- here("..","v1","processed_data", "kitty-act-v1-alldata.csv")
+kid_sampling_data_path <- here("..","v1","processed_data", "kitty-act-v1-processed_data_sampling.csv")
+kid_test_data_path <- here("..","v1","processed_data", "kitty-act-v1-processed_data.csv")
+kid_test_data_long_path <- here("..","v1","processed_data", "kitty-act-v1-processed_data_long.csv")
+kid_participant_info_path <- here("..","v1","processed_data","kitty-act-v1-participant_info.csv")
+
+kid_d <- read_csv(kid_data_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  )) %>%
+  mutate(
+    sample_group = "children"
+  )
+kid_sampling_data <- read_csv(kid_sampling_data_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  ))  %>%
+  mutate(
+    sample_group = "children"
+  )
+kid_test_array_clean <- read_csv(kid_test_data_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  ))  %>%
+  mutate(
+    sample_group = "children"
+  )
+kid_test_array_options_clean <- read_csv(kid_test_data_long_path) %>%
+  mutate(number_training_images_order = case_when(
+    number_training_image_order_vector == "[1,3]" ~ "One-Three",
+    number_training_image_order_vector == "[3,1]" ~ "Three-One",
+  ))  %>%
+  mutate(
+    sample_group = "children"
+  )
+#participant info
+kid_participant_info <- read_csv(kid_participant_info_path) %>%
+  filter(pilot == "no")  %>%
+  mutate(
+    sample_group = "children"
+  )
+```
+
+## compute ages and integrate with main data
+
+```{r}
+kid_participant_info$age_mos_int <- kid_participant_info$age_mos
+
+kid_participant_info <- kid_participant_info %>%
+  mutate(resid_month_decimal=age_day_count/30.417) %>%
+  mutate(age_mos = age_mos_int+resid_month_decimal,
+         age_years=age_mos/12) %>%
+  mutate(
+    age_years_c=age_years-mean(age_years)
+  )
+
+average_age <- kid_participant_info %>%
+  summarize(
+    N=n(),
+    mean_age=mean(age_years,na.rm=TRUE),
+    sd_age=sd(age_years,na.rm=TRUE),
+    min_age=min(age_years,na.rm=TRUE),
+    max_age=max(age_years,na.rm=TRUE)
+  )
+
+average_age %>%
+  kable()
+
+#check that integration will work
+#all subject ids in the response data and the participant info are shared
+setdiff(unique(kid_d$subject_id),unique(kid_participant_info$subject_id))
+setdiff(unique(kid_participant_info$subject_id),unique(kid_d$subject_id))
+
+kid_d <- kid_d %>%
+  left_join(select(kid_participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude)) %>%
+  #convert rt to numeric
+  mutate(
+    rt = case_when(
+      rt=="null" ~ NA,
+      TRUE ~ as.numeric(rt)
+    )
+  )%>%
+  mutate(exclude_participant = case_when(
+    exclude == "yes" ~ 1,
+    exclude == "no" ~ 0,
+    TRUE ~ 0
+  ))
+kid_sampling_data <- kid_sampling_data %>%
+  left_join(select(kid_participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))%>%
+  mutate(exclude_participant = case_when(
+    exclude == "yes" ~ 1,
+    exclude == "no" ~ 0,
+    TRUE ~ 0
+  ))
+kid_test_array_clean <- kid_test_array_clean %>%
+  left_join(select(kid_participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))%>%
+  mutate(exclude_participant = case_when(
+    exclude == "yes" ~ 1,
+    exclude == "no" ~ 0,
+    TRUE ~ 0
+  ))
+kid_test_array_options_clean <- kid_test_array_options_clean %>%
+  left_join(select(kid_participant_info,subject_id,age_group,age_mos,age_years,age_years_c,pilot,exclude))%>%
+  mutate(exclude_participant = case_when(
+    exclude == "yes" ~ 1,
+    exclude == "no" ~ 0,
+    TRUE ~ 0
+  ))
+```
+
+## combine child and adult data
+
+```{r}
+# combine data sets
+
+#first check overlap in columns
+setdiff(colnames(kid_d),colnames(adult_d))
+setdiff(colnames(adult_d),colnames(kid_d))
+
+#combined
+combined_d <- kid_d %>%
+  bind_rows(adult_d)
+
+combined_sampling_data <- kid_sampling_data %>%
+  bind_rows(adult_sampling_data)
+
+combined_test_array_clean <- kid_test_array_clean %>%
+  bind_rows(adult_test_array_clean)
+
+combined_test_array_options_clean <- kid_test_array_options_clean %>%
+  bind_rows(adult_test_array_options_clean)
+```
+
