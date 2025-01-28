@@ -118,6 +118,19 @@ exclusions <- unique(c(exclude_open_responses,exclude_fail_name_check,exclude_sa
 
 write_csv(data.frame(subject=exclusions),here(write_path,"kitty-act_v1a_exclusions.csv"))
 
+## demographic info
+# remove excluded participants from demographic analysis
+survey_dem <- survey_responses %>% filter(!subject %in% c("p55845", "p32877", "p973831")) %>% 
+  select(subject, age, gender, language, other_languages, race, education) %>% 
+  mutate(gender = tolower(gender)) %>%
+  mutate(age = as.numeric(age)) %>% 
+  unique()
+# gender
+survey_dem %>% filter(grepl("f", gender)) %>% nrow()
+# age
+mean(survey_dem$age)
+sd(survey_dem$age)
+
 ## add participant-level indicator for exclusions to dataset
 d <- d %>%
   mutate(
