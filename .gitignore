@@ -1,10 +1,20 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+.Rproj.user
+
 .DS_Store
 experiments/v1/stims/.DS_Store
 experiments/v1/.DS_Store
 experiments/v1/.DS_Store
-.DS_Store
-.Rproj.user
-analysis/.Rhistory
+
 analysis/v1a/data/processed/prolific_export_67883d8fbfe27e2157999d3b.csv
 analysis/v1a/data/processed/kitty-act-v1a-alldata.csv
 analysis/v1a/data/raw/kitty-act-v1a_PARTICIPANT_SESSION_2025-01-15_18h23.34.254.csv
