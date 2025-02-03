@@ -25,6 +25,7 @@ library(lmerTest)
 library(assertthat)
 library(knitr)
 library(patchwork)
+library(ggpattern)
 source("helper.R")
 ```
 
@@ -392,9 +393,7 @@ overall_accuracy_label_level_sampling_all <- subj_test_accuracy_all %>%
 
 # Sampling
 
-## Models
-
-### H1
+## H1
 
 Do learners flexibly shift their sampling choices depending on the training condition? 
 
@@ -418,7 +417,7 @@ combined_sampling_data_3_images_only <- combined_sampling_data %>%
   filter(number_training_images==3)
 ```
 
-#### Children
+### Children
 ```{r}
 #fit multinomial model
 nnetFixedModelStr <- 'sampled_category_level_kind_info_choice_order ~ current_category_training_level_order'
@@ -444,7 +443,7 @@ print(summary(mlogit_sampling_training_kids))
 lrtest(mlogit_sampling_baseline_kids,mlogit_sampling_training_kids)
 ```
 
-#### Adults
+### Adults
 ```{r}
 #fit multinomial model
 nnetFixedFit_adults <-  multinom(as.formula(nnetFixedModelStr), filter(combined_sampling_data_3_images_only,sample_group=="adults"), maxit=10000, abstol=1e-8, reltol=1e-10)
@@ -465,9 +464,9 @@ print(summary(mlogit_sampling_training_adults))
 lrtest(mlogit_sampling_baseline_adults,mlogit_sampling_training_adults)
 ```
 
-#### H1 across age (exploratory)
+### H1 across age (exploratory)
 
-##### Children
+#### Children
 
 ```{r}
 #fit multinomial model
@@ -477,7 +476,7 @@ summary(nnetFixedFit_age)
 Anova(nnetFixedFit_age,type="III")
 ```
 
-##### Interaction with Training Condition
+#### Interaction with Training Condition
 
 ```{r}
 #fit multinomial model
@@ -489,7 +488,7 @@ Anova(nnetFixedFit_age,type="III")
 
 No significant interaction between age and training condition
 
-##### Visualize the age effect
+#### Visualize the age effect
 
 ```{r}
 combined_sampling_data <- combined_sampling_data |> 
@@ -525,7 +524,7 @@ p4 <- combined_sampling_data %>%
 
 ```
 
-##### Follow-up investigation of choices
+#### Follow-up investigation of choices
 
 ```{r}
 m <- glmer(sample_subordinate_choice~age_years_c+(1|participant),data=filter(combined_sampling_data,number_training_images==3 & sample_group=="children"),family=binomial)
@@ -539,9 +538,9 @@ summary(m)
 ```
 
 
-### H2 1-Narrow vs. 3-Narrow
+## H2 1-Narrow vs. 3-Narrow
 
-#### Children
+### Children
 
 ```{r}
 #filter relevant conditions
@@ -558,7 +557,7 @@ summary(nnetFixedFit_h2a_kids)
 Anova(nnetFixedFit_h2a_kids,type="III")
 ```
 
-#### Adults
+### Adults
 
 ```{r}
 nnetFixedFit_h2a_adults <-  multinom(as.formula(nnetFixedModelStr_h2a), filter(combined_sampling_data_1_vs_3,sample_group=="adults"), maxit=10000, abstol=1e-8, reltol=1e-10)
@@ -566,7 +565,7 @@ summary(nnetFixedFit_h2a_adults)
 Anova(nnetFixedFit_h2a_adults,type="III")
 ```
 
-#### H2A: 1-Narrow vs. 3-Narrow across age (exploratory)
+### H2A: 1-Narrow vs. 3-Narrow across age (exploratory)
 
 ```{r}
 #fit multinomial model
@@ -576,7 +575,7 @@ summary(nnetFixedFit_h2a_age)
 Anova(nnetFixedFit_h2a_age,type="III")
 ```
 
-#### Plot
+### Plot
 
 ```{r}
 combined_sampling_data$sampled_category_level_kind_info_ord <- factor(combined_sampling_data$sampled_category_level_kind_info,                                                           levels=c("sub","bas","sup","outside_category"),
@@ -591,14 +590,24 @@ combined_sampling_data$training_condition_ord <- factor(combined_sampling_data$t
   
 # combined_sampling_data$current_category_training_level_ord <- factor(combined_sampling_data$current_category_training_level,levels=c("narrow","intermediate","broad"))
 
-ggplot(combined_sampling_data,aes(training_condition_ord,fill=sampled_category_level_kind_info_ord))+
-  geom_bar(position="fill")+
-  scale_fill_brewer(name="Sampling Choice Type",palette="RdYlBu")+
+ggplot(combined_sampling_data,aes(training_condition_ord,fill=sampled_category_level_kind_info_ord, pattern=sampling_choice_type))+
+  geom_bar_pattern(position="fill",
+                   color = "black", 
+                   pattern_fill = "black",
+                   pattern_angle = 45,
+                   pattern_density = 0.2,
+                   pattern_spacing = 0.025,
+                   pattern_key_scale_factor = 1)+
+  scale_fill_brewer(name="Sampling Choice",palette="RdYlBu")+
+  scale_pattern_manual(name = 
+                         "Choice Type",values = c(explore = "none", confirm = "circle")) +
   xlab("Training Condition")+
   ylab("Proportion of Sampling Choices")+
   facet_wrap(~sample_group)+
   theme_cowplot(font_size=14)+
-  theme(axis.title = element_text(face="bold", size=12),axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4))
+  theme(axis.title = element_text(face="bold", size=12),axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4))+
+  guides(pattern = guide_legend(override.aes = list(fill = "white"),order=2),
+         fill = guide_legend(override.aes = list(pattern = "none"),order=1))
 ggsave(here(figure_path,"kitty-act-sampling.png"),width=6,height=7)
 
 ## Sampling Choices - individual bars
@@ -688,14 +697,102 @@ ggplot(combined_sampling_data_long_structure,aes(age_years,sampling_choice_chose
   facet_wrap(~number_training_images+current_category_training_level)
 ```
 
-## Exploratory
-
-### investigate the proportion of exploratory choices
+## H3: confirmatory/ exploratory choice
 
 ```{r}
 combined_sampling_data <- combined_sampling_data %>%
-  mutate(is_exploratory=ifelse(sampling_choice_type=="explore",1,0)) 
+  mutate(is_exploratory=ifelse(sampling_choice_type=="explore",1,0)) %>%
+  mutate(
+    sample_group_c = ifelse(sample_group=="children",-0.5,0.5)
+  ) %>%
+  mutate(
+    chance_level = case_when(
+      training_condition == "1-Item" ~ 0.75,
+      training_condition == "3-Item Narrow" ~ 0.75,
+      training_condition == "3-Item Intermediate" ~ 0.5,
+      training_condition == "3-Item Broad" ~ 0.25
+    )
+  )
+#more complex random effects structure leads to singular fit/ non-convergence
+m <- glmer(is_exploratory~ offset(logit(chance_level))+ sample_group_c+training_condition+(1|participant),data=combined_sampling_data,family="binomial")
+summary(m)
+Anova(m,type="III")
 
+#children below-chance?
+m <- glmer(is_exploratory~ offset(logit(chance_level))+(1|participant),data=filter(combined_sampling_data,sample_group=="children"),family="binomial")
+summary(m)
+#adults below chance?
+m <- glmer(is_exploratory~ offset(logit(chance_level))+(1|participant),data=filter(combined_sampling_data,sample_group=="adults"),family="binomial")
+summary(m)
+```
+
+### Exploratory: Interaction
+
+```{r}
+m <- glmer(is_exploratory~ sample_group_c*training_condition+(1|participant),data=combined_sampling_data,family="binomial")
+summary(m)
+Anova(m,type="III")
+```
+
+```{r}
+combined_sampling_data <- combined_sampling_data %>%
+  mutate(training_condition = fct_relevel(training_condition, "1-Item","3-Item Narrow","3-Item Intermediate","3-Item Broad"))
+p1 <- ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condition))+
+  geom_smooth(method="lm",se=F)+
+  geom_smooth(method="lm",se=T,color="black")+
+  #facet_wrap(~training_condition)+
+  scale_color_brewer(palette="RdYlGn")+
+  theme_cowplot()+
+  #theme(legend.position="none")+
+  xlab("Age (years)")+
+  ylab("Proportion Exploratory Choices")+
+  ylim(0,1)
+p1
+#summarize
+subj_sampling_exploratory <- combined_sampling_data %>%
+  group_by(participant,sample_group,age_group,age_years,training_condition) %>%
+  summarize(
+    exploratory_choice = mean(is_exploratory)
+  )
+
+overall_sampling_exploratory <- subj_sampling_exploratory %>%
+  group_by(sample_group,training_condition) %>%
+  summarize(
+    N=n(),
+    avg_exploratory_choice = mean(exploratory_choice),
+    sd = sd(exploratory_choice,na.rm=T)/sqrt(N),
+    se = sd(exploratory_choice,na.rm=T)/sqrt(N),
+    ci=qt(0.975, N-1)*se,
+  ) %>%
+  mutate(chance_level = case_when(
+    training_condition == "1-Item" ~ 0.75,
+    training_condition == "3-Item Narrow" ~ 0.75,
+    training_condition == "3-Item Intermediate" ~ 0.5,
+    training_condition == "3-Item Broad" ~ 0.25
+  ))
+
+p2 <- ggplot(overall_sampling_exploratory,aes(training_condition,avg_exploratory_choice, color=training_condition,fill=training_condition))+
+  geom_bar(stat="identity")+
+  geom_errorbar(aes(ymin=avg_exploratory_choice-ci,ymax=avg_exploratory_choice+ci),width=0)+
+  facet_wrap(~sample_group)+
+  theme(legend.position="none")+
+  xlab("Training Condition")+
+  ylab("Proportion Exploratory Choices")+
+  ylim(0,1)+
+  annotate("segment",x=0.5,xend = 1.5,y = 0.75,linetype="dashed")+
+  annotate("segment",x=1.5,xend = 2.5,y = 0.75,linetype="dashed")+
+  annotate("segment",x=2.5,xend = 3.5,y = 0.5,linetype="dashed")+
+  annotate("segment",x=3.5,xend = 4.5,y = 0.25,linetype="dashed")+
+  theme(axis.title = element_text(face="bold"),axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4))
+p2
+p1+p2
+```
+
+### Exploratory
+
+#### investigate the proportion of exploratory choices
+
+```{r}
 subj_exploratory <- combined_sampling_data %>%
   mutate(
     age_bins=case_when(
@@ -751,18 +848,21 @@ Anova(m,type="III")
 #     average_prob = mean(prob)
 #   )
 
-ggplot(combined_sampling_data,aes(age_years,is_exploratory))+
-  geom_hline(yintercept=0.5,linetype="dashed")+
+p2 <- ggplot(combined_sampling_data,aes(age_years,is_exploratory))+
+  #geom_hline(yintercept=0.5,linetype="dashed")+
   geom_smooth(method="glm", method.args = list(family = "binomial"),color="black")+
   geom_errorbar(data=overall_exploratory_age_group,aes(age_bins,y=mean_explore,ymin=lower_se,ymax=upper_se),width=0,color="#0A5C36")+
-  geom_point(data=overall_exploratory_age_group,aes(age_bins,mean_explore),color="#0A5C36",size=2)+
-  ylab("Proportion of Exploratory Sampling Choices")+
+  geom_point(data=overall_exploratory_age_group,aes(age_bins,mean_explore),color="#0A5C36",size=3)+
+  ylab("Proportion Exploratory Choices")+
   xlab("Age (in years)")+
   theme_cowplot(font_size=12)+
   theme(axis.title = element_text(face="bold", size=14),
         #axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4)
-        )
-ggsave(here(figure_path,"kitty-act-sampling-by-age.png"),width=6,height=6)
+        )#+
+  #ylim(0,1)
+
+p2
+ggsave(here(figure_path,"kitty-act-sampling-by-age.png"),width=6,height=4)
  
 
 ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condition))+
@@ -771,98 +871,9 @@ ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condi
   
 ```
 
-## H3: confirmatory/ exploratory choice
+# Test
 
-```{r}
-combined_sampling_data <- combined_sampling_data %>%
-  mutate(
-    sample_group_c = ifelse(sample_group=="children",-0.5,0.5)
-  ) %>%
-  mutate(
-    chance_level = case_when(
-      training_condition == "1-Item" ~ 0.75,
-      training_condition == "3-Item Narrow" ~ 0.75,
-      training_condition == "3-Item Intermediate" ~ 0.5,
-      training_condition == "3-Item Broad" ~ 0.25
-    )
-  )
-m <- glmer(is_exploratory~ offset(logit(chance_level))+ sample_group_c+training_condition+(1|participant),data=combined_sampling_data,family="binomial")
-summary(m)
-Anova(m,type="III")
-
-#children below-chance?
-m <- glmer(is_exploratory~ offset(logit(chance_level))+(1|participant),data=filter(combined_sampling_data,sample_group=="children"),family="binomial")
-summary(m)
-#adults below chance?
-m <- glmer(is_exploratory~ offset(logit(chance_level))+(1|participant),data=filter(combined_sampling_data,sample_group=="adults"),family="binomial")
-summary(m)
-```
-
-### Exploratory: Interaction
-
-```{r}
-m <- glmer(is_exploratory~ sample_group_c*training_condition+(1|participant),data=combined_sampling_data,family="binomial")
-summary(m)
-Anova(m,type="III")
-```
-
-```{r}
-combined_sampling_data <- combined_sampling_data %>%
-  mutate(training_condition = fct_relevel(training_condition, "1-Item","3-Item Narrow","3-Item Intermediate","3-Item Broad"))
-p1 <- ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condition))+
-  geom_smooth(method="loess",se=T)+
-  #geom_smooth(method="lm",se=T,color="black")+
-  facet_wrap(~training_condition)+
-  scale_color_brewer(palette="RdYlGn")+
-  theme_cowplot()+
-  theme(legend.position="none")+
-  xlab("Age (years)")+
-  ylab("Proportion Exploratory Choices")+
-  ylim(-0.1,1.1)
-p1
-#summarize
-subj_sampling_exploratory <- combined_sampling_data %>%
-  group_by(participant,sample_group,age_group,age_years,training_condition) %>%
-  summarize(
-    exploratory_choice = mean(is_exploratory)
-  )
-
-overall_sampling_exploratory <- subj_sampling_exploratory %>%
-  group_by(sample_group,training_condition) %>%
-  summarize(
-    N=n(),
-    avg_exploratory_choice = mean(exploratory_choice),
-    sd = sd(exploratory_choice,na.rm=T)/sqrt(N),
-    se = sd(exploratory_choice,na.rm=T)/sqrt(N),
-    ci=qt(0.975, N-1)*se,
-  ) %>%
-  mutate(chance_level = case_when(
-    training_condition == "1-Item" ~ 0.75,
-    training_condition == "3-Item Narrow" ~ 0.75,
-    training_condition == "3-Item Intermediate" ~ 0.5,
-    training_condition == "3-Item Broad" ~ 0.25
-  ))
-
-p2 <- ggplot(overall_sampling_exploratory,aes(training_condition,avg_exploratory_choice, color=training_condition,fill=training_condition))+
-  geom_bar(stat="identity")+
-  geom_errorbar(aes(ymin=avg_exploratory_choice-ci,ymax=avg_exploratory_choice+ci),width=0)+
-  facet_wrap(~sample_group)+
-  theme(legend.position="none")+
-  xlab("Training Condition")+
-  ylab("Proportion Exploratory Choices")+
-  ylim(0,1)+
-  annotate("segment",x=0.5,xend = 1.5,y = 0.75,linetype="dashed")+
-  annotate("segment",x=1.5,xend = 2.5,y = 0.75,linetype="dashed")+
-  annotate("segment",x=2.5,xend = 3.5,y = 0.5,linetype="dashed")+
-  annotate("segment",x=3.5,xend = 4.5,y = 0.25,linetype="dashed")+
-  theme(axis.title = element_text(face="bold"),axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4))
-p2
-p1+p2
-```
-
-## Test
-
-### Plot
+## Plot
 
 ```{r}
 ## Test Plot
@@ -938,35 +949,34 @@ p2 <- ggplot(filter(overall_test_prop_long,sample_group=="adults"),aes(choice_ty
         )+
   ggtitle("ADULTS") +
   theme(plot.title = element_text(hjust = 0.5))
-p1/p2+plot_annotation(tag_levels = 'A') & 
+p2/p1+plot_annotation(tag_levels = 'A') & 
   theme(plot.tag = element_text(size = 20))
 ggsave(here(figure_path,"kitty-act-test.png"),width=6,height=12)
   
 ```
 
-
-
-
 ## H4: Test Choices
 
-## Training condition modulated participants’ choices at test (Proportion choices)
+Training condition modulated participants’ choices at test (Proportion choices)
 
 ### Children
 
 ```{r}
-# fit individual lmer models
+# fit individual (g)lmer models
+#
 ## subordinate choices
-m_sub <- lmer(prop_subordinate~training_condition+(1|participant),data=filter(subj_test_prop,sample_group=="children"))
+#singular fit but does not appear to affect estimates - keeping category random intercept for consistency
+m_sub <- glmer(prop_subordinate~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="children"),family=binomial)
 summary(m_sub)
 Anova(m_sub,type="III")
 
 ## basic choices
-m_bas <- lmer(prop_basic~training_condition+(1|participant),data=filter(subj_test_prop,sample_group=="children"))
+m_bas <- glmer(prop_basic~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="children"),family=binomial)
 summary(m_bas)
 Anova(m_bas,type="III")
 
 ## superordinate choices
-m_sup <- lmer(prop_superordinate~training_condition+(1|participant),data=filter(subj_test_prop,sample_group=="children"))
+m_sup <- lmer(prop_superordinate~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="children"))
 summary(m_sup)
 Anova(m_sup,type="III")
 ```
@@ -976,26 +986,46 @@ Anova(m_sup,type="III")
 ```{r}
 # fit individual lmer models
 ## subordinate choices
-m_sub <- lmer(prop_subordinate~training_condition+(1|participant),data=filter(subj_test_prop,sample_group=="adults"))
+m_sub <- lmer(prop_subordinate~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="adults"))
 summary(m_sub)
 Anova(m_sub,type="III")
 
 ## basic choices
-m_bas <- lmer(prop_basic~training_condition+(1|participant),data=filter(subj_test_prop,sample_group=="children"))
+m_bas <- lmer(prop_basic~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="adults"))
 summary(m_bas)
 Anova(m_bas,type="III")
 
 ## superordinate choices
-m_sup <- lmer(prop_superordinate~training_condition+(1|participant),data=filter(subj_test_prop,sample_group=="children"))
+m_sup <- lmer(prop_superordinate~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="adults"))
 summary(m_sup)
 Anova(m_sup,type="III")
 ```
 
-### H5: Proportion basic-level choices
+### Exploratory: Interaction with Sample Group
 
-#### Children
+```{r}
+## subordinate choices
+m_sub <- glmer(prop_subordinate~training_condition*sample_group+(1|participant)+(1|current_category_kind),data=subj_test_prop,family=binomial)
+summary(m_sub)
+Anova(m_sub,type="III")
 
-##### Preregistered
+## basic choices
+m_bas <- glmer(prop_basic~training_condition*sample_group+(1|participant)+(1|current_category_kind),data=subj_test_prop,family=binomial)
+summary(m_bas)
+Anova(m_bas,type="III")
+
+## superordinate choices
+m_sup <- lmer(prop_superordinate~training_condition*sample_group+(1|participant)+(1|current_category_kind),data=subj_test_prop)
+summary(m_sup)
+Anova(m_sup,type="III")
+```
+
+
+## H5: Proportion basic-level choices
+
+### Children
+
+#### Preregistered
 
 ```{r}
 #filter to relevant data
@@ -1020,25 +1050,16 @@ subj_test_prop <- subj_test_prop %>%
   mutate(number_training_images_c=(number_training_images-2)/2)
 
 m <- glmer(prop_basic ~ number_training_images_c+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="children"&current_category_training_level=="narrow"),family="binomial")
-# summary(m)
+summary(m)
 #replicates the basic Xu/ Tenenbaum effect
 ```
 
-#### Adults
+### Adults
 
 ```{r}
 m <- glmer(is_chosen ~ number_training_images_c+(1|participant)+(1|current_category_kind),data=filter(basic_test_choices,sample_group=="adults"&current_category_training_level=="narrow"),family="binomial")
 summary(m)
 ```
-
-Exploratory: No interaction between children and adults
-
-```{r}
-m <- glmer(is_chosen ~ number_training_images_c*sample_group+(1|participant)+(1|current_category_kind),data=filter(basic_test_choices,current_category_training_level=="narrow"),family="binomial")
-summary(m)
-```
-
-### H6: 
 
 ### Exploratory: 1-3 vs. 3-1 order
 
@@ -1061,4 +1082,21 @@ summary(m)
 ```{r}
 m <- glmer(is_chosen ~ number_training_images_c*training_num_order_numeric_c+(1|participant)+(1|current_category_kind),data=filter(basic_test_choices,sample_group=="adults"&current_category_training_level=="narrow"),family="binomial")
 summary(m)
+```
+
+#### Plot
+
+```{r}
+ggplot(filter(basic_test_choices,current_category_training_level=="narrow"),aes(number_training_images_c,is_chosen))+
+  geom_smooth(method="lm")+
+  facet_wrap(~training_num_order+sample_group)
+```
+
+
+## H6: No interaction between children and adults
+
+```{r}
+m <- glmer(is_chosen ~ number_training_images_c*sample_group+(1|participant)+(1|current_category_kind),data=filter(basic_test_choices,current_category_training_level=="narrow"),family="binomial")
+summary(m)
+Anova(m, type="III")
 ```
