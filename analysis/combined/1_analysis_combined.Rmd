@@ -604,8 +604,9 @@ ggplot(combined_sampling_data,aes(training_condition_ord,fill=sampled_category_l
   xlab("Training Condition")+
   ylab("Proportion of Sampling Choices")+
   facet_wrap(~sample_group)+
-  theme_cowplot(font_size=14)+
-  theme(axis.title = element_text(face="bold", size=12),axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4))+
+  theme_cowplot(font_size=18)+
+  theme(axis.title = element_text(face="bold", size=16),axis.text.x  = element_text(size=14,angle=90, hjust=1,vjust=0.4),
+        strip.text.x = element_text(size=16))+
   guides(pattern = guide_legend(override.aes = list(fill = "white"),order=2),
          fill = guide_legend(override.aes = list(pattern = "none"),order=1))
 ggsave(here(figure_path,"kitty-act-sampling.png"),width=6,height=7)
@@ -855,8 +856,8 @@ p2 <- ggplot(combined_sampling_data,aes(age_years,is_exploratory))+
   geom_point(data=overall_exploratory_age_group,aes(age_bins,mean_explore),color="#0A5C36",size=3)+
   ylab("Proportion Exploratory Choices")+
   xlab("Age (in years)")+
-  theme_cowplot(font_size=12)+
-  theme(axis.title = element_text(face="bold", size=14),
+  theme_cowplot(font_size=15)+
+  theme(axis.title = element_text(face="bold", size=16),
         #axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4)
         )#+
   #ylim(0,1)
@@ -927,9 +928,11 @@ p1 <- ggplot(filter(overall_test_prop_long,sample_group=="children"),aes(choice_
     values=c("#d7191c","#fdae61","#abd9e9"))+
   xlab("Test Choice Type")+
   ylab("Average Proportion\nof Test Choices")+
+  theme_cowplot(font_size=16)+
   theme(legend.position="none")+
-  theme(axis.title = element_text(face="bold", size=14),
-        axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4)
+  theme(axis.title = element_text(face="bold", size=18),
+        axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4),
+        strip.text.x = element_text(size=16)
         )+
   ggtitle("CHILDREN") +
   theme(plot.title = element_text(hjust = 0.5))
@@ -943,9 +946,11 @@ p2 <- ggplot(filter(overall_test_prop_long,sample_group=="adults"),aes(choice_ty
     values=c("#d7191c","#fdae61","#abd9e9"))+
   xlab("Test Choice Type")+
   ylab("Average Proportion\nof Test Choices")+
+  theme_cowplot(font_size=16)+
   theme(legend.position="none")+
-  theme(axis.title = element_text(face="bold", size=14),
-        axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4)
+  theme(axis.title = element_text(face="bold", size=18),
+        axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4),
+        strip.text.x = element_text(size=16)
         )+
   ggtitle("ADULTS") +
   theme(plot.title = element_text(hjust = 0.5))
