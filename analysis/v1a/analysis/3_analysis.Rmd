@@ -163,6 +163,7 @@ overall_accuracy_label_level_by_condition_round <- subj_test_accuracy_long %>%
 
 
 ### longer test representation
+total_number_options <- 12
 subj_test_accuracy_all <- test_array_options_clean %>%
   group_by(subject,number_training_images,trial_number,trial_type,current_category_training_level,current_category_label_level,current_category_kind,final_choice_array,total_number_correct_options_label,total_number_correct_options_training) %>%
   summarize(
@@ -175,23 +176,23 @@ subj_test_accuracy_all <- test_array_options_clean %>%
   ) %>%
   mutate(
     hit_rate_training_adj= case_when(
-      hit_rate_training==1 ~ 1 - 1/(2*total_number_correct_options_training),
-      hit_rate_training==0 ~ 1/(2*total_number_correct_options_training),
+      hit_rate_training==1 ~ 1 - 1/(2*total_number_options),
+      hit_rate_training==0 ~ 1/(2*total_number_options),
       TRUE ~ hit_rate_training
     ),
     hit_rate_label_adj= case_when(
-      hit_rate_label==1 ~ 1 - 1/(2*total_number_correct_options_label),
-      hit_rate_label==0 ~ 1/(2*total_number_correct_options_label),
+      hit_rate_label==1 ~ 1 - 1/(2*total_number_options),
+      hit_rate_label==0 ~ 1/(2*total_number_options),
       TRUE ~ hit_rate_label
     ),
     false_alarm_rate_training_adj= case_when(
-      false_alarm_rate_training==0 ~ 1/(2*total_number_correct_options_training),
-      false_alarm_rate_training==1 ~ 1 - 1/(2*total_number_correct_options_training),
+      false_alarm_rate_training==0 ~ 1/(2*total_number_options),
+      false_alarm_rate_training==1 ~ 1 - 1/(2*total_number_options),
       TRUE ~ false_alarm_rate_training
     ),
     false_alarm_rate_label_adj= case_when(
-      false_alarm_rate_label==0 ~ 1/(2*total_number_correct_options_label),
-      false_alarm_rate_label==1 ~ 1 - 1/(2*total_number_correct_options_label),
+      false_alarm_rate_label==0 ~ 1/(2*total_number_options),
+      false_alarm_rate_label==1 ~ 1 - 1/(2*total_number_options),
       TRUE ~ false_alarm_rate_label
     )
   ) %>%
@@ -215,6 +216,13 @@ overall_accuracy_label_level_sampling_all <- subj_test_accuracy_all %>%
     average_dprime_label=mean(dprime_label)
   ) 
 ```
+
+## Subject-level accuracy
+
+```{r}
+subj_test_condition <- 
+```
+
 
 ## Sampling
 
