@@ -217,10 +217,42 @@ overall_accuracy_label_level_sampling_all <- subj_test_accuracy_all %>%
   ) 
 ```
 
-## Subject-level accuracy
+## Rank subject-level accuracy
 
 ```{r}
-subj_test_condition <- 
+subj_test_rank <- subj_test_accuracy_all %>%
+  ungroup() %>%
+  filter(exclude_participant==0) %>%
+  select(subject,number_training_images,current_category_training_level,current_category_label_level, accuracy_label,accuracy_training,dprime_label,dprime_training) %>%
+  group_by(number_training_images,current_category_training_level,current_category_label_level) %>%
+  arrange(-dprime_label,-dprime_training,.by_group = TRUE) %>%
+  mutate(rank = rank(-dprime_label, ties.method="min"))
+
+# median subject rank
+subj_test_summary <- subj_test_rank %>%
+  ungroup() %>%
+  group_by(subject) %>%
+  summarize(
+    n=n(),
+    avg_accuracy_label = mean(accuracy_label),
+    avg_accuracy_training = mean(accuracy_training),
+    avg_dprime_label = mean(dprime_label),
+    avg_dprime_training = mean(dprime_training),
+    median_rank = median(rank),
+    mean_rank = mean(rank)
+  )
+
+ggplot(subj_test_summary,aes(avg_dprime_label,median_rank))+geom_point()+geom_smooth()
+ggplot(subj_test_summary,aes(avg_dprime_label,mean_rank))+geom_point()+geom_smooth()
+
+#use mean rank to get the top 15 participants
+top_participants <- subj_test_summary %>%
+  ungroup() %>%
+  arrange(mean_rank) %>%
+  slice_min(order_by=mean_rank,n=15) %>%
+  select(subject)
+write_csv(top_participants,here(write_path,"top_participants.csv"))
+  
 ```
 
 
