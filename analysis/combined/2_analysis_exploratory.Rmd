@@ -1,0 +1,56 @@
+---
+title: "Exploratory Analyses"
+author: "Jaime Chen"
+date: "2025-03-12"
+output: html_document
+---
+
+```{r}
+# combined_sampling_data %>% group_by(sample_group) %>% select(is_exploratory)
+# use subj_test_accuracy_all for test choices
+```
+
+
+# Sampling-Test Interaction
+## exploratory choices --> broader extensions?
+## adult vs children
+### will probably see that exploratory predicts broader extension with adults
+### will probably not see this predictor with children --> not effectively using sampling yet?
+##### --> age effect?
+
+
+# correctness by exploratory?
+
+# hit vs FA
+
+
+# did participants limit test choices based on best extension confirmed/discovered by sampling
+## adult vs children
+### probably yes with adults
+### probably no with kids --> age effect?
+
+
+# d' by age (5 - 8yrs, adults)
+
+```{r}
+age_list = as.character(kid_participant_info$age_group)
+
+subj_test_dprime_avg_training <- subj_test_accuracy_all %>% 
+  group_by(sample_group, participant) %>%
+  summarize(dprime_t = mean(dprime_training))
+subj_test_dprime_avg_training_children <- subj_test_dprime_avg_training %>%
+  filter(sample_group == "children") %>% 
+  mutate(child_age = age_list)
+subj_test_dprime_avg_training_adult <- subj_test_dprime_avg_training %>% 
+  filter(sample_group == "adults") %>% mutate(child_age = "adult")
+subj_test_dprime_avg_training_clean <- rbind(subj_test_dprime_avg_training_children, subj_test_dprime_avg_training_adult)
+
+# plot here
+```
+
+```{r}
+subj_test_dprime_avg_label <- subj_test_accuracy_all %>% 
+  group_by(sample_group, participant) %>% 
+  summarize(dprime_l = mean(dprime_label))
+```
+
