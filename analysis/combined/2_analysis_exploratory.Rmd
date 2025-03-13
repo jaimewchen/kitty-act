@@ -5,7 +5,7 @@ date: "2025-03-12"
 output: html_document
 ---
 
-# d' (training and learning) by age group (5 - 8yrs, adults)
+# d' (training and learning) by age group (5-, 6-, 7-, 8-yos, and adults)
 
 ```{r}
 age_list = as.character(kid_participant_info$age_group)
@@ -22,15 +22,15 @@ subj_test_dprime_avg <- subj_test_dprime_avg_training %>% mutate(dprime_l = subj
 
 subj_test_dprime_avg_children <- subj_test_dprime_avg %>%
   filter(sample_group == "children") %>% 
-  mutate(child_age = age_list)
+  mutate(age_group = age_list)
 subj_test_dprime_avg_adult <- subj_test_dprime_avg %>% 
   filter(sample_group == "adults") %>% 
-  mutate(child_age = "adult")
+  mutate(age_group = "adult")
 subj_test_dprime_avg_clean <- rbind(subj_test_dprime_avg_children, subj_test_dprime_avg_adult)
 
-subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_t, x=child_age)) + geom_violin(draw_quantiles = c(0.5), aes(color=child_age, color=child_age, alpha = 0.1)) + geom_jitter(aes(color = child_age, stroke = 0), size = 2)
+subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_t, x=age_group)) + geom_violin(draw_quantiles = c(0.5), aes(color=age_group, alpha = 0.1)) + geom_jitter(aes(color = age_group, stroke = 0), size = 2)
 
-subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=child_age)) + geom_violin(draw_quantiles = c(0.5), aes(color=child_age, color=child_age, alpha = 0.1)) + geom_jitter(aes(color = child_age, stroke = 0), size = 2)
+subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=age_group)) + geom_violin(draw_quantiles = c(0.5), aes(color=age_group, alpha = 0.1)) + geom_jitter(aes(color = age_group, stroke = 0), size = 2)
 ```
 
 
@@ -47,7 +47,7 @@ subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=child_age)) + geom_violi
 # hit vs FA
 
 
-# did participants limit test choices based on best extension confirmed/discovered by sampling
+# did participants limit test choices based on best extension confirmed/discovered by sampling (match b/w samp and test)
 ## adult vs children
 ### probably yes with adults
 ### probably no with kids --> age effect?
