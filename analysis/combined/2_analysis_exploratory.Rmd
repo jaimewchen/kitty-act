@@ -9,6 +9,7 @@ output: html_document
 
 ```{r}
 age_list = as.character(kid_participant_info$age_group)
+age_cont = kid_participant_info$age_mos
 
 subj_test_dprime_avg_training <- subj_test_accuracy_all %>% 
   group_by(participant, sample_group) %>%
@@ -22,15 +23,33 @@ subj_test_dprime_avg <- subj_test_dprime_avg_training %>% mutate(dprime_l = subj
 
 subj_test_dprime_avg_children <- subj_test_dprime_avg %>%
   filter(sample_group == "children") %>% 
-  mutate(age_group = age_list)
+  mutate(age_group = age_list) %>% 
+  mutate(age_mos = age_cont)
 subj_test_dprime_avg_adult <- subj_test_dprime_avg %>% 
   filter(sample_group == "adults") %>% 
-  mutate(age_group = "adult")
+  mutate(age_group = "adult") %>% 
+  mutate(age_mos = NA)
 subj_test_dprime_avg_clean <- rbind(subj_test_dprime_avg_children, subj_test_dprime_avg_adult)
+
+
+# plotting d' by age group
 
 subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_t, x=age_group)) + geom_violin(draw_quantiles = c(0.5), aes(color=age_group, alpha = 0.1)) + geom_jitter(aes(color = age_group, stroke = 0), size = 2) + theme(legend.position="none")
 
 subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=age_group)) + geom_violin(draw_quantiles = c(0.5), aes(color=age_group, alpha = 0.1)) + geom_jitter(aes(color = age_group, stroke = 0), size = 2) + theme(legend.position="none")
+
+# plotting d' by continuous age
+
+lm_t <- lm(dprime_t ~ age_mos, data = subj_test_dprime_avg_clean)
+lm_l <- lm(dprime_l ~ age_mos, data = subj_test_dprime_avg_clean)
+
+summary(lm_t)
+summary(lm_l)
+
+subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_t, x=age_mos)) + geom_point() + geom_smooth(method='lm')
+subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=age_mos)) + geom_point() + geom_smooth(method='lm')
+
+
 ```
 
 
@@ -40,6 +59,43 @@ subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=age_group)) + geom_violi
 ### will probably see that exploratory predicts broader extension with adults
 ### will probably not see this predictor with children --> not effectively using sampling yet?
 ##### --> age effect?
+
+```{r}
+exploratory <- combined_sampling_data %>% 
+  select(sample_group, participant, trial_counter, is_exploratory) %>%
+  sort_by(combined_sampling_data$sample_group, combined_sampling_data$participant) %>%
+  mutate(is_exploratory = as.character(is_exploratory)) %>% mutate(is_exploratory_yn = case_when(
+    is_exploratory == 1 ~ "explored",
+    is_exploratory == 0 ~ "did not explore",
+    TRUE ~ is_exploratory
+  ))
+
+fa_rate <- subj_test_accuracy_all %>% 
+  ungroup() %>% 
+  select(sample_group, participant, false_alarm_rate_training_adj, false_alarm_rate_label_adj) %>%
+  sort_by(subj_test_accuracy_all$sample_group, subj_test_accuracy_all$participant) %>%
+  select(false_alarm_rate_training_adj, false_alarm_rate_label_adj)
+
+choice_count <- subj_test_accuracy %>% ungroup() %>% select(total_choices)
+
+exploratory_fa <- cbind(exploratory, fa_rate, choice_count)
+
+
+# looking at adjusted FA rate based on exploration during sampling for each round
+
+exploratory_fa %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_training_adj)) + geom_violin()
+exploratory_fa %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_label_adj)) + geom_violin()
+
+
+# looking at total choices made based off of explored/didn't explore during sampling for each round
+
+exploratory_fa %>% ggplot(aes(total_choices, fill = is_exploratory_yn)) + 
+  geom_bar(aes(y = (..count..)/sum(..count..))) + 
+  geom_density(adjust = 5, alpha = 0.3, linewidth = 0) +
+  facet_wrap(~ is_exploratory_yn) + 
+  scale_x_continuous(breaks=seq(0,12,1))
+```
+
 
 
 # correctness by exploratory?
@@ -54,7 +110,6 @@ subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=age_group)) + geom_violi
 
 
 ```{r}
-# combined_sampling_data %>% group_by(sample_group) %>% select(is_exploratory)
-# use subj_test_accuracy_all for test choices
+
 ```
 
