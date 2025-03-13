@@ -28,9 +28,9 @@ subj_test_dprime_avg_adult <- subj_test_dprime_avg %>%
   mutate(age_group = "adult")
 subj_test_dprime_avg_clean <- rbind(subj_test_dprime_avg_children, subj_test_dprime_avg_adult)
 
-subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_t, x=age_group)) + geom_violin(draw_quantiles = c(0.5), aes(color=age_group, alpha = 0.1)) + geom_jitter(aes(color = age_group, stroke = 0), size = 2)
+subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_t, x=age_group)) + geom_violin(draw_quantiles = c(0.5), aes(color=age_group, alpha = 0.1)) + geom_jitter(aes(color = age_group, stroke = 0), size = 2) + theme(legend.position="none")
 
-subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=age_group)) + geom_violin(draw_quantiles = c(0.5), aes(color=age_group, alpha = 0.1)) + geom_jitter(aes(color = age_group, stroke = 0), size = 2)
+subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=age_group)) + geom_violin(draw_quantiles = c(0.5), aes(color=age_group, alpha = 0.1)) + geom_jitter(aes(color = age_group, stroke = 0), size = 2) + theme(legend.position="none")
 ```
 
 
