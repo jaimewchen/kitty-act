@@ -5,9 +5,32 @@ date: "2025-03-12"
 output: html_document
 ---
 
+# d' (training and learning) by age group (5 - 8yrs, adults)
+
 ```{r}
-# combined_sampling_data %>% group_by(sample_group) %>% select(is_exploratory)
-# use subj_test_accuracy_all for test choices
+age_list = as.character(kid_participant_info$age_group)
+
+subj_test_dprime_avg_training <- subj_test_accuracy_all %>% 
+  group_by(participant, sample_group) %>%
+  summarize(dprime_t = mean(dprime_training)) %>% ungroup()
+
+subj_test_dprime_avg_label <- subj_test_accuracy_all %>% 
+  group_by(participant, sample_group) %>% 
+  summarize(dprime_l = mean(dprime_label)) %>% ungroup()
+
+subj_test_dprime_avg <- subj_test_dprime_avg_training %>% mutate(dprime_l = subj_test_dprime_avg_label$dprime_l)
+
+subj_test_dprime_avg_children <- subj_test_dprime_avg %>%
+  filter(sample_group == "children") %>% 
+  mutate(child_age = age_list)
+subj_test_dprime_avg_adult <- subj_test_dprime_avg %>% 
+  filter(sample_group == "adults") %>% 
+  mutate(child_age = "adult")
+subj_test_dprime_avg_clean <- rbind(subj_test_dprime_avg_children, subj_test_dprime_avg_adult)
+
+subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_t, x=child_age)) + geom_violin(draw_quantiles = c(0.5), aes(color=child_age, color=child_age, alpha = 0.1)) + geom_jitter(aes(color = child_age, stroke = 0), size = 2)
+
+subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=child_age)) + geom_violin(draw_quantiles = c(0.5), aes(color=child_age, color=child_age, alpha = 0.1)) + geom_jitter(aes(color = child_age, stroke = 0), size = 2)
 ```
 
 
@@ -30,27 +53,8 @@ output: html_document
 ### probably no with kids --> age effect?
 
 
-# d' by age (5 - 8yrs, adults)
-
 ```{r}
-age_list = as.character(kid_participant_info$age_group)
-
-subj_test_dprime_avg_training <- subj_test_accuracy_all %>% 
-  group_by(sample_group, participant) %>%
-  summarize(dprime_t = mean(dprime_training))
-subj_test_dprime_avg_training_children <- subj_test_dprime_avg_training %>%
-  filter(sample_group == "children") %>% 
-  mutate(child_age = age_list)
-subj_test_dprime_avg_training_adult <- subj_test_dprime_avg_training %>% 
-  filter(sample_group == "adults") %>% mutate(child_age = "adult")
-subj_test_dprime_avg_training_clean <- rbind(subj_test_dprime_avg_training_children, subj_test_dprime_avg_training_adult)
-
-# plot here
-```
-
-```{r}
-subj_test_dprime_avg_label <- subj_test_accuracy_all %>% 
-  group_by(sample_group, participant) %>% 
-  summarize(dprime_l = mean(dprime_label))
+# combined_sampling_data %>% group_by(sample_group) %>% select(is_exploratory)
+# use subj_test_accuracy_all for test choices
 ```
 
