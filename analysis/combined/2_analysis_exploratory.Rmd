@@ -88,16 +88,17 @@ exploratory_interact <- cbind(exploratory, fa_rate, choices)
 
 # adjusted FA rate based on exploration during sampling for each round
 
-exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_training_adj)) + geom_violin()
-exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_label_adj)) + geom_violin()
+exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_training_adj)) + geom_violin() + geom_jitter(aes(color = is_exploratory_yn), size = 0.75, alpha = 0.5) + facet_wrap(~ sample_group) + theme(legend.position="none")
+
+exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_label_adj)) + geom_violin() + facet_wrap(~ sample_group)
 
 
 # total choices made based off of explored/didn't explore during sampling for each round
 
 exploratory_interact %>% ggplot(aes(total_choices, fill = is_exploratory_yn)) + 
   geom_bar(aes(y = (..count..)/sum(..count..))) + 
-  geom_density(adjust = 5, alpha = 0.3, linewidth = 0) +
-  facet_wrap(~ is_exploratory_yn) + 
+  geom_density(bw = 0.75, alpha = 0.3, linewidth = 0) +
+  facet_grid(sample_group ~ is_exploratory_yn) + 
   scale_x_continuous(breaks=seq(0,12,1))+ 
   theme(legend.position="none")
 
@@ -109,7 +110,7 @@ class(exploratory_interact$training_inconsistent_prop)
 exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = training_inconsistent_prop, fill = is_exploratory_yn)) + 
   geom_violin() + 
   stat_summary(fun = "mean", geom = "crossbar", size = 0.3, width = 0.4) + 
-  theme(legend.position="none")
+  theme(legend.position="none") + facet_wrap(~ sample_group)
 
 ```
 
@@ -126,6 +127,21 @@ exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = training_inconsis
 
 
 ```{r}
+kid_sampling_samptestint <- kid_sampling_data %>% select(participant, age_group, age_years, age_mos, exclude_participant, trial_counter, round, number_training_images, current_category_kind, current_category_training_level, current_hypernym_category_kind, sampled_image, sampled_imagelabel, sampled_category_kind, sampled_category_level, sampling_choice_type, sampled_label) %>% group_by(participant, trial_counter)
 
+kid_sampling_samptestint <- kid_sampling_samptestint %>% 
+  mutate(sampling_consistent_cat = case_when(
+    current_category_kind == sampled_category_kind ~ substr(current_category_kind, start=1, stop=3),
+    current_category_kind != sampled_category_kind ~ paste(substr(current_category_kind, start=1, stop=3), substr(sampled_category_kind, start=1, stop=3)),
+    TRUE ~ current_category_kind
+  )) %>% 
+  mutate(sampling_consistent_level = case_when(
+    current_category_kind != sampled_category_kind ~ "hyp",
+    "not" != substr(sampled_label, start=1, stop=3) ~ sampled_category_level,
+    TRUE ~ sampled_category_level
+  ))
+#what about when its not a but its 2 levels higher than training??
+  
+  
 ```
 
