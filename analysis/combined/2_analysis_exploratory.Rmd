@@ -213,7 +213,9 @@ kid_choice_type_rate <- kid_choice_type_count %>%
 
 kid_choice_type_rate[is.na(kid_choice_type_rate)] <- 0
 
-kid_participant_ages <- kid_sampling_data %>% select(participant, age_group, age_years, age_mos) %>% unique()
+kid_participant_ages <- kid_sampling_data %>% select(participant, age_group, age_years, age_mos) %>% unique() %>% mutate(group = case_when(
+    TRUE ~ "1_child"
+  ))
 
 kid_choice_type_rate <- kid_choice_type_rate %>% mutate(hit_rate = hit/(hit+miss)) %>% mutate(fa_rate = false_alarm/(false_alarm+correct_reject)) %>% ungroup() %>% mutate(miss_rate = miss/(hit+miss)) %>% merge(kid_participant_ages)
 
@@ -315,10 +317,10 @@ adult_choice_type_rate[is.na(adult_choice_type_rate)] <- 0
 
 adult_participant_ages <- adult_sampling_data %>% select(participant) %>% unique() %>% 
   mutate(age_years = case_when(
-    TRUE ~ "adult"
+    TRUE ~ 25
   )) %>% 
-  mutate(age_group = case_when(
-    TRUE ~ "adult"
+  mutate(group = case_when(
+    TRUE ~ "2_adult"
   ))
 
 adult_choice_type_rate <- adult_choice_type_rate %>% mutate(hit_rate = hit/(hit+miss)) %>% mutate(fa_rate = false_alarm/(false_alarm+correct_reject)) %>% ungroup() %>% mutate(miss_rate = miss/(hit+miss)) %>% merge(adult_participant_ages)
@@ -327,15 +329,17 @@ adult_choice_type_rate <- adult_choice_type_rate %>% mutate(hit_rate = hit/(hit+
 #### Plotting Children and Adults together
 
 ```{r}
-kid_choice_type_rate_2 <- kid_choice_type_rate %>% select(-age_mos) %>% mutate(age_years = as.character(age_years)) %>% mutate(age_group = as.character(age_group))
-
+kid_choice_type_rate_2 <- kid_choice_type_rate %>% select(-age_group, -age_mos)
 
 samptestint_choice_type_rate <- rbind(adult_choice_type_rate, kid_choice_type_rate_2)
 
-samptestint_choice_type_rate %>% ggplot(aes(x = age_group, y = fa_rate)) + geom_violin()
-samptestint_choice_type_rate %>% ggplot(aes(x = age_group, y = miss_rate)) + geom_violin()
+plot1 <- samptestint_choice_type_rate %>% filter(group == "1_child") %>% ggplot(aes(x = age_years, y = fa_rate)) + geom_point() + scale_y_continuous(limits=c(-0.01, 1.01))
 
+print(plot1)
 
+plot2 <- samptestint_choice_type_rate %>% filter(group == "2_adult") %>% ggplot(aes(x = group, y = fa_rate)) + geom_jitter() + scale_y_continuous(limits=c(-0.01, 1.01))
+
+plot1+plot2
 ```
 
 
