@@ -129,18 +129,27 @@ exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = training_inconsis
 #### Children
 
 ```{r}
-kid_sampling_samptestint <- kid_sampling_data %>% select(participant, age_group, age_years, age_mos, exclude_participant, trial_counter, round, number_training_images, current_category_kind, current_category_training_level, current_hypernym_category_kind, sampled_image, sampled_imagelabel, sampled_category_kind, sampled_category_level, sampling_choice_type, sampled_label) %>% group_by(participant, trial_counter)
+kid_sampling_samptestint <- kid_sampling_data %>% select(participant, age_group, age_years, age_mos, exclude_participant, trial_counter, round, number_training_images, current_category_kind, current_category_training_level, current_hypernym_category_kind, sampled_image, sampled_imagelabel, sampled_category_kind, sampled_category_level, sampling_choice_type, sampled_label) %>% group_by(participant, trial_counter) %>% 
+  mutate(current_category_training_level = case_when(
+    number_training_images == 1 ~ "sub",
+    number_training_images == 3 & current_category_training_level == "narrow" ~ "sub",
+    number_training_images == 3 & current_category_training_level == "intermediate" ~ "bas",
+    number_training_images == 3 & current_category_training_level == "broad" ~ "sup",
+    TRUE ~ current_category_training_level
+  ))
 
 kid_sampling_samptestint <- kid_sampling_samptestint %>% 
   mutate(sampling_consistent_cat = case_when(
     current_category_kind == sampled_category_kind ~ substr(current_category_kind, start=1, stop=3),
-    current_category_kind != sampled_category_kind ~ paste(substr(current_category_kind, start=1, stop=3), substr(sampled_category_kind, start=1, stop=3)),
+    current_category_kind != sampled_category_kind & "not" == substr(sampled_label, start=1, stop=3) ~ substr(current_category_kind, start=1, stop=3),
+    current_category_kind != sampled_category_kind & "not" != substr(sampled_label, start=1, stop=3) ~ paste(substr(current_category_kind, start=1, stop=3), substr(sampled_category_kind, start=1, stop=3)),
     TRUE ~ current_category_kind
   )) %>% 
   mutate(sampling_consistent_level = case_when(
-    current_category_kind != sampled_category_kind ~ "hyp",
+    current_category_kind != sampled_category_kind & "not" != substr(sampled_label, start=1, stop=3) ~ "hyp",
     "not" != substr(sampled_label, start=1, stop=3) ~ sampled_category_level,
-    TRUE ~ sampled_category_level
+    "not" == substr(sampled_label, start=1, stop=3) ~ current_category_training_level,
+    TRUE ~ NA
   ))
 # what about when sampling gives "not a ___" but they sampled 2 or 3 levels up (e.g., sub training, sup/hyp sampling)
 
@@ -183,10 +192,6 @@ kid_samptestint <- kid_samptestint %>%
     .default = 0
   ))
 
-
-round, number_training_images, current_category_training_level, sampling_consistent_level
-
-
 kid_sample_choice_consistency <- kid_samptestint %>% ungroup() %>% group_by(participant, trial_counter) %>% select(participant, age_group, age_years, age_mos, trial_counter, round, number_training_images, current_category_training_level, sampling_consistent_level, is_chosen, sampling_consistent) %>% 
   mutate(choice_type = case_when(
     is_chosen == 1 & sampling_consistent == 1 ~ "hit",
@@ -217,13 +222,121 @@ kid_choice_type_rate %>% ggplot(aes(x=age_years, y=fa_rate)) + geom_point()
 kid_choice_type_rate %>% ggplot(aes(x=age_years, y=miss_rate)) + geom_point()
 
 ```
-# are kids actually using the sampling information to make test choices
+
+#### Adults
 
 ```{r}
+adult_hypernym_data <- adult_d %>% select(participant, current_category_kind, current_hypernym_category_kind) %>% unique() %>% na.omit()
 
+adult_sampling_data <- merge(adult_sampling_data, adult_hypernym_data)
+
+adult_sampling_samptestint <- adult_sampling_data %>% select(participant, exclude_participant, trial_counter, round, number_training_images, current_category_kind, current_category_training_level, current_hypernym_category_kind, sampled_image, sampled_imagelabel, sampled_category_kind, sampled_category_level, sampling_choice_type, sampled_label) %>% group_by(participant, trial_counter) %>% 
+  mutate(current_category_training_level = case_when(
+    number_training_images == 1 ~ "sub",
+    number_training_images == 3 & current_category_training_level == "narrow" ~ "sub",
+    number_training_images == 3 & current_category_training_level == "intermediate" ~ "bas",
+    number_training_images == 3 & current_category_training_level == "broad" ~ "sup",
+    TRUE ~ current_category_training_level
+  ))
+
+adult_sampling_samptestint <- adult_sampling_samptestint %>% 
+  mutate(sampling_consistent_cat = case_when(
+    current_category_kind == sampled_category_kind ~ substr(current_category_kind, start=1, stop=3),
+    current_category_kind != sampled_category_kind & "not" == substr(sampled_label, start=1, stop=3) ~ substr(current_category_kind, start=1, stop=3),
+    current_category_kind != sampled_category_kind & "not" != substr(sampled_label, start=1, stop=3) ~ paste(substr(current_category_kind, start=1, stop=3), substr(sampled_category_kind, start=1, stop=3)),
+    TRUE ~ current_category_kind
+  )) %>% 
+  mutate(sampling_consistent_level = case_when(
+    current_category_kind != sampled_category_kind & "not" != substr(sampled_label, start=1, stop=3) ~ "hyp",
+    "not" != substr(sampled_label, start=1, stop=3) ~ sampled_category_level,
+    "not" == substr(sampled_label, start=1, stop=3) ~ current_category_training_level,
+    TRUE ~ NA
+  ))
+# what about when sampling gives "not a ___" but they sampled 2 or 3 levels up (e.g., sub training, sup/hyp sampling)
+
+adult_test_samptestint <- adult_test_array_options_clean %>% select(participant, trial_index, round, test_image, is_chosen) %>% mutate(trial_counter = (trial_index-1)/7) %>% select(participant, trial_counter, round, test_image, is_chosen)
+
+adult_samptestint <- merge(adult_test_samptestint, adult_sampling_samptestint)
+
+hyp_consistent = c("sub", "bas", "sup", "hyp")
+sup_consistent = c("sub", "bas", "sup")
+bas_consistent = c("sub", "bas")
+sub_consistent = c("sub")
+
+# how many sampling+training consistent choices they made (e.g, sampling_consistent is 1 and is_chosen is 1)
+# how many sampling+training inconsistent choices they made (e.g, sampling_consistent is 0 but is_chosen is 1)
+# how many sampling+training consistent choices they missed (e.g, sampling_consistent is 1 but is_chosen is 0)
+
+adult_samptestint <- adult_samptestint %>% rowwise() %>% 
+  mutate(test_image_level = case_when(
+    grepl("sub", test_image) ~ "sub",
+    grepl("bas", test_image) ~ "bas",
+    grepl("sup", test_image) ~ "sup",
+    TRUE ~ test_image
+  )) %>%
+  mutate(test_image_cat = case_when(
+    grepl((substr(current_hypernym_category_kind, start=1, stop=3)), test_image) ~ "out_hyp",
+    grepl((substr(current_category_kind, start=1, stop=3)), test_image) ~ "in",
+    .default = "out"
+  ))
+
+adult_samptestint <- adult_samptestint %>%
+  mutate(sampling_consistent = case_when(
+    sampling_consistent_level == "sub" & test_image_cat == "in" & test_image_level == "sub" ~ 1,
+    sampling_consistent_level == "bas" & test_image_cat == "in" & test_image_level == "bas" ~ 1,
+    sampling_consistent_level == "bas" & test_image_level == "sub" ~ 1,
+    sampling_consistent_level == "sup" & test_image_cat == "in" ~ 1,
+    sampling_consistent_level == "hyp" & test_image_cat == "in" ~ 1,
+    sampling_consistent_level == "hyp" & test_image_cat == "out_hyp" ~ 1,
+    .default = 0
+  ))
+
+
+adult_sample_choice_consistency <- adult_samptestint %>% ungroup() %>% group_by(participant, trial_counter) %>% select(participant, trial_counter, round, number_training_images, current_category_training_level, sampling_consistent_level, is_chosen, sampling_consistent) %>% 
+  mutate(choice_type = case_when(
+    is_chosen == 1 & sampling_consistent == 1 ~ "hit",
+    is_chosen == 1 & sampling_consistent == 0 ~ "false_alarm",
+    is_chosen == 0 & sampling_consistent == 1 ~ "miss",
+    is_chosen == 0 ~ "correct_reject",
+    .default = NA
+  ))
+
+adult_choice_type_count <- adult_sample_choice_consistency %>% 
+  ungroup() %>% 
+  group_by(participant) %>% 
+  count(choice_type)
+
+adult_choice_type_count %>% ggplot(aes(x = choice_type, y = n)) + geom_violin()
+
+adult_choice_type_rate <- adult_choice_type_count %>% 
+  pivot_wider(names_from = choice_type, values_from = n)
+
+adult_choice_type_rate[is.na(adult_choice_type_rate)] <- 0
+
+adult_participant_ages <- adult_sampling_data %>% select(participant) %>% unique() %>% 
+  mutate(age_years = case_when(
+    TRUE ~ "adult"
+  )) %>% 
+  mutate(age_group = case_when(
+    TRUE ~ "adult"
+  ))
+
+adult_choice_type_rate <- adult_choice_type_rate %>% mutate(hit_rate = hit/(hit+miss)) %>% mutate(fa_rate = false_alarm/(false_alarm+correct_reject)) %>% ungroup() %>% mutate(miss_rate = miss/(hit+miss)) %>% merge(adult_participant_ages)
 ```
 
+#### Plotting Children and Adults together
 
+```{r}
+kid_choice_type_rate_2 <- kid_choice_type_rate %>% select(-age_mos) %>% mutate(age_years = as.character(age_years)) %>% mutate(age_group = as.character(age_group))
+
+
+samptestint_choice_type_rate <- rbind(adult_choice_type_rate, kid_choice_type_rate_2)
+
+samptestint_choice_type_rate %>% ggplot(aes(x = age_group, y = fa_rate)) + geom_violin()
+samptestint_choice_type_rate %>% ggplot(aes(x = age_group, y = miss_rate)) + geom_violin()
+
+
+```
 
 
 # Play with participant-provided hypotheses
