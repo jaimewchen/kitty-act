@@ -401,13 +401,25 @@ exp_kid_samptestint <- kid_samptestint %>% mutate(explored_yn = case_when(
   )) %>% 
   ungroup() %>% group_by(participant, trial_counter)
 
-exp_adult_samptestint_summarized <- exp_adult_samptestint %>% filter(is_chosen == 1) %>% summarize(prop_sampinconsistent_choices = sum(is_chosen - sampling_consistent)/sum(is_chosen), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "adult")
 
-exp_kid_samptestint_summarized <- exp_kid_samptestint %>% filter(is_chosen == 1) %>% summarize(prop_sampinconsistent_choices = sum(is_chosen - sampling_consistent)/sum(is_chosen), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "child")
+# Looking at proportion of sampling inconsistent choices made (e.g., extending words broader than what was confirmed by sampling and/or exploring)
 
-exp_samptestint_summarized <- rbind(exp_adult_samptestint_summarized, exp_kid_samptestint_summarized)
+exp_adult_samptestint_sampinconsistent <- exp_adult_samptestint %>% filter(is_chosen == 1) %>% summarize(prop_sampinconsistent_choices = sum(is_chosen - sampling_consistent)/sum(is_chosen), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "adult")
 
-exp_samptestint_summarized %>% ggplot(aes(x = samp_group, y = prop_sampinconsistent_choices, color = samp_group)) + geom_violin() + geom_jitter(alpha = 0.2) + facet_grid(explored_yn~samp_feedback_type)
+exp_kid_samptestint_sampinconsistent <- exp_kid_samptestint %>% filter(is_chosen == 1) %>% summarize(prop_sampinconsistent_choices = sum(is_chosen - sampling_consistent)/sum(is_chosen), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "child")
+
+exp_sampinconsistent <- rbind(exp_adult_samptestint_sampinconsistent, exp_kid_samptestint_sampinconsistent)
+
+exp_sampinconsistent %>% ggplot(aes(x = samp_group, y = prop_sampinconsistent_choices, color = samp_group)) + geom_violin() + geom_jitter(alpha = 0.2) + facet_grid(explored_yn~samp_feedback_type)
+
+
+# Looking at proportion of sampling consistent choices missed
+
+exp_adult_samptestint_missed <- exp_adult_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type)
+
+exp_kid_samptestint_missed <- exp_kid_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type)
+
+
 ```
 
 
