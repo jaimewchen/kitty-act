@@ -360,13 +360,21 @@ kid_choice_type_rate_2 <- kid_choice_type_rate %>% select(-age_group, -age_mos)
 
 samptestint_choice_type_rate <- rbind(adult_choice_type_rate, kid_choice_type_rate_2)
 
-plot1 <- samptestint_choice_type_rate %>% filter(group == "1_child") %>% ggplot(aes(x = age_years, y = fa_rate)) + geom_point() + scale_y_continuous(limits=c(-0.01, 1.01)) + geom_smooth(method = "lm")
+plot1 <- samptestint_choice_type_rate %>% filter(group == "1_child") %>% ggplot(aes(x = age_years, y = hit_rate)) + geom_point() + scale_y_continuous(limits=c(-0.01, 1.01)) + geom_smooth(method = "lm")
 
-print(plot1)
+plot2 <- samptestint_choice_type_rate %>% filter(group == "2_adult") %>% ggplot(aes(x = group, y = hit_rate)) + geom_jitter() + scale_y_continuous(limits=c(-0.01, 1.01))
 
-plot2 <- samptestint_choice_type_rate %>% filter(group == "2_adult") %>% ggplot(aes(x = group, y = fa_rate)) + geom_jitter() + scale_y_continuous(limits=c(-0.01, 1.01))
+plot3 <- samptestint_choice_type_rate %>% filter(group == "1_child") %>% ggplot(aes(x = age_years, y = fa_rate)) + geom_point() + scale_y_continuous(limits=c(-0.01, 1.01)) + geom_smooth(method = "lm")
 
-plot1+plot2
+plot4 <- samptestint_choice_type_rate %>% filter(group == "2_adult") %>% ggplot(aes(x = group, y = fa_rate)) + geom_jitter() + scale_y_continuous(limits=c(-0.01, 1.01))
+
+plot5 <- samptestint_choice_type_rate %>% filter(group == "1_child") %>% ggplot(aes(x = age_years, y = miss_rate)) + geom_point() + scale_y_continuous(limits=c(-0.01, 1.01)) + geom_smooth(method = "lm")
+
+plot6 <- samptestint_choice_type_rate %>% filter(group == "2_adult") %>% ggplot(aes(x = group, y = miss_rate)) + geom_jitter() + scale_y_continuous(limits=c(-0.01, 1.01))
+
+(plot1+plot2)
+(plot3+plot4)
+(plot5+plot6)
 ```
 
 
