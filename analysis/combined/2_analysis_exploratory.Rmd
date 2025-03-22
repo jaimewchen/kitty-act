@@ -145,13 +145,26 @@ kid_sampling_samptestint <- kid_sampling_samptestint %>%
     current_category_kind != sampled_category_kind & "not" != substr(sampled_label, start=1, stop=3) ~ paste(substr(current_category_kind, start=1, stop=3), substr(sampled_category_kind, start=1, stop=3)),
     TRUE ~ current_category_kind
   )) %>% 
+  mutate(current_category_training_level_num = case_when(
+    current_category_training_level == "sub" ~ 1,
+    current_category_training_level == "bas" ~ 2,
+    current_category_training_level == "sup" ~ 3,
+    TRUE ~ 0
+  )) %>% 
+  mutate(sampled_category_level_num = case_when(
+    sampled_category_level == "sub" ~ 1,
+    sampled_category_level == "bas" ~ 2,
+    current_category_kind == sampled_category_kind & sampled_category_level == "sup" ~ 3,
+    current_category_kind != sampled_category_kind ~ 4,
+    TRUE ~ 0
+  )) %>% 
   mutate(sampling_consistent_level = case_when(
     current_category_kind != sampled_category_kind & "not" != substr(sampled_label, start=1, stop=3) ~ "hyp",
-    "not" != substr(sampled_label, start=1, stop=3) ~ sampled_category_level,
+    "not" != substr(sampled_label, start=1, stop=3) & sampled_category_level_num >= current_category_training_level_num ~ sampled_category_level,
+    "not" != substr(sampled_label, start=1, stop=3) & sampled_category_level_num < current_category_training_level_num ~ current_category_training_level,
     "not" == substr(sampled_label, start=1, stop=3) ~ current_category_training_level,
     TRUE ~ NA
-  ))
-# what about when sampling gives "not a ___" but they sampled 2 or 3 levels up (e.g., sub training, sup/hyp sampling)
+  )) %>% select(-current_category_training_level_num, -sampled_category_level_num)
 
 kid_test_samptestint <- kid_test_array_options_clean %>% select(participant, trial_counter, round, test_image, is_chosen)
 
@@ -248,12 +261,26 @@ adult_sampling_samptestint <- adult_sampling_samptestint %>%
     current_category_kind != sampled_category_kind & "not" != substr(sampled_label, start=1, stop=3) ~ paste(substr(current_category_kind, start=1, stop=3), substr(sampled_category_kind, start=1, stop=3)),
     TRUE ~ current_category_kind
   )) %>% 
+  mutate(current_category_training_level_num = case_when(
+    current_category_training_level == "sub" ~ 1,
+    current_category_training_level == "bas" ~ 2,
+    current_category_training_level == "sup" ~ 3,
+    TRUE ~ 0
+  )) %>% 
+  mutate(sampled_category_level_num = case_when(
+    sampled_category_level == "sub" ~ 1,
+    sampled_category_level == "bas" ~ 2,
+    current_category_kind == sampled_category_kind & sampled_category_level == "sup" ~ 3,
+    current_category_kind != sampled_category_kind ~ 4,
+    TRUE ~ 0
+  )) %>% 
   mutate(sampling_consistent_level = case_when(
     current_category_kind != sampled_category_kind & "not" != substr(sampled_label, start=1, stop=3) ~ "hyp",
-    "not" != substr(sampled_label, start=1, stop=3) ~ sampled_category_level,
+    "not" != substr(sampled_label, start=1, stop=3) & sampled_category_level_num >= current_category_training_level_num ~ sampled_category_level,
+    "not" != substr(sampled_label, start=1, stop=3) & sampled_category_level_num < current_category_training_level_num ~ current_category_training_level,
     "not" == substr(sampled_label, start=1, stop=3) ~ current_category_training_level,
     TRUE ~ NA
-  ))
+  )) %>% select(-current_category_training_level_num, -sampled_category_level_num)
 # what about when sampling gives "not a ___" but they sampled 2 or 3 levels up (e.g., sub training, sup/hyp sampling)
 
 adult_test_samptestint <- adult_test_array_options_clean %>% select(participant, trial_index, round, test_image, is_chosen) %>% mutate(trial_counter = (trial_index-1)/7) %>% select(participant, trial_counter, round, test_image, is_chosen)
@@ -333,7 +360,7 @@ kid_choice_type_rate_2 <- kid_choice_type_rate %>% select(-age_group, -age_mos)
 
 samptestint_choice_type_rate <- rbind(adult_choice_type_rate, kid_choice_type_rate_2)
 
-plot1 <- samptestint_choice_type_rate %>% filter(group == "1_child") %>% ggplot(aes(x = age_years, y = fa_rate)) + geom_point() + scale_y_continuous(limits=c(-0.01, 1.01))
+plot1 <- samptestint_choice_type_rate %>% filter(group == "1_child") %>% ggplot(aes(x = age_years, y = fa_rate)) + geom_point() + scale_y_continuous(limits=c(-0.01, 1.01)) + geom_smooth(method = "lm")
 
 print(plot1)
 
