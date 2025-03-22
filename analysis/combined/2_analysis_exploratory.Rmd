@@ -59,11 +59,8 @@ subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=age)) + geom_point() + g
 
 
 # Sampling-Test Interaction
-## exploratory choices --> broader extensions?
-## adult vs children
-### will probably see that exploratory predicts broader extension with adults
-### will probably not see this predictor with children --> not effectively using sampling yet?
-##### --> age effect?
+## Exploration-Test
+### Do exploratory choices lead to broader extensions in children and adults?
 
 ```{r}
 exploratory <- combined_sampling_data %>% 
@@ -117,14 +114,9 @@ exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = training_inconsis
 
 
 
-# hit vs FA
 
-
-# did participants limit test choices based on best extension confirmed/discovered by sampling (match b/w samp and test)
-## adult vs children
-### probably yes with adults
-### probably no with kids --> age effect?
-
+## Sampling Consistency of Test Choices
+### Did participants limit test choices based on best extension confirmed/discovered by sampling and training (match b/w samp and test)?
 
 #### Children
 
@@ -164,7 +156,7 @@ kid_sampling_samptestint <- kid_sampling_samptestint %>%
     "not" != substr(sampled_label, start=1, stop=3) & sampled_category_level_num < current_category_training_level_num ~ current_category_training_level,
     "not" == substr(sampled_label, start=1, stop=3) ~ current_category_training_level,
     TRUE ~ NA
-  )) %>% select(-current_category_training_level_num, -sampled_category_level_num)
+  ))
 
 kid_test_samptestint <- kid_test_array_options_clean %>% select(participant, trial_counter, round, test_image, is_chosen)
 
@@ -205,7 +197,7 @@ kid_samptestint <- kid_samptestint %>%
     .default = 0
   ))
 
-kid_sample_choice_consistency <- kid_samptestint %>% ungroup() %>% group_by(participant, trial_counter) %>% select(participant, age_group, age_years, age_mos, trial_counter, round, number_training_images, current_category_training_level, sampling_consistent_level, is_chosen, sampling_consistent) %>% 
+kid_sample_choice_consistency <- kid_samptestint %>% ungroup() %>% group_by(participant, trial_counter) %>% select(participant, age_group, age_years, age_mos, trial_counter, round, number_training_images, current_category_training_level, sampling_consistent_level, is_chosen, sampling_consistent, current_category_training_level_num, sampled_category_level_num) %>% 
   mutate(choice_type = case_when(
     is_chosen == 1 & sampling_consistent == 1 ~ "hit",
     is_chosen == 1 & sampling_consistent == 0 ~ "false_alarm",
@@ -280,7 +272,7 @@ adult_sampling_samptestint <- adult_sampling_samptestint %>%
     "not" != substr(sampled_label, start=1, stop=3) & sampled_category_level_num < current_category_training_level_num ~ current_category_training_level,
     "not" == substr(sampled_label, start=1, stop=3) ~ current_category_training_level,
     TRUE ~ NA
-  )) %>% select(-current_category_training_level_num, -sampled_category_level_num)
+  ))
 # what about when sampling gives "not a ___" but they sampled 2 or 3 levels up (e.g., sub training, sup/hyp sampling)
 
 adult_test_samptestint <- adult_test_array_options_clean %>% select(participant, trial_index, round, test_image, is_chosen) %>% mutate(trial_counter = (trial_index-1)/7) %>% select(participant, trial_counter, round, test_image, is_chosen)
@@ -321,7 +313,7 @@ adult_samptestint <- adult_samptestint %>%
   ))
 
 
-adult_sample_choice_consistency <- adult_samptestint %>% ungroup() %>% group_by(participant, trial_counter) %>% select(participant, trial_counter, round, number_training_images, current_category_training_level, sampling_consistent_level, is_chosen, sampling_consistent) %>% 
+adult_sample_choice_consistency <- adult_samptestint %>% ungroup() %>% group_by(participant, trial_counter) %>% select(participant, trial_counter, round, number_training_images, current_category_training_level, sampling_consistent_level, is_chosen, sampling_consistent, current_category_training_level_num, sampled_category_level_num) %>% 
   mutate(choice_type = case_when(
     is_chosen == 1 & sampling_consistent == 1 ~ "hit",
     is_chosen == 1 & sampling_consistent == 0 ~ "false_alarm",
@@ -376,6 +368,48 @@ plot6 <- samptestint_choice_type_rate %>% filter(group == "2_adult") %>% ggplot(
 (plot3+plot4)
 (plot5+plot6)
 ```
+
+## Exploration Consistent Test Choices?
+### Did exploration (and associated sampling feedback) actually have an effect on how participants extended the novel word? 
+
+#### Separating participants by explored/didn't explore 
+
+```{r}
+exp_adult_samptestint <- adult_samptestint %>% mutate(explored_yn = case_when(
+  sampled_category_level_num > current_category_training_level_num ~ "explored",
+  sampled_category_level_num <= current_category_training_level_num ~ "did not explore",
+  TRUE ~ NA
+)) %>% 
+  mutate(samp_feedback_type = case_when(
+    current_category_training_level == sampling_consistent_level & sampling_choice_type == "explore" ~ "negative",
+    current_category_training_level != sampling_consistent_level & sampling_choice_type == "explore" ~ "positive",
+    sampling_choice_type == "confirm" ~ "confirming",
+    TRUE ~ NA
+  )) %>% 
+  ungroup() %>% group_by(participant, trial_counter)
+
+exp_kid_samptestint <- kid_samptestint %>% mutate(explored_yn = case_when(
+  sampled_category_level_num > current_category_training_level_num ~ "explored",
+  sampled_category_level_num <= current_category_training_level_num ~ "did not explore",
+  TRUE ~ NA
+)) %>% 
+  mutate(samp_feedback_type = case_when(
+    current_category_training_level == sampling_consistent_level & sampling_choice_type == "explore" ~ "negative",
+    current_category_training_level != sampling_consistent_level & sampling_choice_type == "explore" ~ "positive",
+    sampling_choice_type == "confirm" ~ "confirming",
+    TRUE ~ NA
+  )) %>% 
+  ungroup() %>% group_by(participant, trial_counter)
+
+exp_adult_samptestint_summarized <- exp_adult_samptestint %>% filter(is_chosen == 1) %>% summarize(prop_sampinconsistent_choices = sum(is_chosen - sampling_consistent)/sum(is_chosen), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "adult")
+
+exp_kid_samptestint_summarized <- exp_kid_samptestint %>% filter(is_chosen == 1) %>% summarize(prop_sampinconsistent_choices = sum(is_chosen - sampling_consistent)/sum(is_chosen), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "child")
+
+exp_samptestint_summarized <- rbind(exp_adult_samptestint_summarized, exp_kid_samptestint_summarized)
+
+exp_samptestint_summarized %>% ggplot(aes(x = samp_group, y = prop_sampinconsistent_choices, color = samp_group)) + geom_violin() + geom_jitter(alpha = 0.2) + facet_grid(explored_yn~samp_feedback_type)
+```
+
 
 
 # Play with participant-provided hypotheses
