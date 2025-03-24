@@ -415,13 +415,82 @@ exp_sampinconsistent %>% ggplot(aes(x = samp_group, y = prop_sampinconsistent_ch
 
 # Looking at proportion of sampling consistent choices missed
 
-exp_adult_samptestint_missed <- exp_adult_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type)
+exp_adult_samptestint_missed <- exp_adult_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "adult")
 
-exp_kid_samptestint_missed <- exp_kid_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type)
 
+exp_kid_samptestint_missed <- exp_kid_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "child")
+
+
+exp_missed <- rbind(exp_adult_samptestint_missed, exp_kid_samptestint_missed)
+
+exp_missed %>% ggplot(aes(x = samp_group, y = prop_sampconsistent_missed, color = samp_group)) + geom_violin() + geom_jitter(alpha = 0.2) + facet_grid(explored_yn~samp_feedback_type)
 
 ```
 
 
 
 # Play with participant-provided hypotheses
+
+```{r}
+hypothesis_adult <- read_csv("hypothesis_coding_prelim_adults.csv") %>% mutate(samp_group = "adult")
+hypothesis_kid <- read_csv("hypothesis_coding_prelim_children.csv") %>% mutate(samp_group = "child")
+
+hypothesis_level_adult <- hypothesis_adult %>% select(participant, samp_group, trial_counter, hypothesis_level)
+
+hypothesis_level_kid <- hypothesis_kid %>% select(participant, samp_group, trial_counter, hypothesis_level)
+
+hypothesis_level = rbind(hypothesis_level_adult, hypothesis_level_kid)
+
+# filter out unsure/un-codable things (i.e., not sub, bas, sup, hyp)
+
+hypothesis_level <- hypothesis_level %>% filter(hypothesis_level == "sub" | hypothesis_level == "bas" | hypothesis_level == "sup" | hypothesis_level == "hyp")
+
+
+# seeing if hypotheses are sampling consistent, narrower, or broader
+
+hypothesis_level <- hypothesis_level %>% mutate(hypothesis_level_num = case_when(
+  hypothesis_level == "sub" ~ 1,
+  hypothesis_level == "bas" ~ 2,
+  hypothesis_level == "sup" ~ 3,
+  hypothesis_level == "hyp" ~ 4,
+  TRUE ~ NA
+))
+
+kid_sampling_samptestint_hypothesisanalysis <- kid_sampling_samptestint %>% select(participant, trial_counter, number_training_images, sampling_consistent_level) %>% mutate(samp_cons_level_num = case_when(
+  sampling_consistent_level == "sub" ~ 1,
+  sampling_consistent_level == "bas" ~ 2,
+  sampling_consistent_level == "sup" ~ 3,
+  sampling_consistent_level == "hyp" ~ 4,
+  TRUE ~ NA
+)) %>% mutate(samp_group = "child")
+
+sampling_vs_hypothesis <- adult_sampling_samptestint %>% select(participant, trial_counter, number_training_images, sampling_consistent_level) %>% mutate(samp_cons_level_num = case_when(
+  sampling_consistent_level == "sub" ~ 1,
+  sampling_consistent_level == "bas" ~ 2,
+  sampling_consistent_level == "sup" ~ 3,
+  sampling_consistent_level == "hyp" ~ 4,
+  TRUE ~ NA
+)) %>% mutate(samp_group = "adult") %>%
+  rbind(kid_sampling_samptestint_hypothesisanalysis) %>% 
+  merge(hypothesis_level)
+
+sampling_vs_hypothesis <- sampling_vs_hypothesis %>% 
+  mutate(hypothesis_sampling_agreement = case_when(
+    samp_cons_level_num == hypothesis_level_num ~ "agree",
+    samp_cons_level_num < hypothesis_level_num ~ "hypothesis is broader",
+    samp_cons_level_num > hypothesis_level_num ~ "hypothesis is narrower",
+    TRUE ~ NA
+  ))
+
+summarized_sampling_vs_hypothesis <- sampling_vs_hypothesis %>% group_by(samp_group, number_training_images) %>% count(hypothesis_sampling_agreement)
+
+sampling_vs_hypothesis <- sampling_vs_hypothesis %>% group_by(samp_group, number_training_images)
+
+sampling_vs_hypothesis %>% ggplot(aes(x = hypothesis_sampling_agreement, fill = samp_group)) + 
+  facet_grid(samp_group~number_training_images, labeller = as_labeller(
+               c("1" = "1-Item Condition", "3" = "3-Item Condition", "adult" = "adult", "child" = "child"))) + 
+  geom_bar() + coord_flip() + theme(strip.background = element_blank(), strip.placement = "outside") + labs(x = "Hypothesis VS Broadest Confirmed Cat Level", y = "Count")
+
+# look at relationship between alignment of sampling consistency and hypothesis based on number of training images, training level, and age
+```
+
