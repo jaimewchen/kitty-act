@@ -102,12 +102,11 @@ exploratory_interact %>% ggplot(aes(total_choices, fill = is_exploratory_yn)) +
 
 # proportion of training inconsistent choices based on exploration
 
-class(exploratory_interact$training_inconsistent_prop)
+exploratory_interact %>% ggplot(aes(x = training_inconsistent_prop)) + 
+  geom_histogram(binwidth = 0.2) + 
+  facet_grid(is_exploratory_yn ~ sample_group)
 
-exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = training_inconsistent_prop, fill = is_exploratory_yn)) + 
-  geom_violin() + 
-  stat_summary(fun = "mean", geom = "crossbar", size = 0.3, width = 0.4) + 
-  theme(legend.position="none") + facet_wrap(~ sample_group)
+
 
 ```
 
@@ -413,19 +412,104 @@ exp_sampinconsistent <- rbind(exp_adult_samptestint_sampinconsistent, exp_kid_sa
 exp_sampinconsistent %>% ggplot(aes(x = samp_group, y = prop_sampinconsistent_choices, color = samp_group)) + geom_violin() + geom_jitter(alpha = 0.2) + facet_grid(explored_yn~samp_feedback_type)
 
 
-# Looking at proportion of sampling consistent choices missed
+## Looking at proportion of sampling consistent choices missed
 
-exp_adult_samptestint_missed <- exp_adult_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "adult")
+# exp_adult_samptestint_missed <- exp_adult_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "adult")
+# 
+# 
+# exp_kid_samptestint_missed <- exp_kid_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "child")
 
-
-exp_kid_samptestint_missed <- exp_kid_samptestint %>% filter(sampling_consistent == 1) %>% mutate(is_not_chosen = -(is_chosen - 1)) %>% summarize(prop_sampconsistent_missed = sum(is_not_chosen)/sum(sampling_consistent), explored_yn, samp_feedback_type) %>% unique() %>% mutate(samp_group = "child")
-
-
-exp_missed <- rbind(exp_adult_samptestint_missed, exp_kid_samptestint_missed)
-
-exp_missed %>% ggplot(aes(x = samp_group, y = prop_sampconsistent_missed, color = samp_group)) + geom_violin() + geom_jitter(alpha = 0.2) + facet_grid(explored_yn~samp_feedback_type)
+# 
+# exp_missed <- rbind(exp_adult_samptestint_missed, exp_kid_samptestint_missed)
+# 
+# exp_missed %>% ggplot(aes(x = samp_group, y = prop_sampconsistent_missed, color = samp_group)) + geom_violin() + geom_jitter(alpha = 0.2) + facet_grid(explored_yn~samp_feedback_type)
 
 ```
+
+# separating explorers by how many levels up they explored in sampling
+
+```{r}
+
+exp_adult <- adult_samptestint %>% mutate(test_image_level_num = case_when(
+    test_image_level == "sub" & test_image_cat == "in" ~ 1,
+    test_image_level == "bas" & test_image_cat == "in" ~ 2,
+    test_image_level == "sup" & test_image_cat == "in" ~ 3,
+    test_image_cat == "out_hyp" ~ 4,
+    test_image_cat == "out" ~ 5,
+    TRUE ~ 0
+  )) %>% filter(is_chosen == 1) %>% select(participant, trial_counter, number_training_images, sampling_choice_type, current_category_training_level_num, sampled_category_level_num, test_image_level_num, sampling_consistent)
+
+exp_kid <- kid_samptestint %>% mutate(test_image_level_num = case_when(
+    test_image_level == "sub" & test_image_cat == "in" ~ 1,
+    test_image_level == "bas" & test_image_cat == "in" ~ 2,
+    test_image_level == "sup" & test_image_cat == "in" ~ 3,
+    test_image_cat == "out_hyp" ~ 4,
+    test_image_cat == "out" ~ 5,
+    TRUE ~ 0
+  )) %>% filter(is_chosen == 1) %>% select(participant, trial_counter, number_training_images, sampling_choice_type, current_category_training_level_num, sampled_category_level_num, test_image_level_num, sampling_consistent)
+
+exp_all <- rbind(exp_adult, exp_kid) %>% rowwise() %>% mutate(samp_train_level_diff = sampled_category_level_num - current_category_training_level_num) %>% mutate(test_image_level = case_when(
+  test_image_level_num > sampled_category_level_num & sampling_choice_type == "explore" ~ "above_exp_sampling",
+  test_image_level_num == sampled_category_level_num & sampling_choice_type == "explore" ~ "same_exp_sampling",
+  test_image_level_num > sampled_category_level_num & sampling_choice_type == "confirm" ~ "above_conf_sampling",
+  test_image_level_num <= current_category_training_level_num ~ "same_or_below_training",
+  test_image_level_num < sampled_category_level_num & test_image_level_num > current_category_training_level_num ~ "below_sampling_above_training"
+))
+
+exp_all_count <- exp_all %>% group_by(participant, trial_counter, number_training_images, samp_train_level_diff) %>% count(test_image_level) %>% pivot_wider(names_from = test_image_level, values_from = n)
+
+exp_feedback <- exp_sampinconsistent %>% select(participant, samp_group, trial_counter, samp_feedback_type)
+
+exp_all_feedback <- merge(exp_feedback, exp_all_count)
+
+
+# summarizing counts of test choice types based on sample group and feedback type
+
+feedback_summarized <- exp_all_feedback %>% 
+  ungroup() %>% 
+  group_by(samp_group, samp_feedback_type) %>%
+  summarize(
+    above_exp_sampling = sum(above_exp_sampling, na.rm = TRUE), 
+    same_exp_sampling = sum(same_exp_sampling, na.rm = TRUE), 
+    above_conf_sampling = sum(above_conf_sampling, na.rm = TRUE), 
+    same_or_below_training = sum(same_or_below_training, na.rm = TRUE), 
+    below_sampling_above_training = sum(below_sampling_above_training, na.rm = TRUE))
+
+confirm_feedback_summarized <- feedback_summarized %>% filter(samp_feedback_type == "confirming") %>% select(samp_group, samp_feedback_type, same_or_below_training, above_conf_sampling) %>% pivot_longer(cols = c(same_or_below_training, above_conf_sampling), names_to = "test_choice_type")
+
+explore_feedback_summarized <- feedback_summarized %>% filter(samp_feedback_type == "positive" | samp_feedback_type == "negative") %>% select(samp_group, samp_feedback_type, same_or_below_training, below_sampling_above_training, same_exp_sampling, above_exp_sampling) %>% pivot_longer(cols = c(same_or_below_training, below_sampling_above_training, same_exp_sampling, above_exp_sampling), names_to = "test_choice_type")
+
+
+plot1 <- confirm_feedback_summarized %>% ggplot(aes(x = test_choice_type, y = value, fill = samp_group)) + geom_col() + facet_wrap(~samp_group) + labs(title = "did not explore", ) + theme(legend.position="none")
+
+plot2 <- explore_feedback_summarized %>% ggplot(aes(x = test_choice_type, y = value, fill = samp_group)) + labs(title = "explored") + geom_col() + facet_grid(samp_feedback_type~samp_group) + theme(legend.position="none")
+
+plot1 + plot2
+
+
+# fix x tick labels, make into proportions?
+
+```
+
+
+```{r}
+# [continued from above] separating feedback and summaries by sampling level (how many levels up/down was the sampling choice compared to training)
+
+feedback_summarized_by_level <- exp_all_feedback %>% 
+  ungroup() %>% 
+  group_by(samp_group, samp_feedback_type, samp_train_level_diff) %>%
+  summarize(
+    above_exp_sampling = sum(above_exp_sampling, na.rm = TRUE), 
+    same_exp_sampling = sum(same_exp_sampling, na.rm = TRUE), 
+    above_conf_sampling = sum(above_conf_sampling, na.rm = TRUE), 
+    same_or_below_training = sum(same_or_below_training, na.rm = TRUE), 
+    below_sampling_above_training = sum(below_sampling_above_training, na.rm = TRUE))
+
+confirm_feedback_summarized_by_level <- feedback_summarized_by_level %>% filter(samp_feedback_type == "confirming") %>% select(samp_group, samp_feedback_type, samp_train_level_diff, same_or_below_training, above_conf_sampling)
+
+explore_feedback_summarized_by_level <- feedback_summarized_by_level %>% filter(samp_feedback_type == "positive" | samp_feedback_type == "negative") %>% select(samp_group, samp_feedback_type, samp_train_level_diff, same_or_below_training, below_sampling_above_training, same_exp_sampling, above_exp_sampling)
+```
+
 
 
 
