@@ -5,11 +5,6 @@ date: "2025-03-12"
 output: html_document
 ---
 
-```{r}
-library(ggplot2)
-```
-
-
 # d' (training and learning) by age group (5-, 6-, 7-, 8-yos, and adults)
 
 ```{r}
@@ -502,16 +497,14 @@ explore_feedback_summarized <- feedback_summarized %>%
 conf_labs = c(">S", "\u2264T")
 exp_labs = c(">S", "<S,>T", "=S", "\u2264T")
 
-cols_conf = c("Adults" = "#F53D15", "Children" = "#159DF5")
-cols_adult = c("Positive Feedback" = "#FA7356", "Negative Feedback" = "#BD2505")
-cols_kid= c("Positive Feedback" = "#62BFFA", "Negative Feedback" = "#0E73B3")
-
-plot1 <- confirm_feedback_summarized %>% ggplot(aes(x = test_choice_type, y = proportion, fill = samp_group)) + geom_col() + facet_wrap(~samp_group) + labs(title = "Confirmatory Sampling", ) + theme(legend.position="none") + scale_x_discrete(labels = conf_labs) + xlab("Category Level of Test Extensions") + ylab("Proportion of Test Extensions")
+plot1 <- confirm_feedback_summarized %>% ggplot(aes(x = test_choice_type, y = proportion, fill = samp_group)) + geom_col() + facet_wrap(~samp_group) + labs(title = "Confirmatory Sampling", ) + theme(legend.position="none", plot.title = element_text(hjust = 0.5)) + scale_x_discrete(labels = conf_labs) + xlab("Category Level of Test Extensions") + ylab("Proportion of Test Extensions")
 
 plot2 <- explore_feedback_summarized %>% group_by(samp_feedback_type) %>% ggplot(aes(x = test_choice_type, y = proportion, fill = samp_group, group = samp_feedback_type)) + 
   labs(title = "Exploratory Sampling") + 
+  theme(plot.title = element_text(hjust = 0.5)) +
   geom_col_pattern(
     position = "dodge", 
+    show.legend = TRUE,
     pattern = c("stripe", "stripe",
                 "stripe", "stripe",
                 "circle", "circle",
@@ -528,15 +521,32 @@ plot2 <- explore_feedback_summarized %>% group_by(samp_feedback_type) %>% ggplot
     pattern_spacing = 0.02
     ) + 
   facet_wrap(~samp_group) + 
-  theme(legend.position="none") + 
+  # theme(legend.position="none") + 
   scale_x_discrete(labels = exp_labs) + 
   xlab("Category Level of Test Extensions") + 
   ylab("Proportion of Test Extensions")
+  # + theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
 
-plot1 + plot2 + plot_layout(widths = c(3, 5))
+patch <- ((plot1 + theme(plot.margin = unit(c(0,10,0,0), "pt"))) + (plot2 & ylab(NULL)) & xlab(NULL)) + plot_layout(widths = c(3, 5))
+
+patch2 <- wrap_elements(panel = patch) +
+  labs(tag = "Category Level of Test Extensions") +
+  theme(
+    plot.tag = element_text(size = rel(1), vjust = 3),
+    plot.tag.position = "bottom",
+  )
 
 
-# join x and y labs, hide y ticks on plot2, center titles
+abbreviation <- c(">S", "<S,>T", "=S", "\u2264T")
+meaning <- c("broader than sampling level", "narrower than sampling level, broader than training level", "same level as sampling level", "narrower or equal to training level")
+
+key <- data.frame(abbreviation, meaning)
+legend <- tableGrob(key, cols = NULL, rows = NULL, theme = ttheme_default(base_size = 10, padding = unit(c(1.5, 1.5), "mm")))
+
+patch2 / legend + plot_layout(heights = c(6, 1))
+
+
+# add pattern legend for feedback
 
 ```
 
