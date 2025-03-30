@@ -464,11 +464,11 @@ feedback_summarized <- exp_all_feedback %>%
   ungroup() %>% 
   group_by(samp_group, samp_feedback_type) %>%
   summarize(
-    above_exp_sampling = sum(above_exp_sampling, na.rm = TRUE), 
-    same_exp_sampling = sum(same_exp_sampling, na.rm = TRUE), 
-    above_conf_sampling = sum(above_conf_sampling, na.rm = TRUE), 
-    same_or_below_training = sum(same_or_below_training, na.rm = TRUE), 
-    below_sampling_above_training = sum(below_sampling_above_training, na.rm = TRUE))
+    a_above_exp_sampling = sum(above_exp_sampling, na.rm = TRUE), 
+    b_same_exp_sampling = sum(same_exp_sampling, na.rm = TRUE), 
+    a_above_conf_sampling = sum(above_conf_sampling, na.rm = TRUE), 
+    d_same_or_below_training = sum(same_or_below_training, na.rm = TRUE), 
+    c_below_sampling_above_training = sum(below_sampling_above_training, na.rm = TRUE))
 
 confirm_feedback_summarized <- feedback_summarized %>% filter(samp_feedback_type == "confirming") %>%
   mutate(samp_group = case_when(
@@ -476,8 +476,8 @@ confirm_feedback_summarized <- feedback_summarized %>% filter(samp_feedback_type
     samp_group == "child" ~ "Children",
     TRUE ~ samp_group
     )) %>% 
-  select(samp_group, samp_feedback_type, same_or_below_training, above_conf_sampling) %>%
-  pivot_longer(cols = c(same_or_below_training, above_conf_sampling), names_to = "test_choice_type") %>% ungroup() %>% group_by(samp_group, samp_feedback_type) %>% summarize(test_choice_type, proportion = value/sum(value))
+  select(samp_group, samp_feedback_type, d_same_or_below_training, a_above_conf_sampling) %>%
+  pivot_longer(cols = c(d_same_or_below_training, a_above_conf_sampling), names_to = "test_choice_type") %>% ungroup() %>% group_by(samp_group, samp_feedback_type) %>% summarize(test_choice_type, proportion = value/sum(value))
 
 explore_feedback_summarized <- feedback_summarized %>% 
   filter(samp_feedback_type == "positive" | samp_feedback_type == "negative") %>% 
@@ -491,67 +491,19 @@ explore_feedback_summarized <- feedback_summarized %>%
     samp_feedback_type == "negative" ~ "Negative Feedback",
     TRUE ~ samp_feedback_type
   )) %>% 
-  select(samp_group, samp_feedback_type, same_or_below_training, below_sampling_above_training, same_exp_sampling, above_exp_sampling) %>% 
-  pivot_longer(cols = c(same_or_below_training, below_sampling_above_training, same_exp_sampling, above_exp_sampling), names_to = "test_choice_type") %>% ungroup() %>% group_by(samp_group, samp_feedback_type) %>% summarize(test_choice_type, proportion = value/sum(value))
+  select(samp_group, samp_feedback_type, d_same_or_below_training, c_below_sampling_above_training, b_same_exp_sampling, a_above_exp_sampling) %>% 
+  pivot_longer(cols = c(d_same_or_below_training, c_below_sampling_above_training, b_same_exp_sampling, a_above_exp_sampling), names_to = "test_choice_type") %>% ungroup() %>% group_by(samp_group, samp_feedback_type) %>% summarize(test_choice_type, proportion = value/sum(value))
 
 conf_labs = c(">S", "\u2264T")
-exp_labs = c(">S", "<S,>T", "=S", "\u2264T")
-
-plot1 <- confirm_feedback_summarized %>% ggplot(aes(x = test_choice_type, y = proportion, fill = samp_group)) + geom_col() + facet_wrap(~samp_group) + labs(title = "Confirmatory Sampling", ) + theme(legend.position="none", plot.title = element_text(hjust = 0.5)) + scale_x_discrete(labels = conf_labs) + xlab("Category Level of Test Extensions") + ylab("Proportion of Test Extensions")
-
-plot2 <- explore_feedback_summarized %>% group_by(samp_feedback_type) %>% ggplot(aes(x = test_choice_type, y = proportion, fill = samp_group, group = samp_feedback_type)) + 
-  labs(title = "Exploratory Sampling") + 
-  theme(plot.title = element_text(hjust = 0.5)) +
-  geom_col_pattern(
-    position = "dodge", 
-    show.legend = TRUE,
-    pattern = c("stripe", "stripe",
-                "stripe", "stripe",
-                "circle", "circle",
-                "circle", "circle",
-                "stripe", "stripe",
-                "stripe", "stripe",
-                "circle", "circle",
-                "circle", "circle"),
-    pattern_color = c("black", "black", "black", "black",
-                      "white", "white", "white", "white",
-                      "black", "black", "black", "black",
-                      "white", "white", "white", "white"),
-    pattern_size = 0.3,
-    pattern_spacing = 0.02
-    ) + 
-  facet_wrap(~samp_group) + 
-  # theme(legend.position="none") + 
-  scale_x_discrete(labels = exp_labs) + 
-  xlab("Category Level of Test Extensions") + 
-  ylab("Proportion of Test Extensions")
-  # + theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
-
-patch <- ((plot1 + theme(plot.margin = unit(c(0,10,0,0), "pt"))) + (plot2 & ylab(NULL)) & xlab(NULL)) + plot_layout(widths = c(3, 5))
-
-patch2 <- wrap_elements(panel = patch) +
-  labs(tag = "Category Level of Test Extensions") +
-  theme(
-    plot.tag = element_text(size = rel(1), vjust = 3),
-    plot.tag.position = "bottom",
-  )
-
-
-abbreviation <- c(">S", "<S,>T", "=S", "\u2264T")
-meaning <- c("broader than sampling level", "narrower than sampling level, broader than training level", "same level as sampling level", "narrower or equal to training level")
-
-key <- data.frame(abbreviation, meaning)
-legend <- tableGrob(key, cols = NULL, rows = NULL, theme = ttheme_default(base_size = 10, padding = unit(c(1.5, 1.5), "mm")))
-
-patch2 / legend + plot_layout(heights = c(6, 1))
-
-
-# add pattern legend for feedback
+exp_labs = c(">S", "=S", "<S,>T", "\u2264T")
 
 ```
+
 ```{r}
 
-plot1 <- confirm_feedback_summarized %>% ggplot(aes(x = test_choice_type, y = proportion, fill = samp_group)) + geom_col() + facet_wrap(~samp_group) + labs(title = "Confirmatory Sampling", ) + theme(legend.position="none", plot.title = element_text(hjust = 0.5)) + scale_x_discrete(labels = conf_labs) + xlab("Category Level of Test Extensions") + ylab("Proportion of Test Extensions")
+# Plotting
+
+plot1 <- confirm_feedback_summarized %>% ggplot(aes(x = test_choice_type, y = proportion, fill = samp_group)) + geom_col() + facet_wrap(~samp_group) + labs(title = "Confirmatory Sampling", ) + theme(legend.position="none", plot.title = element_text(hjust = 0.5)) + scale_x_discrete(labels = conf_labs) + ylim(0, 0.8) + xlab("Category Level of Test Extensions") + ylab("Proportion of Test Extensions")
 
 plot2 <- explore_feedback_summarized %>% group_by(samp_feedback_type) %>% 
   ggplot(aes(x = test_choice_type, 
@@ -601,12 +553,12 @@ plot2 <- explore_feedback_summarized %>% group_by(samp_feedback_type) %>%
     values = 0.02
   ) +
   facet_wrap(~samp_group) + 
-  # theme(legend.position="none") + 
   scale_x_discrete(labels = exp_labs) + 
   xlab("Category Level of Test Extensions") + 
   ylab("Proportion of Test Extensions") + 
-  guides(fill = "none")
-  # + theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
+  ylim(0, 0.8) +
+  guides(fill = "none") +
+  theme(legend.position = c(0.71, 0.82), legend.key.size = unit(0.4, 'cm'))
 
 patch <- ((plot1 + theme(plot.margin = unit(c(0,10,0,0), "pt"))) + (plot2 & ylab(NULL)) & xlab(NULL)) + plot_layout(widths = c(2, 5))
 
@@ -618,16 +570,14 @@ patch2 <- wrap_elements(panel = patch) +
   )
 
 
-abbreviation <- c(">S", "<S,>T", "=S", "\u2264T")
-meaning <- c("broader than sampling level", "narrower than sampling level, broader than training level", "same level as sampling level", "narrower or equal to training level")
+abbreviation <- c(">S", "=S", "<S,>T", "\u2264T")
+meaning <- c("broader than sampling level", "same level as sampling level", "narrower than sampling level, broader than training level", "narrower or equal to training level")
 
 
 key <- data.frame(abbreviation, meaning)
 key_legend <- tableGrob(key, cols = NULL, rows = NULL, theme = ttheme_default(base_size = 10, padding = unit(c(1.5, 1.5), "mm")))
 
-patch2 / key_legend + plot_layout(heights = c(6, 1))
-
-# move feedback legend onto children plot? or adjust location of key legend
+patch2 / key_legend + plot_layout(heights = c(7, 1))
 
 ```
 
