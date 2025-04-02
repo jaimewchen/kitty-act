@@ -87,22 +87,66 @@ exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_
 
 # total choices made based off of explored/didn't explore during sampling for each round
 
-exploratory_interact %>% ggplot(aes(total_choices, fill = is_exploratory_yn)) + 
-  geom_bar(aes(y = (..count..)/sum(..count..))) + 
-  geom_density(bw = 0.75, alpha = 0.3, linewidth = 0) +
-  facet_grid(sample_group ~ is_exploratory_yn) + 
-  scale_x_continuous(breaks=seq(0,12,1))+ 
-  theme(legend.position="none")
+exploratory_interact_total_choice_counts <- exploratory_interact %>% 
+  ungroup() %>% 
+  group_by(sample_group, is_exploratory_yn, total_choices) %>%
+  count() %>% 
+  pivot_wider(names_from = total_choices, values_from = n)
 
 
-# proportion of training inconsistent choices based on exploration
+exploratory_interact_sums <- exploratory_interact %>% 
+  ungroup() %>% 
+  group_by(sample_group, is_exploratory_yn, total_choices) %>%
+  count() %>% 
+  ungroup(total_choices) %>% 
+  summarize(sum = sum(n))
 
-exploratory_interact %>% ggplot(aes(x = training_inconsistent_prop)) + 
-  geom_histogram(binwidth = 0.2) + 
-  facet_grid(is_exploratory_yn ~ sample_group)
+exploratory_interact_summarized <- merge(exploratory_interact_total_choice_counts, exploratory_interact_sums) %>% pivot_longer(cols = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), names_to = "total_choices", values_to = "count") %>% mutate(proportion = count/sum) %>% select(sample_group, is_exploratory_yn, total_choices, count, proportion) %>% mutate(total_choices = as.integer(total_choices)) %>% mutate(sample_group = case_when(
+  sample_group == "adults" ~ "Adults",
+  sample_group == "children" ~ "Children",
+  TRUE ~ sample_group
+))
+
+exploratory_interact_means <- exploratory_interact_summarized %>% ungroup() %>% group_by(sample_group, is_exploratory_yn) %>% summarize(mean = sum(proportion*total_choices, na.rm = TRUE))
+  
+exploratory_interact_summarized %>% 
+  ggplot(aes(x = total_choices, y = proportion, fill = interaction(sample_group, is_exploratory_yn, sep=':'))) + 
+  facet_wrap(~ sample_group) + 
+  geom_col(position = "dodge") + 
+  scale_color_manual(
+    values = c("Adults:explored" = "#F8766D", 
+               "Adults:did not explore" = "#ffa7a1",
+               "Children:explored" = "#00BFC4",
+               "Children:did not explore" = "#73DEDE")) +
+  scale_fill_manual(
+    name = "Explore Status",
+    values = c("Adults:explored" = "#F8766D", 
+               "Adults:did not explore" = "#ffa7a1",
+               "Children:explored" = "#00BFC4",
+               "Children:did not explore" = "#73DEDE"),
+    breaks = c("Adults:did not explore",
+               "Adults:explored",
+               "Children:did not explore",
+               "Children:explored"),
+    labels = c("Adults:explored" = "Explored", 
+               "Adults:did not explore" = "Did not explore", 
+               "Children:explored" = "Explored", 
+               "Children:did not explore" = "Did not explore")) +
+  theme(legend.position = c(0.63, 0.863), 
+        legend.key.spacing.x = unit(165, "pt"), 
+        legend.key.spacing.y = unit(3, "pt"), 
+        legend.key = element_rect(fill = "white"),
+        legend.title=element_blank(),
+        legend.background=element_blank()
+        ) +
+  guides(fill = guide_legend(title.position = "top", ncol = 2), color = "none") +
+  xlab("Number of Test Images Chosen during a Round") + 
+  ylab("Proportion of Rounds") +
+  ylim(0, 0.5) + 
+  scale_x_discrete(limits=c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"))
 
 
-
+# add density curve
 ```
 
 
