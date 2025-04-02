@@ -75,14 +75,24 @@ fa_rate <- subj_test_accuracy_all %>%
 
 choices <- subj_test_accuracy %>% ungroup() %>% select(total_choices, ground_truth_correct_choices, ground_truth_incorrect_choices, training_consistent_choices, training_inconsistent_choices) %>% mutate(training_inconsistent_prop = training_inconsistent_choices/total_choices)
 
-exploratory_interact <- cbind(exploratory, fa_rate, choices)
+exploratory_interact <- cbind(exploratory, fa_rate, choices) %>% 
+  mutate(sample_group = case_when(
+    sample_group == "adults" ~ "Adults",
+    sample_group == "children" ~ "Children",
+    TRUE ~ sample_group)) %>% 
+  mutate(is_exploratory_yn = case_when(
+    is_exploratory_yn == "explored" ~ "Explored",
+    is_exploratory_yn == "did not explore" ~ "Did not explore",
+    TRUE ~ is_exploratory_yn)) %>% 
+  group_by(sample_group, is_exploratory_yn)
+
 
 
 # adjusted FA rate based on exploration during sampling for each round
 
 exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_training_adj)) + geom_violin() + geom_jitter(aes(color = is_exploratory_yn), size = 0.75, alpha = 0.5) + facet_wrap(~ sample_group) + theme(legend.position="none")
 
-exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_label_adj)) + geom_violin() + facet_wrap(~ sample_group)
+exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = false_alarm_rate_label_adj)) + geom_violin() + facet_wrap(~ sample_group) 
 
 
 # total choices made based off of explored/didn't explore during sampling for each round
@@ -101,11 +111,7 @@ exploratory_interact_sums <- exploratory_interact %>%
   ungroup(total_choices) %>% 
   summarize(sum = sum(n))
 
-exploratory_interact_summarized <- merge(exploratory_interact_total_choice_counts, exploratory_interact_sums) %>% pivot_longer(cols = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), names_to = "total_choices", values_to = "count") %>% mutate(proportion = count/sum) %>% select(sample_group, is_exploratory_yn, total_choices, count, proportion) %>% mutate(total_choices = as.integer(total_choices)) %>% mutate(sample_group = case_when(
-  sample_group == "adults" ~ "Adults",
-  sample_group == "children" ~ "Children",
-  TRUE ~ sample_group
-))
+exploratory_interact_summarized <- merge(exploratory_interact_total_choice_counts, exploratory_interact_sums) %>% pivot_longer(cols = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), names_to = "total_choices", values_to = "count") %>% mutate(proportion = count/sum) %>% select(sample_group, is_exploratory_yn, total_choices, count, proportion) %>% mutate(total_choices = as.integer(total_choices)) 
 
 exploratory_interact_means <- exploratory_interact_summarized %>% ungroup() %>% group_by(sample_group, is_exploratory_yn) %>% summarize(mean = sum(proportion*total_choices, na.rm = TRUE))
   
@@ -114,24 +120,24 @@ exploratory_interact_summarized %>%
   facet_wrap(~ sample_group) + 
   geom_col(position = "dodge") + 
   scale_color_manual(
-    values = c("Adults:explored" = "#F8766D", 
-               "Adults:did not explore" = "#ffa7a1",
-               "Children:explored" = "#00BFC4",
-               "Children:did not explore" = "#73DEDE")) +
+    values = c("Adults:Explored" = "#F8766D", 
+               "Adults:Did not explore" = "#ffa7a1",
+               "Children:Explored" = "#00BFC4",
+               "Children:Did not explore" = "#73DEDE")) +
   scale_fill_manual(
     name = "Explore Status",
-    values = c("Adults:explored" = "#F8766D", 
-               "Adults:did not explore" = "#ffa7a1",
-               "Children:explored" = "#00BFC4",
-               "Children:did not explore" = "#73DEDE"),
-    breaks = c("Adults:did not explore",
-               "Adults:explored",
-               "Children:did not explore",
-               "Children:explored"),
-    labels = c("Adults:explored" = "Explored", 
-               "Adults:did not explore" = "Did not explore", 
-               "Children:explored" = "Explored", 
-               "Children:did not explore" = "Did not explore")) +
+    values = c("Adults:Explored" = "#F8766D", 
+               "Adults:Did not explore" = "#ffa7a1",
+               "Children:Explored" = "#00BFC4",
+               "Children:Did not explore" = "#73DEDE"),
+    breaks = c("Adults:Did not explore",
+               "Adults:Explored",
+               "Children:Did not explore",
+               "Children:Explored"),
+    labels = c("Adults:Explored" = "Explored", 
+               "Adults:Did not explore" = "Did not explore", 
+               "Children:Explored" = "Explored", 
+               "Children:Did not explore" = "Did not explore")) +
   theme(legend.position = c(0.63, 0.863), 
         legend.key.spacing.x = unit(165, "pt"), 
         legend.key.spacing.y = unit(3, "pt"), 
@@ -145,17 +151,107 @@ exploratory_interact_summarized %>%
   ylim(0, 0.5) + 
   scale_x_discrete(limits=c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"))
 
-
-# training inconsistent choices
-
-exploratory_interact %>% ggplot(aes(x = is_exploratory_yn, y = training_inconsistent_prop, fill = is_exploratory_yn)) + 
-   geom_violin() + 
-   stat_summary(fun = "mean", geom = "crossbar", linewidth = 0.3, width = 0.4) + 
-   theme(legend.position="none") + facet_wrap(~ sample_group)
-
 ```
 
 
+```{r}
+# training inconsistent choices
+
+exploratory_interact_plot_adult <- exploratory_interact %>% filter(sample_group == "Adults") %>% ggplot(aes(x = is_exploratory_yn, y = training_inconsistent_prop)) + 
+  geom_jitter(aes(
+    color = is_exploratory_yn),
+    alpha = 0.4
+    ) +
+  geom_violin(aes(fill = is_exploratory_yn), alpha = 0.8) + 
+  scale_color_manual(
+    values = c("Explored" = "#F8766D",
+               "Did not explore" = "#ffa7a1"
+               )) +
+  scale_fill_manual(
+    name = "Explore Status",
+    values = c("Explored" = "#F8766D",
+               "Did not explore" = "#ffa7a1"
+               ),
+    breaks = c("Did not explore",
+               "Explored"
+               )) +
+  stat_summary(fun = "mean",
+               geom = "crossbar",
+               linewidth = 0.4,
+               width = 0.7
+               ) +
+  guides(color = "none", alpha = "none", fill = "none") +
+  geom_signif(
+              comparisons = list(c("Explored", "Did not explore")), 
+              map_signif_level=TRUE) +
+  ylab("Proportion of Training-Inconsistent Test Choices") +
+  xlab("Did the Participant Explore During Sampling?") +
+  labs(title = "Adults") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+exploratory_interact_plot_kid <- exploratory_interact %>% filter(sample_group == "Children") %>% ggplot(aes(x = is_exploratory_yn, y = training_inconsistent_prop)) + 
+  geom_jitter(aes(
+    color = is_exploratory_yn),
+    alpha = 0.4
+    ) +
+  geom_violin(aes(fill = is_exploratory_yn), alpha = 0.8) + 
+  scale_color_manual(
+    values = c("Explored" = "#00BFC4",
+               "Did not explore" = "#73DEDE"
+               )) +
+  scale_fill_manual(
+    name = "Explore Status",
+    values = c("Explored" = "#00BFC4",
+               "Did not explore" = "#73DEDE"
+               ),
+    breaks = c("Did not explore",
+               "Explored"
+               )) +
+  stat_summary(fun = "mean",
+               geom = "crossbar",
+               linewidth = 0.4,
+               width = 0.7
+               ) +
+  guides(color = "none", alpha = "none", fill = "none") +
+  geom_signif(
+              comparisons = list(c("Explored", "Did not explore")), 
+              map_signif_level=TRUE) +
+  ylab("Proportion of Training-Inconsistent Test Choices") +
+  xlab("Did Participants Explore During Sampling?") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  labs(title = "Children") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+exploratory_interact_patch1 <- exploratory_interact_plot_adult + (exploratory_interact_plot_kid & ylab(NULL)) & xlab(NULL)
+
+exploratory_interact_plot <- wrap_elements(panel = exploratory_interact_patch1) +
+  labs(tag = "Did Participants Explore During Sampling?") +
+  theme(
+    plot.tag = element_text(size = rel(1), vjust = 3),
+    plot.tag.position = "bottom",
+  )
+
+exploratory_interact_plot
+
+# Stats test
+
+adult_explored_traininginconsistent <- exploratory_interact %>% filter(sample_group == "Adults", is_exploratory_yn == "Explored") %>% ungroup() %>% select(training_inconsistent_prop)
+
+adult_noexplore_traininginconsistent <- exploratory_interact %>% filter(sample_group == "Adults", is_exploratory_yn == "Did not explore") %>% ungroup() %>% select(training_inconsistent_prop)
+
+kid_explored_traininginconsistent <- exploratory_interact %>% filter(sample_group == "Children", is_exploratory_yn == "Explored") %>% ungroup() %>% select(training_inconsistent_prop)
+
+kid_noexplore_traininginconsistent <- exploratory_interact %>% filter(sample_group == "Children", is_exploratory_yn == "Did not explore") %>% ungroup() %>% select(training_inconsistent_prop)
+
+t.test(x = adult_explored_traininginconsistent, 
+       y = adult_noexplore_traininginconsistent, 
+       alternative = "greater")
+
+t.test(x = kid_explored_traininginconsistent, 
+       y = kid_noexplore_traininginconsistent, 
+       alternative = "greater")
+
+```
 
 
 
@@ -553,7 +649,16 @@ exp_labs = c(">S", "=S", "<S,>T", "\u2264T")
 
 # Plotting
 
-plot1 <- confirm_feedback_summarized %>% ggplot(aes(x = test_choice_type, y = proportion, fill = samp_group)) + geom_col() + facet_wrap(~samp_group) + labs(title = "Confirmatory Sampling", ) + theme(legend.position="none", plot.title = element_text(hjust = 0.5)) + scale_x_discrete(labels = conf_labs) + ylim(0, 0.8) + xlab("Category Level of Test Extensions") + ylab("Proportion of Test Extensions")
+plot1 <- confirm_feedback_summarized %>% 
+  ggplot(aes(x = test_choice_type, y = proportion, fill = samp_group)) + 
+  geom_col() + 
+  facet_wrap(~samp_group) + 
+  labs(title = "Confirmatory Sampling", ) + 
+  theme(legend.position="none", plot.title = element_text(hjust = 0.5)) + 
+  scale_x_discrete(labels = conf_labs) + 
+  ylim(0, 0.8) + 
+  xlab("Category Level of Test Extensions") + 
+  ylab("Proportion of Test Extensions") 
 
 plot2 <- explore_feedback_summarized %>% group_by(samp_feedback_type) %>% 
   ggplot(aes(x = test_choice_type, 

@@ -26,6 +26,7 @@ library(assertthat)
 library(knitr)
 library(patchwork)
 library(ggpattern)
+library(ggsignif)
 source("helper.R")
 ```
 
