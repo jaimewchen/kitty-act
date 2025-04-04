@@ -640,7 +640,7 @@ explore_feedback_summarized <- feedback_summarized %>%
   select(samp_group, samp_feedback_type, d_same_or_below_training, c_below_sampling_above_training, b_same_exp_sampling, a_above_exp_sampling) %>% 
   pivot_longer(cols = c(d_same_or_below_training, c_below_sampling_above_training, b_same_exp_sampling, a_above_exp_sampling), names_to = "test_choice_type") %>% ungroup() %>% group_by(samp_group, samp_feedback_type) %>% summarize(test_choice_type, proportion = value/sum(value))
 
-conf_labs = c(">S", "\u2264T")
+conf_labs = c(">T", "\u2264T")
 exp_labs = c(">S", "=S", "<S,>T", "\u2264T")
 
 ```
@@ -725,8 +725,8 @@ patch2 <- wrap_elements(panel = patch) +
   )
 
 
-abbreviation <- c(">S", "=S", "<S,>T", "\u2264T")
-meaning <- c("broader than sampling level", "same level as sampling level", "narrower than sampling level, broader than training level", "narrower or equal to training level")
+abbreviation <- c(">S", "=S", "<S,>T", ">T", "\u2264T")
+meaning <- c("broader than sampling level", "same level as sampling level", "narrower than sampling level, broader than training level", "broader than training", "narrower or equal to training level")
 
 
 key <- data.frame(abbreviation, meaning)
