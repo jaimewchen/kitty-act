@@ -5,6 +5,16 @@ date: "2025-03-12"
 output: html_document
 ---
 
+#### TO DO ### 
+
+# * load in all data appropriately here (if there are data objects from 1_analysis_combined that we want to use, need to store them and then read them in here, so that the code can run in a standalone way)
+
+# * make sure all packages needed to run the code are loaded
+
+# * where does the function "sort_by" come from? Can it be replaced by a tidyverse function? (arrange)
+
+
+
 # d' (training and learning) by age group (5-, 6-, 7-, 8-yos, and adults)
 
 ```{r}
@@ -60,7 +70,8 @@ subj_test_dprime_avg_clean %>% ggplot(aes(y=dprime_l, x=age)) + geom_point() + g
 ```{r}
 exploratory <- combined_sampling_data %>% 
   select(sample_group, participant, trial_counter, is_exploratory) %>%
-  sort_by(combined_sampling_data$sample_group, combined_sampling_data$participant) %>%
+  #sort_by(combined_sampling_data$sample_group, combined_sampling_data$participant) %>%
+  arrange(sample_group,participant) %>%
   mutate(is_exploratory = as.character(is_exploratory)) %>% mutate(is_exploratory_yn = case_when(
     is_exploratory == 1 ~ "explored",
     is_exploratory == 0 ~ "did not explore",
