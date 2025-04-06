@@ -81,7 +81,8 @@ exploratory <- combined_sampling_data %>%
 fa_rate <- subj_test_accuracy_all %>% 
   ungroup() %>% 
   select(sample_group, participant, false_alarm_rate_training_adj, false_alarm_rate_label_adj) %>%
-  sort_by(subj_test_accuracy_all$sample_group, subj_test_accuracy_all$participant) %>%
+  #sort_by(subj_test_accuracy_all$sample_group, subj_test_accuracy_all$participant) %>%
+  arrange(sample_group,participant) %>%
   select(false_alarm_rate_training_adj, false_alarm_rate_label_adj)
 
 choices <- subj_test_accuracy %>% ungroup() %>% select(total_choices, ground_truth_correct_choices, ground_truth_incorrect_choices, training_consistent_choices, training_inconsistent_choices) %>% mutate(training_inconsistent_prop = training_inconsistent_choices/total_choices)
