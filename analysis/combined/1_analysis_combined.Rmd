@@ -834,6 +834,10 @@ m <- glmer(is_exploratory~ age_years_c*training_condition+(1|participant),data=c
 summary(m)
 Anova(m,type="III") 
 
+m0 <- glmer(is_exploratory~ age_years_c+(1|participant),data=combined_sampling_data,family="binomial")
+summary(m0)
+Anova(m0,type="III") 
+
 
 
 # New data for prediction
@@ -869,10 +873,21 @@ p2 <- ggplot(combined_sampling_data,aes(age_years,is_exploratory))+
 p2
 #ggsave(here(figure_path,"kitty-act-sampling-by-age.png"),width=6,height=4)
  
+library(paletteer)
 
 ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condition))+
   geom_smooth(method="lm",se=F)+
-  geom_smooth(method="lm",color="black")
+  scale_color_manual(
+    values = c("#F8B100FF", "#CA697CFF", "#AB74CFFF", "#5bc1cf")
+  ) +
+  geom_smooth(method="lm",color="black") +
+  geom_errorbar(data=overall_exploratory_age_group,aes(age_bins,y=mean_explore,ymin=lower_se,ymax=upper_se),width=0,color="black") +
+  geom_point(data=overall_exploratory_age_group,aes(age_bins,mean_explore),color="black",size=3)+
+  ylab("Proportion Exploratory Choices")+
+  xlab("Age (in years)")+
+  theme_cowplot(font_size=15)+
+  theme(axis.title = element_text(face="bold", size=16))+
+  guides(color=guide_legend(title="Training Condition"))
   
 ```
 
@@ -883,12 +898,21 @@ combined_sampling_data$training_condition_ref_narrow <- relevel(combined_samplin
 
 m_narrow <- glmer(is_exploratory~ age_years_c*training_condition_ref_narrow+(1|participant),data=combined_sampling_data,family="binomial")
 summary(m_narrow)
+Anova(m_narrow,type="III")
 
 #intermediate
 combined_sampling_data$training_condition_ref_im <- relevel(combined_sampling_data$training_condition, ref = "3-Item Intermediate")
 
 m_im <- glmer(is_exploratory~ age_years_c*training_condition_ref_im+(1|participant),data=combined_sampling_data,family="binomial")
 summary(m_im)
+Anova(m_im,type="III")
+
+#broad
+combined_sampling_data$training_condition_ref_broad <- relevel(combined_sampling_data$training_condition, ref = "3-Item Broad")
+
+m_broad <- glmer(is_exploratory~ age_years_c*training_condition_ref_broad+(1|participant),data=combined_sampling_data,family="binomial")
+summary(m_broad)
+Anova(m_broad,type="III")
 
 ```
 
