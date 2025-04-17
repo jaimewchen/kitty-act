@@ -611,7 +611,7 @@ ggplot(combined_sampling_data,aes(training_condition_ord,fill=sampled_category_l
         strip.text.x = element_text(size=16))+
   guides(pattern = guide_legend(override.aes = list(fill = "white"),order=2),
          fill = guide_legend(override.aes = list(pattern = "none"),order=1))
-ggsave(here(figure_path,"kitty-act-sampling.png"),width=6,height=7)
+#ggsave(here(figure_path,"kitty-act-sampling.png"),width=6,height=7)
 
 ## Sampling Choices - individual bars
 combined_sampling_data_long_structure <- expand.grid(
@@ -834,6 +834,8 @@ m <- glmer(is_exploratory~ age_years_c*training_condition+(1|participant),data=c
 summary(m)
 Anova(m,type="III") 
 
+
+
 # New data for prediction
 # predicted_data <- expand.grid(
 #   age_years_c = seq(min(combined_sampling_data$age_years_c,na.rm=T), max(combined_sampling_data$age_years_c,na.rm=T), length.out = 100),
@@ -865,7 +867,7 @@ p2 <- ggplot(combined_sampling_data,aes(age_years,is_exploratory))+
   #ylim(0,1)
 
 p2
-ggsave(here(figure_path,"kitty-act-sampling-by-age.png"),width=6,height=4)
+#ggsave(here(figure_path,"kitty-act-sampling-by-age.png"),width=6,height=4)
  
 
 ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condition))+
@@ -873,6 +875,23 @@ ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condi
   geom_smooth(method="lm",color="black")
   
 ```
+
+Writing out the model more explicitly in order to do model comparisons to determine overall age effect
+
+```{r}
+combined_sampling_data$training_condition_ref_narrow <- relevel(combined_sampling_data$training_condition, ref = "3-Item Narrow")
+
+m_narrow <- glmer(is_exploratory~ age_years_c*training_condition_ref_narrow+(1|participant),data=combined_sampling_data,family="binomial")
+summary(m_narrow)
+
+#intermediate
+combined_sampling_data$training_condition_ref_im <- relevel(combined_sampling_data$training_condition, ref = "3-Item Intermediate")
+
+m_im <- glmer(is_exploratory~ age_years_c*training_condition_ref_im+(1|participant),data=combined_sampling_data,family="binomial")
+summary(m_im)
+
+```
+
 
 # Test
 
@@ -958,7 +977,7 @@ p2 <- ggplot(filter(overall_test_prop_long,sample_group=="adults"),aes(choice_ty
   theme(plot.title = element_text(hjust = 0.5))
 p2/p1+plot_annotation(tag_levels = 'A') & 
   theme(plot.tag = element_text(size = 20))
-ggsave(here(figure_path,"kitty-act-test.png"),width=6,height=12)
+#ggsave(here(figure_path,"kitty-act-test.png"),width=6,height=12)
   
 ```
 
