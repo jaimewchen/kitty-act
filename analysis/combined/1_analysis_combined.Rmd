@@ -620,7 +620,7 @@ combined_sampling_data_long_structure <- expand.grid(
   sampling_choice_type = c("subordinate","basic","superordinate","outside category")
 )
 combined_sampling_data_long <-  combined_sampling_data %>%
-  group_by(participant,sample_group,age_years,age_group,number_training_images,trial_counter, current_category_training_level) %>%
+  group_by(participant,sample_group,age_years,age_group,number_training_images, training_condition, training_condition_ord,trial_counter, current_category_training_level) %>%
   summarize(sampling_response = sampled_category_level_kind_info_ord) %>%
   arrange(participant,trial_counter)
 combined_sampling_data_long_structure <- combined_sampling_data_long_structure %>%
@@ -633,7 +633,7 @@ combined_sampling_data_long_structure <- combined_sampling_data_long_structure %
   )
 
 combined_sampling_data_long_structure_summarized <- combined_sampling_data_long_structure %>%
-  group_by(sample_group,number_training_images,current_category_training_level, sampling_choice_type) %>%
+  group_by(sample_group,number_training_images,training_condition,training_condition_ord,current_category_training_level, sampling_choice_type) %>%
   summarize(
     N=n(),
     sampling_response_avg=mean(sampling_choice_chosen,na.rm=TRUE),
@@ -644,15 +644,27 @@ combined_sampling_data_long_structure_summarized <- combined_sampling_data_long_
 combined_sampling_data_long_structure_summarized$current_category_training_level_ord <- factor(combined_sampling_data_long_structure_summarized$current_category_training_level,levels=c("narrow","intermediate","broad"))
 
 
-ggplot(combined_sampling_data_long_structure_summarized,aes(current_category_training_level_ord,sampling_response_avg, group=sampling_choice_type,fill=sampling_choice_type))+
+ggplot(filter(combined_sampling_data_long_structure_summarized, sample_group=="adults"),aes(training_condition_ord,sampling_response_avg, group=sampling_choice_type,fill=sampling_choice_type))+
   geom_errorbar(aes(ymin=sampling_response_binom_lower, ymax=sampling_response_binom_upper),width=0.3, color="black",position=position_dodge(width=0.9))+
   geom_bar(stat="identity",position=position_dodge())+
-  #theme_cowplot(font_size=30)+
+  theme_cowplot(font_size=30)+
   scale_fill_brewer(name="Sampling Choice Type",palette="RdYlBu")+
   scale_color_brewer(name="Sampling Choice Type",palette="RdYlBu")+
   xlab("Training Condition")+
   ylab("Proportion of Sampling Choices")+
-  facet_wrap(~number_training_images+sample_group)
+  facet_wrap(~sample_group)
+ggsave(here(figure_path,"sampling_choices_long_adults.png"),width=18,height=9)
+
+ggplot(filter(combined_sampling_data_long_structure_summarized, sample_group=="children"),aes(training_condition_ord,sampling_response_avg, group=sampling_choice_type,fill=sampling_choice_type))+
+  geom_errorbar(aes(ymin=sampling_response_binom_lower, ymax=sampling_response_binom_upper),width=0.3, color="black",position=position_dodge(width=0.9))+
+  geom_bar(stat="identity",position=position_dodge())+
+  theme_cowplot(font_size=30)+
+  scale_fill_brewer(name="Sampling Choice Type",palette="RdYlBu")+
+  scale_color_brewer(name="Sampling Choice Type",palette="RdYlBu")+
+  xlab("Training Condition")+
+  ylab("Proportion of Sampling Choices")+
+  facet_wrap(~sample_group)
+ggsave(here(figure_path,"sampling_choices_long_children.png"),width=18,height=9)
 ```
 
 ## Sampling by Age
@@ -729,7 +741,7 @@ m <- glmer(is_exploratory~ offset(logit(chance_level))+(1|participant),data=filt
 summary(m)
 ```
 
-### Exploratory: Interaction
+### Exploratory: Interaction between sample group and condition
 
 ```{r}
 m <- glmer(is_exploratory~ sample_group_c*training_condition+(1|participant),data=combined_sampling_data,family="binomial")
@@ -782,14 +794,26 @@ p2 <- ggplot(overall_sampling_exploratory,aes(training_condition,avg_exploratory
   xlab("Training Condition")+
   ylab("Proportion Exploratory Choices")+
   ylim(0,1)+
-  annotate("segment",x=0.5,xend = 1.5,y = 0.75,linetype="dashed")+
-  annotate("segment",x=1.5,xend = 2.5,y = 0.75,linetype="dashed")+
-  annotate("segment",x=2.5,xend = 3.5,y = 0.5,linetype="dashed")+
-  annotate("segment",x=3.5,xend = 4.5,y = 0.25,linetype="dashed")+
-  theme(axis.title = element_text(face="bold"),axis.text.x  = element_text(angle=90, hjust=1,vjust=0.4))
+  annotate("segment",x=0.5,xend = 1.5,y = 0.75,linetype="dashed",size=1.2)+
+  annotate("segment",x=1.5,xend = 2.5,y = 0.75,linetype="dashed",size=1.2)+
+  annotate("segment",x=2.5,xend = 3.5,y = 0.5,linetype="dashed",size=1.2)+
+  annotate("segment",x=3.5,xend = 4.5,y = 0.25,linetype="dashed",size=1.2)+
+  theme_cowplot()+
+  theme(axis.title = element_text(face="bold"))+
+  scale_color_manual(
+    values = c("#F8B100FF", "#CA697CFF", "#AB74CFFF", "#5bc1cf")
+  ) +
+  scale_fill_manual(
+    values = c("#F8B100FF", "#CA697CFF", "#AB74CFFF", "#5bc1cf")
+  ) +
+  theme(legend.position="none")+
+  theme(axis.title = element_text(face="bold", size=24),
+        axis.text.x  = element_text(size=16),
+        strip.text.x = element_text(size = 24,face="bold"))
 p2
-p1+p2
+ggsave(here(figure_path,"kitty-act-confirmatory-choices.png"),width=16,height=7)
 ```
+
 
 ### Exploratory
 
@@ -875,8 +899,10 @@ p2
  
 library(paletteer)
 
-ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condition))+
-  geom_smooth(method="lm",se=F)+
+p1 <- ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condition))+
+  #geom_smooth(method="lm",se=F)+
+  geom_line(stat="smooth",method = "lm", alpha=0,size=1.2)+
+  geom_smooth(method="lm",color="black")+
   scale_color_manual(
     values = c("#F8B100FF", "#CA697CFF", "#AB74CFFF", "#5bc1cf")
   ) +
@@ -888,8 +914,60 @@ ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condi
   theme_cowplot(font_size=15)+
   theme(axis.title = element_text(face="bold", size=16))+
   guides(color=guide_legend(title="Training Condition"))
+p1
+ggsave(here(figure_path,"kitty-act-sampling-condition-transparent.png"),width=8,height=6)
+
+p2 <- ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training_condition))+
+  geom_smooth(method="lm",se=F)+
+  #geom_line(stat="smooth",method = "lm", alpha=1,size=1.2)+
+  scale_color_manual(
+    values = c("#F8B100FF", "#CA697CFF", "#AB74CFFF", "#5bc1cf")
+  ) +
+  geom_smooth(method="lm",color="black") +
+  geom_errorbar(data=overall_exploratory_age_group,aes(age_bins,y=mean_explore,ymin=lower_se,ymax=upper_se),width=0,color="black") +
+  geom_point(data=overall_exploratory_age_group,aes(age_bins,mean_explore),color="black",size=3)+
+  ylab("Proportion Exploratory Choices")+
+  xlab("Age (in years)")+
+  theme_cowplot(font_size=20)+
+  theme(axis.title = element_text(face="bold", size=24))+
+  guides(color=guide_legend(title="Training Condition"))
+ggsave(here(figure_path,"kitty-act-sampling-condition-opaque.png"),width=9,height=6)
   
 ```
+
+```{r}
+p1 <- combined_sampling_data %>%
+  filter(sample_group=="children") %>%
+  ggplot(aes(age_years,sample_subordinate_choice))+
+  geom_smooth(aes(color=training_condition),method="lm",se=F,alpha=0.5)+
+  geom_smooth(method="lm",color="black")+
+  scale_color_manual(
+    values = c("#F8B100FF", "#CA697CFF", "#AB74CFFF", "#5bc1cf")
+  ) +
+  ylab("Proportion Subordinate Choices")+
+  xlab("Age (in years)")+
+  theme_cowplot(font_size=20)+
+  theme(axis.title = element_text(face="bold", size=22))+
+  guides(color=guide_legend(title="Training Condition"))+
+  theme(legend.position=c(0.1,0.2))
+p2 <- combined_sampling_data %>%
+  filter(sample_group=="children") %>%
+  ggplot(aes(age_years,sample_superordinate_choice))+
+  geom_smooth(aes(color=training_condition),method="lm",se=F,alpha=0.5)+
+  geom_smooth(method="lm",color="black")+
+  scale_color_manual(
+    values = c("#F8B100FF", "#CA697CFF", "#AB74CFFF", "#5bc1cf")
+  ) +
+  ylab("Proportion Superordinate Choices")+
+  xlab("Age (in years)")+
+  theme_cowplot(font_size=20)+
+  theme(axis.title = element_text(face="bold", size=22))+
+  guides(color=guide_legend(title="Training Condition"))+
+  theme(legend.position="none")
+p1+p2
+ggsave(here(figure_path,"kitty-act-sampling-sub-super.png"),width=12,height=6)
+```
+
 
 Writing out the model more explicitly in order to do model comparisons to determine overall age effect
 
@@ -1002,7 +1080,45 @@ p2 <- ggplot(filter(overall_test_prop_long,sample_group=="adults"),aes(choice_ty
 p2/p1+plot_annotation(tag_levels = 'A') & 
   theme(plot.tag = element_text(size = 20))
 #ggsave(here(figure_path,"kitty-act-test.png"),width=6,height=12)
-  
+
+#presentation
+#just kids
+ggplot(filter(overall_test_prop_long,sample_group=="children"),aes(choice_type_ord,avg_prop,fill=choice_type_ord))+
+  geom_bar(stat="identity")+
+  geom_errorbar(aes(ymin=prop_lower_ci,ymax=prop_upper_ci),width=0.1)+
+  facet_wrap(~training_condition_ord,nrow=1)+
+  theme_cowplot(font_size=20)+
+  scale_fill_manual(
+    name="Test Choice Type",
+    values=c("#d7191c","#fdae61","#abd9e9"))+
+  xlab("Test Choice Type")+
+  ylab("Proportion of Test Choices")+
+  theme(axis.title = element_text(face="bold", size=32),
+        axis.text.x  = element_text(size=24),
+        strip.text.x = element_text(size = 24,face="bold"))+
+  scale_x_discrete(breaks=c("subordinate","basic","superordinate"),
+                   labels=c("sub-\nordinate","basic","super-\nordinate"))+
+  theme(legend.position="none")
+ggsave(here(figure_path,"kitty-act-test-children-wider.png"),width=16,height=7)
+
+#just adults
+ggplot(filter(overall_test_prop_long,sample_group=="adults"),aes(choice_type_ord,avg_prop,fill=choice_type_ord))+
+  geom_bar(stat="identity")+
+  geom_errorbar(aes(ymin=prop_lower_ci,ymax=prop_upper_ci),width=0.1)+
+  facet_wrap(~training_condition_ord,nrow=1)+
+  theme_cowplot(font_size=20)+
+  scale_fill_manual(
+    name="Test Choice Type",
+    values=c("#d7191c","#fdae61","#abd9e9"))+
+  xlab("Test Choice Type")+
+  ylab("Proportion of Test Choices")+
+  theme(axis.title = element_text(face="bold", size=32),
+        axis.text.x  = element_text(size=24),
+        strip.text.x = element_text(size = 24,face="bold"))+
+  scale_x_discrete(breaks=c("subordinate","basic","superordinate"),
+                   labels=c("sub-\nordinate","basic","super-\nordinate"))+
+  theme(legend.position="none")
+ggsave(here(figure_path,"kitty-act-test-adults-wider.png"),width=16,height=7)
 ```
 
 ## H4: Test Choices
@@ -1150,3 +1266,200 @@ m <- glmer(is_chosen ~ number_training_images_c*sample_group+(1|participant)+(1|
 summary(m)
 Anova(m, type="III")
 ```
+
+## Exploratory
+
+### How do choices influence sampling?
+
+```{r}
+combined_test_array_options_clean <- combined_test_array_options_clean %>%
+  mutate(
+    sampling_feedback = case_when(
+      str_detect(sampled_label,"not") ~ "negative",
+      TRUE ~ "positive"
+    ),
+    choice_type = case_when(
+      test_image_type == "basic" & test_image_match_category==1 ~ "basic",
+      test_image_type == "subordinate" & test_image_match_category==1 ~ "subordinate",
+      test_image_type == "superordinate" & test_image_match_category==1 ~ "superordinate",
+      test_image_match_category==0 ~ "outside_category",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  mutate(training_condition = case_when(
+    number_training_images == 1 ~ "1-Item",
+    TRUE ~ paste0("3-Item ", stringr::str_to_title(current_category_training_level))
+  )) %>%
+  mutate(
+    is_match_to_sample = case_when(
+      sampled_category_level_kind_info == "sub" & test_image_match_category == 1 & test_image_type == "subordinate" ~ 1,
+      sampled_category_level_kind_info == "bas" & test_image_match_category == 1 & test_image_type == "subordinate" ~ 1,
+      sampled_category_level_kind_info == "bas" & test_image_match_category == 1 & test_image_type == "basic" ~ 1,
+      sampled_category_level_kind_info == "sup" & test_image_match_category == 1 & test_image_type == "subordinate" ~ 1,
+      sampled_category_level_kind_info == "sup" & test_image_match_category == 1 & test_image_type == "basic" ~ 1,
+      sampled_category_level_kind_info == "sup" & test_image_match_category == 1 & test_image_type == "superordinate" ~ 1,
+      sampled_category_level_kind_info == "outside_category" & test_image_match_category == 1 ~ 1,
+      sampled_category_level_kind_info == "outside_category" & (test_image_category == sampled_category_kind) ~ 1,
+      TRUE ~ 0
+    )
+  ) %>%
+  mutate(
+    is_match_to_sample_specific = case_when(
+       sampled_category_level_kind_info == "sub" & test_image_match_category == 1 & test_image_type == "subordinate" ~ 1,
+       sampled_category_level_kind_info == "bas" & test_image_match_category == 1 & test_image_type == "basic" ~ 1,
+       sampled_category_level_kind_info == "sup" & test_image_match_category == 1 & test_image_type == "superordinate" ~ 1,
+       sampled_category_level_kind_info == "outside_category" & (test_image_category == sampled_category_kind) ~ 1,
+       TRUE ~ 0
+    )) %>%
+  mutate(
+    match_categories = case_when(
+       sampled_category_level_kind_info == "sub" & test_image_match_category == 1 & test_image_type == "subordinate" ~ "sampled level",
+       sampled_category_level_kind_info == "bas" & test_image_match_category == 1 & test_image_type == "basic" ~ "sampled level",
+       sampled_category_level_kind_info == "sup" & test_image_match_category == 1 & test_image_type == "superordinate" ~ "sampled level",
+       sampled_category_level_kind_info == "outside_category" & (test_image_category == sampled_category_kind) ~ "sampled level",
+      test_image_type_training_consistent == 1 ~ "training consistent (not sampled)",
+       TRUE ~ "not training consistent"
+    )) %>%
+  ungroup()
+
+summarize_sampling_test <- combined_test_array_options_clean %>%
+  group_by(sample_group,number_training_images,current_category_training_level,training_condition,sampling_choice_type,sampling_feedback,choice_type) %>%
+  summarize(
+    N=n(),
+    avg_choice = mean(is_chosen),
+    sd = sd(is_chosen,na.rm=T)/sqrt(N),
+    se = sd(is_chosen,na.rm=T)/sqrt(N),
+    ci=qt(0.975, N-1)*se,
+  )
+
+#plot
+p_adults <- ggplot(filter(summarize_sampling_test,sample_group=="adults"),
+                   aes(x=training_condition,y=avg_choice,fill=choice_type))+
+  geom_errorbar(aes(ymin= avg_choice-ci, ymax=avg_choice+ci),width=0.3, color="black",position=position_dodge(width=0.9))+
+  geom_bar(stat="identity",position=position_dodge())+
+  facet_wrap(~sampling_choice_type+sampling_feedback)
+p_adults
+
+#plot
+p_kids <- ggplot(filter(summarize_sampling_test,sample_group=="children"),
+                   aes(x=training_condition,y=avg_choice,fill=choice_type))+
+  geom_errorbar(aes(ymin= avg_choice-ci, ymax=avg_choice+ci),width=0.3, color="black",position=position_dodge(width=0.9))+
+  geom_bar(stat="identity",position=position_dodge())+
+  facet_wrap(~sampling_choice_type+sampling_feedback)
+p_kids
+```
+
+Narrowing on specific test choices.
+
+```{r}
+summarize_sampling_test_sample_specific <- combined_test_array_options_clean %>%
+  group_by(sample_group,sampling_choice_type,sampling_feedback,is_match_to_sample_specific) %>%
+  summarize(
+    N=n(),
+    avg_choice = mean(is_chosen),
+    sd = sd(is_chosen,na.rm=T)/sqrt(N),
+    se = sd(is_chosen,na.rm=T)/sqrt(N),
+    ci=qt(0.975, N-1)*se,
+  )
+
+#plot
+p_kids <- ggplot(filter(summarize_sampling_test_sample_specific,sample_group=="children"),
+                   aes(x=sampling_feedback,y=avg_choice,fill=as.factor(is_match_to_sample_specific)))+
+  geom_errorbar(aes(ymin= avg_choice-ci, ymax=avg_choice+ci),width=0.3, color="black",position=position_dodge(width=0.9))+
+  geom_bar(stat="identity",position=position_dodge())+
+  facet_wrap(~sampling_choice_type)
+p_kids
+```
+
+```{r}
+subj_summarize_sampling_test_match_categories <- combined_test_array_options_clean %>%
+  group_by(participant,sample_group,sampling_choice_type,sampling_feedback,match_categories) %>%
+  summarize(
+    N=n(),
+    mean_choice = mean(is_chosen)
+  )
+summarize_sampling_test_match_categories <- subj_summarize_sampling_test_match_categories %>%
+  group_by(sample_group,sampling_choice_type,sampling_feedback,match_categories) %>%
+  summarize(
+    N=n(),
+    avg_choice = mean(mean_choice),
+    sd = sd(mean_choice,na.rm=T)/sqrt(N),
+    se = sd(mean_choice,na.rm=T)/sqrt(N),
+    ci=qt(0.975, N-1)*se,
+  )
+
+#plot
+p_adults <- ggplot(filter(summarize_sampling_test_match_categories,sample_group=="adults"),
+                   aes(x=sampling_feedback,y=avg_choice,fill=match_categories))+
+  geom_errorbar(aes(ymin= avg_choice-ci, ymax=avg_choice+ci),width=0.3, color="black",position=position_dodge(width=0.9))+
+  geom_bar(stat="identity",position=position_dodge())+
+  facet_wrap(~sampling_choice_type,scales="free")+
+  theme_cowplot()+
+  xlab("Sampling Feedback")+
+  ylab("Proportion of Options Chosen at Test")+
+  scale_fill_manual(name="Test Item Type",
+    values=c("#fde725","#21918c","#440154"))+
+  theme(axis.title = element_text(face="bold", size=32),
+        axis.text.x  = element_text(size=24),
+        strip.text.x = element_text(size = 24,,face="bold"),
+        legend.title=element_text(size=26), 
+    legend.text=element_text(size=24))
+p_adults
+ggsave(here(figure_path,"test_sampling_feedback_adults.png"),width=18,height=9)
+p_kids <- ggplot(filter(summarize_sampling_test_match_categories,sample_group=="children"),
+                   aes(x=sampling_feedback,y=avg_choice,fill=match_categories))+
+  geom_errorbar(aes(ymin= avg_choice-ci, ymax=avg_choice+ci),width=0.3, color="black",position=position_dodge(width=0.9))+
+  geom_bar(stat="identity",position=position_dodge())+
+  facet_wrap(~sampling_choice_type,scales="free")+
+  theme_cowplot()+
+  xlab("Sampling Feedback")+
+  ylab("Proportion of Options Chosen at Test")+
+  scale_fill_manual(name="Test Item Type",
+    values=c("#fde725","#21918c","#440154"))+
+  theme(axis.title = element_text(face="bold", size=32),
+        axis.text.x  = element_text(size=24),
+        strip.text.x = element_text(size = 24,,face="bold"),
+        legend.title=element_text(size=26), 
+    legend.text=element_text(size=24))
+p_kids
+ggsave(here(figure_path,"test_sampling_feedback_kids.png"),width=18,height=9)
+```
+
+```{r}
+subj_summarize_sampling_test_match_categories_cond <- combined_test_array_options_clean %>%
+  group_by(participant,sample_group,training_condition,sampling_choice_type,sampling_feedback,match_categories) %>%
+  summarize(
+    N=n(),
+    mean_choice = mean(is_chosen)
+  )
+summarize_sampling_test_match_categories_cond <- subj_summarize_sampling_test_match_categories_cond %>%
+  group_by(sample_group,training_condition,sampling_choice_type,sampling_feedback,match_categories) %>%
+  summarize(
+    N=n(),
+    avg_choice = mean(mean_choice),
+    sd = sd(mean_choice,na.rm=T)/sqrt(N),
+    se = sd(mean_choice,na.rm=T)/sqrt(N),
+    ci=qt(0.975, N-1)*se,
+  )
+
+#plot
+p_adults <- ggplot(filter(summarize_sampling_test_match_categories_cond,sample_group=="adults"),
+                   aes(x=training_condition,y=avg_choice,fill=match_categories))+
+  geom_errorbar(aes(ymin= avg_choice-ci, ymax=avg_choice+ci),width=0.3, color="black",position=position_dodge(width=0.9))+
+  geom_bar(stat="identity",position=position_dodge())+
+  facet_wrap(~sampling_choice_type+sampling_feedback)
+p_adults
+p_kids <- ggplot(filter(summarize_sampling_test_match_categories_cond,sample_group=="children"),
+                   aes(x=training_condition,y=avg_choice,fill=match_categories))+
+  geom_errorbar(aes(ymin= avg_choice-ci, ymax=avg_choice+ci),width=0.3, color="black",position=position_dodge(width=0.9))+
+  geom_bar(stat="identity",position=position_dodge())+
+  facet_wrap(~sampling_choice_type+sampling_feedback)
+p_kids
+```
+
+```{r}
+m <- glmer(is_chosen~match_categories*sampling_feedback+(1|participant)+(1|training_condition),data=combined_test_array_options_clean, family=binomial)
+summary(m)
+Anova(m, type="III")
+```
+
