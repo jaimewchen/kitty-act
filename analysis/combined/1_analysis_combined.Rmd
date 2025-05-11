@@ -932,7 +932,7 @@ p2 <- ggplot(combined_sampling_data,aes(age_years,is_exploratory, color=training
   theme_cowplot(font_size=20)+
   theme(axis.title = element_text(face="bold", size=24))+
   guides(color=guide_legend(title="Training Condition"))
-ggsave(here(figure_path,"kitty-act-sampling-condition-opaque.png"),width=9,height=6)
+ggsave(here(figure_path,"kitty-act-sampling-condition-opaque.png"),width=9,height=6,dpi=600)
   
 ```
 
