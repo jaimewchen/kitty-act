@@ -1457,9 +1457,35 @@ p_kids <- ggplot(filter(summarize_sampling_test_match_categories_cond,sample_gro
 p_kids
 ```
 
+#### Overall model
+
 ```{r}
-m <- glmer(is_chosen~match_categories*sampling_feedback+(1|participant)+(1|training_condition),data=combined_test_array_options_clean, family=binomial)
+m <- glmer(is_chosen~match_categories*sampling_feedback+(1|participant)+(1|current_category_kind),data=combined_test_array_options_clean, family=binomial)
 summary(m)
 Anova(m, type="III")
+```
+
+#### Analysis focused just on sampled level
+
+A slightly simpler analysis that focuses just on the sampled level for exploratory choices and includes an interaction with age group
+
+```{r}
+#center predictors
+combined_test_array_options_clean <- combined_test_array_options_clean %>%
+  mutate(sampling_feedback_c = ifelse(sampling_feedback == "positive",0.5,-0.5),
+         sample_group_c = ifelse(sample_group == "adults",0.5,-0.5))
+
+#interaction
+m <- glmer(is_chosen~sampling_feedback_c*sample_group_c+(1+sampling_feedback_c|participant)+(1|current_category_kind),data=filter(combined_test_array_options_clean,match_categories=="sampled level" & sampling_choice_type == "explore"), family=binomial)
+summary(m)
+
+# just children
+#removed the feedback slope due to convergence issues but the effect holds whether it is included or not
+m <- glmer(is_chosen~sampling_feedback_c+(1|participant)+(1|current_category_kind),data=filter(combined_test_array_options_clean,match_categories=="sampled level" & sampling_choice_type == "explore"&sample_group=="children"), family=binomial)
+summary(m)
+
+# just adults
+m <- glmer(is_chosen~sampling_feedback_c+(1+sampling_feedback_c|participant)+(1|training_condition),data=filter(combined_test_array_options_clean,match_categories=="sampled level" & sampling_choice_type == "explore"&sample_group=="adults"), family=binomial)
+summary(m)
 ```
 
