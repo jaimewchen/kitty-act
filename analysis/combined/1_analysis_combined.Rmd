@@ -529,13 +529,13 @@ p4 <- combined_sampling_data %>%
 #### Follow-up investigation of choices
 
 ```{r}
-m <- glmer(sample_subordinate_choice~age_years_c+(1|participant),data=filter(combined_sampling_data,number_training_images==3 & sample_group=="children"),family=binomial)
+m <- glmer(sample_subordinate_choice~age_years_c+(1|participant)+(1|current_category_kind),data=filter(combined_sampling_data,number_training_images==3 & sample_group=="children"),family=binomial)
 summary(m)
-m <- glmer(sample_basic_choice~age_years_c+(1|participant),data=filter(combined_sampling_data,number_training_images==3 & sample_group=="children"),family=binomial)
+m <- glmer(sample_basic_choice~age_years_c+(1|participant)+(1|current_category_kind),data=filter(combined_sampling_data,number_training_images==3 & sample_group=="children"),family=binomial)
 summary(m)
-m <- glmer(sample_superordinate_choice~age_years_c+(1|participant),data=filter(combined_sampling_data,number_training_images==3 & sample_group=="children"),family=binomial)
+m <- glmer(sample_superordinate_choice~age_years_c+(1|participant)+(1|current_category_kind),data=filter(combined_sampling_data,number_training_images==3 & sample_group=="children"),family=binomial)
 summary(m)
-m <- glmer(sample_outside_choice~age_years_c+(1|participant),data=filter(combined_sampling_data,number_training_images==3 & sample_group=="children"),family=binomial)
+m <- glmer(sample_outside_choice~age_years_c+(1|participant)+(1|current_category_kind),data=filter(combined_sampling_data,number_training_images==3 & sample_group=="children"),family=binomial)
 summary(m)
 ```
 
@@ -744,7 +744,7 @@ summary(m)
 ### Exploratory: Interaction between sample group and condition
 
 ```{r}
-m <- glmer(is_exploratory~ sample_group_c*training_condition+(1|participant),data=combined_sampling_data,family="binomial")
+m <- glmer(is_exploratory~ sample_group_c*training_condition+(1|participant),data=combined_sampling_data,family="binomial",glmerControl(optimizer="bobyqa"))
 summary(m)
 Anova(m,type="III")
 ```
@@ -854,6 +854,7 @@ overall_exploratory_age_group <- subj_exploratory %>%
   )
 
 #model
+#more complex random effects structure does not converge
 m <- glmer(is_exploratory~ age_years_c*training_condition+(1|participant),data=combined_sampling_data,family="binomial")
 summary(m)
 Anova(m,type="III") 
@@ -1132,16 +1133,18 @@ Training condition modulated participants’ choices at test (Proportion choices
 #
 ## subordinate choices
 #singular fit but does not appear to affect estimates - keeping category random intercept for consistency
-m_sub <- glmer(prop_subordinate~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="children"),family=binomial)
+m_sub <- glmer(prop_subordinate~training_condition+(1+training_condition|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="children"),family=binomial)
 summary(m_sub)
 Anova(m_sub,type="III")
 
 ## basic choices
+# training condition slope omitted due to singular fit
 m_bas <- glmer(prop_basic~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="children"),family=binomial)
 summary(m_bas)
 Anova(m_bas,type="III")
 
 ## superordinate choices
+# training condition slope omitted due to singular fit
 m_sup <- lmer(prop_superordinate~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="children"))
 summary(m_sup)
 Anova(m_sup,type="III")
@@ -1182,6 +1185,31 @@ Anova(m_bas,type="III")
 
 ## superordinate choices
 m_sup <- lmer(prop_superordinate~training_condition*sample_group+(1|participant)+(1|current_category_kind),data=subj_test_prop)
+summary(m_sup)
+Anova(m_sup,type="III")
+```
+
+### Exploratory: Interaction with age among children
+
+```{r}
+## subordinate choices
+m_sub <- glmer(prop_subordinate~training_condition*age_years_c+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop, sample_group=="children"),family=binomial)
+summary(m_sub)
+Anova(m_sub,type="III")
+
+## basic choices
+m_bas <- glmer(prop_basic~training_condition*age_years_c+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop, sample_group=="children"),family=binomial)
+summary(m_bas)
+Anova(m_bas,type="III")
+
+## superordinate choices
+m_sup <- lmer(prop_superordinate~training_condition*age_years_c+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop, sample_group=="children"))
+summary(m_sup)
+Anova(m_sup,type="III")
+
+#set reference to 3_Item Broad level to further investigate broad condition
+subj_test_prop$training_condition_ref_broad <- relevel(as.factor(subj_test_prop$training_condition), ref = "3-Item Broad")
+m_sup <- lmer(prop_superordinate~training_condition_ref_broad*age_years_c+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop, sample_group=="children"))
 summary(m_sup)
 Anova(m_sup,type="III")
 ```
