@@ -1160,7 +1160,7 @@ summary(m_sub)
 Anova(m_sub,type="III")
 
 ## basic choices
-m_bas <- lmer(prop_basic~training_condition+(1|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="adults"))
+m_bas <- lmer(prop_basic~training_condition+(1+training_condition|participant)+(1|current_category_kind),data=filter(subj_test_prop,sample_group=="adults"))
 summary(m_bas)
 Anova(m_bas,type="III")
 
@@ -1170,7 +1170,7 @@ summary(m_sup)
 Anova(m_sup,type="III")
 ```
 
-### Exploratory: Interaction with Sample Group
+### H6: Interaction with Sample Group
 
 ```{r}
 ## subordinate choices
@@ -1287,7 +1287,7 @@ ggplot(filter(basic_test_choices,current_category_training_level=="narrow"),aes(
 ```
 
 
-## H6: No interaction between children and adults
+## H6B/exploratory: No interaction between children and adults
 
 ```{r}
 m <- glmer(is_chosen ~ number_training_images_c*sample_group+(1|participant)+(1|current_category_kind),data=filter(basic_test_choices,current_category_training_level=="narrow"),family="binomial")
@@ -1513,7 +1513,7 @@ m <- glmer(is_chosen~sampling_feedback_c+(1|participant)+(1|current_category_kin
 summary(m)
 
 # just adults
-m <- glmer(is_chosen~sampling_feedback_c+(1+sampling_feedback_c|participant)+(1|training_condition),data=filter(combined_test_array_options_clean,match_categories=="sampled level" & sampling_choice_type == "explore"&sample_group=="adults"), family=binomial)
+m <- glmer(is_chosen~sampling_feedback_c+(1+sampling_feedback_c|participant)+(1|current_category_kind),data=filter(combined_test_array_options_clean,match_categories=="sampled level" & sampling_choice_type == "explore"&sample_group=="adults"), family=binomial)
 summary(m)
 ```
 
